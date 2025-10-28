@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { NavigationCard } from "@/components/NavigationCard";
 import { ConsultasSection } from "@/components/ConsultasSection";
@@ -6,6 +7,8 @@ import { RelatoriosSection } from "@/components/RelatoriosSection";
 import { Database, Headphones, Phone, Building, Server } from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
       <Header />
@@ -13,7 +16,7 @@ const Index = () => {
       <main className="container px-6 py-8">
         {/* Navigation Grid */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-          <NavigationCard icon={Database} title="Cadastro" />
+          <NavigationCard icon={Database} title="Cadastro" onClick={() => navigate("/cadastro")} />
           <NavigationCard icon={Headphones} title="Suporte" />
           <NavigationCard icon={Phone} title="Telecom" />
           <NavigationCard icon={Building} title="Unidade" />
