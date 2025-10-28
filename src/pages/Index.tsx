@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { NavigationCard } from "@/components/NavigationCard";
 import { ConsultasSection } from "@/components/ConsultasSection";
-import { CadastroVRTSection } from "@/components/CadastroVRTSection";
 import { RelatoriosSection } from "@/components/RelatoriosSection";
 import { Database, Headphones, Phone, Building, Server } from "lucide-react";
 
@@ -24,13 +23,9 @@ const Index = () => {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-2 gap-6">
           <div className="space-y-6">
             <ConsultasSection />
-          </div>
-          
-          <div className="space-y-6">
-            <CadastroVRTSection />
           </div>
           
           <div className="space-y-6">
