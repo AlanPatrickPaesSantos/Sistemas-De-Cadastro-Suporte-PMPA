@@ -1,13 +1,16 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { NavigationCard } from "@/components/NavigationCard";
 import { ConsultasSection } from "@/components/ConsultasSection";
 import { CadastroVRTSection } from "@/components/CadastroVRTSection";
 import { RelatoriosSection } from "@/components/RelatoriosSection";
+import { EqSuporteDialog } from "@/components/EqSuporteDialog";
 import { Database, Headphones, Phone, Building, Server } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
+  const [eqSuporteOpen, setEqSuporteOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/30">
@@ -17,7 +20,7 @@ const Index = () => {
         {/* Navigation Grid */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           <NavigationCard icon={Database} title="Cadastro" onClick={() => navigate("/cadastro")} />
-          <NavigationCard icon={Headphones} title="Suporte" />
+          <NavigationCard icon={Headphones} title="Suporte" onClick={() => setEqSuporteOpen(true)} />
           <NavigationCard icon={Phone} title="Telecom" />
           <NavigationCard icon={Building} title="Unidade" />
           <NavigationCard icon={Server} title="Serv_Int_Ext" onClick={() => navigate("/servico-interno-externo")} />
@@ -50,6 +53,8 @@ const Index = () => {
           </p>
         </div>
       </main>
+
+      <EqSuporteDialog open={eqSuporteOpen} onOpenChange={setEqSuporteOpen} />
     </div>
   );
 };
