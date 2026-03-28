@@ -1,11 +1,12 @@
 import { Shield } from "lucide-react";
+import pmpaBrasao from "@/assets/pmpa-brasao.png";
 
 export const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 glass-effect">
       <div className="container flex h-16 items-center justify-between px-6">
         <div className="flex items-center gap-3">
-          <img src="/pmpa-brasao.webp" alt="Brasão PMPA" className="h-11 w-11 object-contain" />
+          <img src={pmpaBrasao} alt="Brasão PMPA" className="h-11 w-auto object-contain" />
           <div>
             <h1 className="text-lg font-bold tracking-tight text-foreground">PMPA</h1>
             <p className="text-[11px] font-medium text-muted-foreground tracking-wide uppercase">Suporte & Telecom</p>
