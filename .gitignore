@@ -23,20 +23,13 @@ dist-ssr
 *.sln
 *.sw?
 
-# ---------- SEGURANÇA BACKEND (DITEL) ----------
-# Senhas, Rotas Privadas e Tokens (NUNCA EXPÔ-LAS NA INTERNET)
+# Backend specific ignores
 backend/.env
-
-# Módulos Pesados do Servidor
 backend/node_modules/
-backend/package-lock.json
-
-# Lixo, Testes e Pastas Temporárias dos Relatórios e Debugs
+backend/temp/
+backend/docx_text*
 backend/tmp_docx/
-backend/tmp_docx_extract/
-backend/docx_text.txt
-backend/docx_text_clean.txt
-backend/xml_sample.txt
 backend/debug_parts.txt
-backend/remoto_os.txt
 backend/final_check*.json
+backend/remoto_os.txt
+backend/unique_legacy_services.txt
