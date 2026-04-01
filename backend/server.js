@@ -257,8 +257,8 @@ app.put('/api/servicos/:id', async (req, res) => {
 
 // ====== ROTAS DE MISSÕES (SERVIÇOS INTERNOS/EXTERNOS) ======
 
-// Busca e filtros de Missões (Relatórios) - contagem exata
-app.get('/api/missoes', async (req, res) => {
+// Busca e filtros de Missões (Relatórios) - listagem
+app.get('/api/missoes', verificarToken, async (req, res) => {
   try {
     const { startDate, endDate, servico } = req.query;
     let query = {};
@@ -270,7 +270,7 @@ app.get('/api/missoes', async (req, res) => {
     }
 
     if (servico) {
-      query.servico = servico.toLowerCase();
+      query.servico = { $regex: new RegExp(`^${servico}$`, 'i') };
     }
 
     // Usa countDocuments para contagem exata sem limite
@@ -279,10 +279,10 @@ app.get('/api/missoes', async (req, res) => {
       Missao.countDocuments(query)
     ]);
     
-    // Retorna os dados com o total real no header
     res.set('X-Total-Count', total);
     res.json(missoes);
   } catch (err) {
+    console.error('Erro ao buscar missões:', err);
     res.status(500).json({ error: err.message });
   }
 });

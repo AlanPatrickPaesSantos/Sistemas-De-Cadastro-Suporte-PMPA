@@ -31,8 +31,9 @@ export const RelatoriosSection = () => {
       // Também busca os primeiros registros para exibir na lista (até 500)
       const listUrl = `${API_BASE}/missoes?startDate=${filters.startDate}&endDate=${filters.endDate}`;
       const listResp = await fetch(listUrl);
+      if (!listResp.ok) throw new Error("Erro ao buscar lista de missões");
       const data = await listResp.json();
-      setResults(data);
+      setResults(Array.isArray(data) ? data : []);
 
       if (exactStats.total === 0) {
         alert("Nenhuma missão encontrada para este período.");
@@ -338,7 +339,7 @@ export const RelatoriosSection = () => {
                   <p className="font-bold text-sm uppercase tracking-widest">Nenhum dado carregado para este período.</p>
                 </div>
               )}
-              {results.map((item) => (
+              {Array.isArray(results) && results.map((item) => (
                 <button 
                   key={item._id}
                   onClick={() => setSelectedRecord(item)}
