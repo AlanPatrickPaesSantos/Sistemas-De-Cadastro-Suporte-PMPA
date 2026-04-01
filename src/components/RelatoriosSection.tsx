@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CadastroForm } from "./CadastroForm";
 import { ServicoInternoExternoForm } from "./ServicoInternoExternoForm";
+import { API_BASE } from "../lib/api-config";
 // Removido import de RelatorioMissaoPrint para usar janela isolada
 
 
@@ -22,13 +23,13 @@ export const RelatoriosSection = () => {
     setIsLoading(true);
     try {
       // Usa rota de contagem EXATA para missões (sem limite)
-      const countUrl = `http://localhost:5001/api/missoes/count?startDate=${filters.startDate}&endDate=${filters.endDate}`;
+      const countUrl = `${API_BASE}/missoes/count?startDate=${filters.startDate}&endDate=${filters.endDate}`;
       const countResp = await fetch(countUrl);
       if (!countResp.ok) throw new Error("Erro na resposta do servidor");
       const exactStats = await countResp.json();
 
       // Também busca os primeiros registros para exibir na lista (até 500)
-      const listUrl = `http://localhost:5001/api/missoes?startDate=${filters.startDate}&endDate=${filters.endDate}`;
+      const listUrl = `${API_BASE}/missoes?startDate=${filters.startDate}&endDate=${filters.endDate}`;
       const listResp = await fetch(listUrl);
       const data = await listResp.json();
       setResults(data);
@@ -79,8 +80,8 @@ export const RelatoriosSection = () => {
     let manutencaoStats = { total: 0, prontas: 0 };
     try {
       const [prontoResp, totalResp] = await Promise.all([
-        fetch(`http://localhost:5001/api/servicos/count?startDate=${filters.startDate}&endDate=${filters.endDate}&status=PRONTO`),
-        fetch(`http://localhost:5001/api/servicos/count?startDate=${filters.startDate}&endDate=${filters.endDate}`)
+        fetch(`${API_BASE}/servicos/count?startDate=${filters.startDate}&endDate=${filters.endDate}&status=PRONTO`),
+        fetch(`${API_BASE}/servicos/count?startDate=${filters.startDate}&endDate=${filters.endDate}`)
       ]);
       if (prontoResp.ok) {
         const prontoData = await prontoResp.json();

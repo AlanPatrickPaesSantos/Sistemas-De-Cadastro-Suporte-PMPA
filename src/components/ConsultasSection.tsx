@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { CadastroForm } from "./CadastroForm";
 import { LaudoPrint } from "./LaudoPrint";
 import { toast } from "sonner";
+import { API_BASE } from "../lib/api-config";
 
 export const ConsultasSection = () => {
   const [query, setQuery] = useState("");
@@ -28,7 +29,7 @@ export const ConsultasSection = () => {
 
       setIsLoading(true);
       try {
-        const response = await fetch(`http://localhost:5001/api/servicos?q=${encodeURIComponent(query)}`);
+        const response = await fetch(`${API_BASE}/servicos?q=${encodeURIComponent(query)}`);
         const data = await response.json();
         setResults(data);
       } catch (error) {

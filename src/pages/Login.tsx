@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { useAuth } from '../contexts/AuthContext';
 import { ShieldAlert, Loader2, Lock } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
+import { API_BASE } from '../lib/api-config';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -23,7 +24,7 @@ const Login = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', {
+      const response = await fetch(`${API_BASE}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

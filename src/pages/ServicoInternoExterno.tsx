@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Search, Loader2, Target } from "lucide-react";
 import { toast } from "sonner";
+import { API_BASE } from "@/lib/api-config";
 
 const ServicoInternoExterno = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const ServicoInternoExterno = () => {
     if (!query.trim()) return;
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:5001/api/missoes/${query.trim()}`);
+      const res = await fetch(`${API_BASE}/missoes/${query.trim()}`);
       if (!res.ok) {
         toast.error(`Missão OS ${query} não encontrada no banco isolado.`);
         setSelectedRecord(null);
@@ -42,13 +43,13 @@ const ServicoInternoExterno = () => {
     try {
       let res;
       if (selectedRecord) {
-        res = await fetch(`http://localhost:5001/api/missoes/${selectedRecord.os}`, {
+        res = await fetch(`${API_BASE}/missoes/${selectedRecord.os}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
       } else {
-        res = await fetch("http://localhost:5001/api/missoes", {
+        res = await fetch(`${API_BASE}/missoes`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),

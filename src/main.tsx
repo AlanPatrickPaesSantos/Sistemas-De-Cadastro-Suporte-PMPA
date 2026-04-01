@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import { API_BASE } from "./lib/api-config";
 
 // --- INTERCEPTADOR GLOBAL DE REDE (SEGURANÇA JWT) ---
 // Qualquer chamada 'fetch' feita pelo sistema passará por aqui primeiro para anexar o token
@@ -9,12 +10,18 @@ const originalFetch = window.fetch;
 window.fetch = async (...args) => {
   let [resource, config] = args;
   
-  if (typeof resource === 'string' && resource.startsWith('http://localhost:5001/api/')) {
+  const isApiRequest = typeof resource === 'string' && (
+    resource.startsWith(API_BASE) || 
+    resource.startsWith('/api/') || 
+    resource.startsWith('http://localhost:5001/api/')
+  );
+
+  if (isApiRequest) {
     const token = localStorage.getItem('ditel_token');
     if (token) {
       config = config || {};
       config.headers = {
-        ...config.headers,
+        ...(config.headers || {}),
         'Authorization': `Bearer ${token}`
       };
     }

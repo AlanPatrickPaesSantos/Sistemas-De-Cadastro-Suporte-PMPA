@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { API_BASE } from "@/lib/api-config";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -70,7 +71,7 @@ export const CadastroForm = ({ onSubmit, initialData, id = "cadastro-form" }: Ca
 
   useEffect(() => {
     if (!initialData) {
-      fetch("http://localhost:5001/api/servicos/next-os")
+      fetch(`${API_BASE}/servicos/next-os`)
         .then(r => r.json())
         .then(d => {
           const osVal = String(d.nextOs);

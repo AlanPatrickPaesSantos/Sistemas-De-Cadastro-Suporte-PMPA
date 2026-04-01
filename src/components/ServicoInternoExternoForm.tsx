@@ -15,6 +15,7 @@ import {
 import { toast } from "sonner";
 import { useEffect } from "react";
 import { UnidadeCombobox } from "./UnidadeCombobox";
+import { API_BASE } from "../lib/api-config";
 
 const formSchema = z.object({
   os: z.union([z.string(), z.number()]).transform(v => String(v)),
@@ -66,7 +67,7 @@ export const ServicoInternoExternoForm = ({
       // Fetch próxima OS apenas quando for um registro novo
       const fetchNextOs = async () => {
         try {
-          const res = await fetch("http://localhost:5001/api/missoes/next-os");
+          const res = await fetch(`${API_BASE}/missoes/next-os`);
           const data = await res.json();
           if (data.nextOs) setValue("os", data.nextOs.toString());
         } catch (err) {

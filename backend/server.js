@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -12,7 +13,7 @@ app.use(express.json());
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ Conectado ao MongoDB Local (PMPA DITEL)'))
+  .then(() => console.log(`✅ Conectado ao MongoDB [${process.env.NODE_ENV === 'production' ? 'CLOUD' : 'LOCAL'}]`))
   .catch(err => console.error('❌ Erro ao conectar ao MongoDB:', err));
 
 const Servico = require('./models/Servico');
@@ -372,6 +373,16 @@ app.put('/api/missoes/:id', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor backend rodando na porta ${PORT}`);
+// ====== SERVIR FRONTEND ESTÁTICO (PRODUÇÃO) ======
+if (process.env.NODE_ENV === 'production' || process.env.RENDER) {
+  const distPath = path.join(__dirname, '..', 'dist');
+  app.use(express.static(distPath));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
+
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Servidor rodando na porta ${PORT} [MODO: ${process.env.NODE_ENV || 'development'}]`);
 });

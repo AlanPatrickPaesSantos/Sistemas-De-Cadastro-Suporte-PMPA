@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "@/lib/api-config";
 import { CadastroForm } from "@/components/CadastroForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +28,7 @@ const Cadastro = () => {
       }
       setIsLoading(true);
       try {
-        const response = await fetch(`http://localhost:5001/api/servicos?q=${encodeURIComponent(query)}`);
+        const response = await fetch(`${API_BASE}/servicos?q=${encodeURIComponent(query)}`);
         const data = await response.json();
         setResults(data);
       } catch (error) {
@@ -43,12 +44,12 @@ const Cadastro = () => {
   // Carrega um registro e verifica adjacentes
   const loadRecord = async (item: any) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/servicos/${item.Id_cod}`);
+      const res = await fetch(`${API_BASE}/servicos/${item.Id_cod}`);
       const fresh = await res.json();
       setSelectedRecord(fresh);
       const [prevRes, nextRes] = await Promise.all([
-        fetch(`http://localhost:5001/api/servicos/${fresh.Id_cod}/prev`),
-        fetch(`http://localhost:5001/api/servicos/${fresh.Id_cod}/next`),
+        fetch(`${API_BASE}/servicos/${fresh.Id_cod}/prev`),
+        fetch(`${API_BASE}/servicos/${fresh.Id_cod}/next`),
       ]);
       setHasPrev(prevRes.ok);
       setHasNext(nextRes.ok);
@@ -66,12 +67,12 @@ const Cadastro = () => {
     if (!selectedRecord) return;
     setIsNavLoading(true);
     try {
-      const res = await fetch(`http://localhost:5001/api/servicos/${selectedRecord.Id_cod}/${direction}`);
+      const res = await fetch(`${API_BASE}/servicos/${selectedRecord.Id_cod}/${direction}`);
       if (!res.ok) return;
       const record = await res.json();
       const [prevRes, nextRes] = await Promise.all([
-        fetch(`http://localhost:5001/api/servicos/${record.Id_cod}/prev`),
-        fetch(`http://localhost:5001/api/servicos/${record.Id_cod}/next`),
+        fetch(`${API_BASE}/servicos/${record.Id_cod}/prev`),
+        fetch(`${API_BASE}/servicos/${record.Id_cod}/next`),
       ]);
       setSelectedRecord(record);
       setHasPrev(prevRes.ok);
@@ -86,7 +87,7 @@ const Cadastro = () => {
   // Salva NOVO equipamento
   const handleSubmit = async (data: any) => {
     try {
-      const res = await fetch("http://localhost:5001/api/servicos", {
+      const res = await fetch(`${API_BASE}/servicos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
