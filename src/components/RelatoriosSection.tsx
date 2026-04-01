@@ -93,6 +93,7 @@ export const RelatoriosSection = () => {
       }
     } catch (e) {
       console.error("Erro ao buscar manutenções:", e);
+      printWindow.document.write("<p style='color:red'>Erro ao carregar dados complementares (Manutencao). O relatório pode estar incompleto.</p>");
     }
 
     const logoBase = window.location.origin;

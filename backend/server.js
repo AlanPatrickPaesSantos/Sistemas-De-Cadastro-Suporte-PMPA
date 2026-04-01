@@ -106,12 +106,14 @@ app.get('/api/servicos/count', async (req, res) => {
     }
 
     if (status) {
-      query.Serviço = status;
+      // Busca insensível a maiúsculas/minúsculas (ex: PRONTO, Pronto, pronto)
+      query.Serviço = { $regex: new RegExp(`^${status}$`, 'i') };
     }
 
     const total = await Servico.countDocuments(query);
     res.json({ count: total });
   } catch (err) {
+    console.error('Erro na contagem de serviços:', err);
     res.status(500).json({ error: err.message });
   }
 });
