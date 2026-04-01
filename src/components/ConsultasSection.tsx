@@ -115,7 +115,7 @@ export const ConsultasSection = () => {
             </div>
 
             {/* Lista de Resultados Rápidos */}
-            {results.length > 0 && (
+            {Array.isArray(results) && results.length > 0 && (
               <div className="rounded-lg border border-border/40 bg-card overflow-hidden divide-y divide-border/20 shadow-sm animate-in fade-in slide-in-from-top-2 duration-300 max-h-[300px] overflow-y-auto custom-scrollbar">
                 {results.map((item) => (
                   <button

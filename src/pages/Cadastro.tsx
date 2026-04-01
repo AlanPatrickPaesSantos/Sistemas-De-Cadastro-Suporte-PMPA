@@ -134,7 +134,8 @@ const Cadastro = () => {
           </div>
 
           {/* Dropdown de Resultados */}
-          {results.length > 0 && (
+          {/* Lista de Resultados Rápidos */}
+          {Array.isArray(results) && results.length > 0 && (
             <div className="absolute z-50 left-0 right-0 top-full mt-1 rounded-lg border border-border/40 bg-card shadow-lg overflow-hidden divide-y divide-border/20 max-h-[280px] overflow-y-auto">
               {results.map((item) => (
                 <button
