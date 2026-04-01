@@ -45,13 +45,13 @@ export const ConsultasSection = () => {
 
   const loadRecord = async (record: any) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/servicos/${record.Id_cod}`);
+      const res = await fetch(`${API_BASE}/servicos/${record.Id_cod}`);
       const fresh = await res.json();
       setSelectedRecord(fresh);
       // Verifica se existem registros adjacentes
       const [prevRes, nextRes] = await Promise.all([
-        fetch(`http://localhost:5001/api/servicos/${fresh.Id_cod}/prev`),
-        fetch(`http://localhost:5001/api/servicos/${fresh.Id_cod}/next`),
+        fetch(`${API_BASE}/servicos/${fresh.Id_cod}/prev`),
+        fetch(`${API_BASE}/servicos/${fresh.Id_cod}/next`),
       ]);
       setHasPrev(prevRes.ok);
       setHasNext(nextRes.ok);
@@ -67,12 +67,12 @@ export const ConsultasSection = () => {
     if (!selectedRecord) return;
     setIsNavLoading(true);
     try {
-      const res = await fetch(`http://localhost:5001/api/servicos/${selectedRecord.Id_cod}/${direction}`);
+      const res = await fetch(`${API_BASE}/servicos/${selectedRecord.Id_cod}/${direction}`);
       if (!res.ok) return;
       const record = await res.json();
       const [prevRes, nextRes] = await Promise.all([
-        fetch(`http://localhost:5001/api/servicos/${record.Id_cod}/prev`),
-        fetch(`http://localhost:5001/api/servicos/${record.Id_cod}/next`),
+        fetch(`${API_BASE}/servicos/${record.Id_cod}/prev`),
+        fetch(`${API_BASE}/servicos/${record.Id_cod}/next`),
       ]);
       setSelectedRecord(record);
       setHasPrev(prevRes.ok);
@@ -163,7 +163,7 @@ export const ConsultasSection = () => {
               onSubmit={async (data) => {
                 try {
                   const res = await fetch(
-                    `http://localhost:5001/api/servicos/${selectedRecord?.Id_cod}`,
+                    `${API_BASE}/servicos/${selectedRecord?.Id_cod}`,
                     {
                       method: "PUT",
                       headers: { "Content-Type": "application/json" },

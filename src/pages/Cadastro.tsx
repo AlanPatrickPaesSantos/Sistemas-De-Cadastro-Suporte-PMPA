@@ -207,7 +207,7 @@ const Cadastro = () => {
               onSubmit={async (data) => {
                 try {
                   const res = await fetch(
-                    `http://localhost:5001/api/servicos/${selectedRecord?.Id_cod}`,
+                    `${API_BASE}/servicos/${selectedRecord?.Id_cod}`,
                     {
                       method: "PUT",
                       headers: { "Content-Type": "application/json" },
