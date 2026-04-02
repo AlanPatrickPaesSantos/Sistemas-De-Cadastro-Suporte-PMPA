@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Calendar, Settings, ChevronRight, Loader2, Search, X, Activity } from "lucide-react";
+import { FileText, Calendar, Settings, ChevronRight, Loader2, Search, X, Activity, Printer } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CadastroForm } from "./CadastroForm";
 import { ServicoInternoExternoForm } from "./ServicoInternoExternoForm";
 import { API_BASE } from "../lib/api-config";
+import { LaudoPrint } from "./LaudoPrint";
 // Removido import de RelatorioMissaoPrint para usar janela isolada
 
 
@@ -19,6 +20,8 @@ export const RelatoriosSection = () => {
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [stats, setStats] = useState({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0 });
 
+  const [printType, setPrintType] = useState<'laudo' | 'saida'>('laudo');
+  
   const handleGenerateReport = async () => {
     setIsLoading(true);
     try {
@@ -416,10 +419,49 @@ export const RelatoriosSection = () => {
           </DialogHeader>
           <div className="p-4 md:p-6 flex-1 overflow-y-auto">
             {activeReport === "Rel_Missao_Consolidado" ? (
-              <ServicoInternoExternoForm initialData={selectedRecord} onCancel={() => setSelectedRecord(null)} onSubmit={() => setSelectedRecord(null)} />
+              <ServicoInternoExternoForm id="report-detail-form" initialData={selectedRecord} onCancel={() => setSelectedRecord(null)} onSubmit={() => setSelectedRecord(null)} />
             ) : (
-              <CadastroForm initialData={selectedRecord} onCancel={() => setSelectedRecord(null)} onSubmit={() => setSelectedRecord(null)} />
+              <CadastroForm id="report-detail-form" initialData={selectedRecord} onCancel={() => setSelectedRecord(null)} onSubmit={() => setSelectedRecord(null)} />
             )}
+            {selectedRecord && <LaudoPrint data={selectedRecord} type={printType} />}
+          </div>
+
+          <div className="p-3 md:p-4 border-t bg-muted/20 shrink-0 shadow-inner">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+              <Button
+                variant="outline"
+                onClick={() => setSelectedRecord(null)}
+                className="h-12 md:h-14 gap-2 text-pmpa-navy border-pmpa-navy/30 hover:bg-pmpa-navy/5 font-bold"
+              >
+                FECHAR
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={() => { setPrintType('laudo'); setTimeout(() => window.print(), 100); }}
+                className="h-12 md:h-14 gap-1 md:gap-2 text-pmpa-navy border-pmpa-navy/30 hover:bg-pmpa-navy/5 font-bold px-1"
+              >
+                <Printer className="h-4 w-4 md:h-6 md:w-6" />
+                <span className="inline text-[9px] md:text-[13px]">LAUDO</span>
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={() => { setPrintType('saida'); setTimeout(() => window.print(), 100); }}
+                className="h-12 md:h-14 gap-1 md:gap-2 text-pmpa-navy border-pmpa-navy/30 hover:bg-pmpa-navy/5 font-bold px-1"
+              >
+                <Printer className="h-4 w-4 md:h-6 md:w-6" />
+                <span className="inline text-[9px] md:text-[13px]">SAÍDA</span>
+              </Button>
+
+              <Button
+                type="submit"
+                form="report-detail-form"
+                className="h-12 md:h-14 bg-pmpa-navy hover:bg-pmpa-navy/90 text-white font-black text-lg shadow-lg border-2 border-white/10 uppercase tracking-tight"
+              >
+                SALVAR
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

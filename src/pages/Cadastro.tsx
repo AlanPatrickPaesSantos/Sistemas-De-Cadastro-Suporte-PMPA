@@ -270,7 +270,7 @@ const Cadastro = () => {
                 title="Gerar Laudo Técnico para Impressão"
               >
                 <Printer className="h-4 w-4 md:h-6 md:w-6" />
-                <span className="hidden sm:inline">LAUDO</span>
+                <span className="inline text-[9px] md:text-[13px]">LAUDO</span>
               </Button>
 
               <Button
@@ -280,7 +280,7 @@ const Cadastro = () => {
                 title="Gerar Relatório de Saída"
               >
                 <Printer className="h-4 w-4 md:h-6 md:w-6" />
-                <span className="hidden sm:inline">SAÍDA</span>
+                <span className="inline text-[9px] md:text-[13px]">SAÍDA</span>
               </Button>
 
               <Button

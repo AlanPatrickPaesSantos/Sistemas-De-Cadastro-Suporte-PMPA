@@ -216,21 +216,21 @@ export const ConsultasSection = () => {
               <Button
                 variant="outline"
                 onClick={() => { setPrintType('laudo'); setTimeout(() => window.print(), 100); }}
-                className="h-12 md:h-14 gap-2 text-pmpa-navy border-pmpa-navy/30 hover:bg-pmpa-navy/5 font-bold text-[10px] md:text-[13px]"
+                className="h-12 md:h-14 gap-1 md:gap-2 text-pmpa-navy border-pmpa-navy/30 hover:bg-pmpa-navy/5 font-bold px-1"
                 title="Gerar Laudo Técnico para Impressão"
               >
-                <Printer className="h-5 w-5 md:h-6 md:w-6" />
-                <span className="hidden sm:inline">LAUDO</span>
+                <Printer className="h-4 w-4 md:h-5 md:w-5" />
+                <span className="inline text-[9px] md:text-[13px]">LAUDO</span>
               </Button>
 
               <Button
                 variant="outline"
                 onClick={() => { setPrintType('saida'); setTimeout(() => window.print(), 100); }}
-                className="h-12 md:h-14 gap-2 text-pmpa-navy border-pmpa-navy/30 hover:bg-pmpa-navy/5 font-bold text-[10px] md:text-[13px]"
+                className="h-12 md:h-14 gap-1 md:gap-2 text-pmpa-navy border-pmpa-navy/30 hover:bg-pmpa-navy/5 font-bold px-1"
                 title="Gerar Relatório de Saída"
               >
-                <Printer className="h-5 w-5 md:h-6 md:w-6" />
-                <span className="hidden sm:inline">SAÍDA</span>
+                <Printer className="h-4 w-4 md:h-5 md:w-5" />
+                <span className="inline text-[9px] md:text-[13px]">SAÍDA</span>
               </Button>
 
               <Button
