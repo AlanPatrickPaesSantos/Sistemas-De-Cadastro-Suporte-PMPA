@@ -55,6 +55,25 @@ export const RelatoriosSection = () => {
     }
   };
 
+  const loadDetail = async (item: any) => {
+    setIsLoading(true);
+    try {
+      const endpoint = activeReport === "Rel_Missao_Consolidado" ? "missoes" : "servicos";
+      const id = activeReport === "Rel_Missao_Consolidado" ? item.os : item.Id_cod;
+      const res = await fetch(`${API_BASE}/${endpoint}/${id}`);
+      if (res.ok) {
+        const fullData = await res.json();
+        setSelectedRecord(fullData);
+      } else {
+        setSelectedRecord(item);
+      }
+    } catch {
+      setSelectedRecord(item);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   const handlePrint = async () => {
     if (stats.total === 0) return;
@@ -275,10 +294,10 @@ export const RelatoriosSection = () => {
       </Card>
 
       <Dialog open={!!activeReport} onOpenChange={() => setActiveReport(null)}>
-        <DialogContent className="max-w-5xl max-h-[92vh] overflow-hidden flex flex-col p-6 border-border/50 shadow-2xl">
-          <DialogHeader className="sr-only">
-            <DialogTitle>Gerador de Relatórios</DialogTitle>
-            <DialogDescription>Visualize e imprima relatórios consolidados.</DialogDescription>
+        <DialogContent className="max-w-5xl w-[95vw] sm:w-full max-h-[92vh] overflow-hidden flex flex-col p-4 md:p-6 border-border/50 shadow-2xl">
+          <DialogHeader className="p-2 md:p-4 border-b border-border/50 bg-muted/20 rounded-t-lg">
+            <DialogTitle className="text-xl md:text-2xl font-black text-pmpa-navy uppercase">Gerador de Relatórios</DialogTitle>
+            <DialogDescription className="text-xs md:text-sm">Visualize e imprima relatórios consolidados do sistema DITEL.</DialogDescription>
           </DialogHeader>
 
           <div className="flex-1 overflow-hidden flex flex-col gap-4">
@@ -333,17 +352,17 @@ export const RelatoriosSection = () => {
             )}
 
             {/* Lista de Resultados */}
-            <div className="flex-1 overflow-y-auto border border-border/40 rounded-lg divide-y divide-border/40 custom-scrollbar print:hidden shadow-inner bg-muted/10">
+            <div className="flex-1 overflow-y-auto border border-border/40 rounded-lg divide-y divide-border/40 custom-scrollbar print:hidden shadow-inner bg-card">
               {results.length === 0 && !isLoading && (
                 <div className="flex flex-col items-center justify-center py-20 text-muted-foreground gap-3">
                   <FileText className="h-12 w-12 opacity-10" />
-                  <p className="font-bold text-sm uppercase tracking-widest">Nenhum dado carregado para este período.</p>
+                  <p className="font-bold text-xs uppercase tracking-widest text-center px-4">Nenhum dado carregado para este período.</p>
                 </div>
               )}
               {Array.isArray(results) && results.filter(Boolean).map((item, index) => (
                 <button 
                   key={item._id || `report-item-${index}`}
-                  onClick={() => setSelectedRecord(item)}
+                  onClick={() => loadDetail(item)}
                   className="w-full text-left p-4 hover:bg-primary/5 transition-colors group flex items-center justify-between"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1">
@@ -386,13 +405,16 @@ export const RelatoriosSection = () => {
 
       {/* Modal de Detalhes */}
       <Dialog open={!!selectedRecord} onOpenChange={() => setSelectedRecord(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col p-0 border-border/50 shadow-2xl">
-          <div className="p-6 pb-4 border-b border-border background-muted/20 flex flex-col justify-center">
-            <h2 className="text-2xl font-black text-foreground uppercase tracking-tight">
-              {activeReport === "Rel_Missao_Consolidado" ? `Missão OS #${selectedRecord?.os}` : `Equipamento #${selectedRecord?.Id_cod}`}
-            </h2>
-          </div>
-          <div className="p-6 flex-1 overflow-hidden">
+        <DialogContent className="max-w-4xl w-[95vw] sm:w-full max-h-[92vh] overflow-hidden flex flex-col p-0 border-border/50 shadow-2xl">
+          <DialogHeader className="p-4 md:p-6 pb-2 border-b border-border/50 bg-pmpa-navy/5">
+            <DialogTitle className="text-xl md:text-2xl font-black text-pmpa-navy uppercase tracking-tight">
+              {activeReport === "Rel_Missao_Consolidado" ? `Missão OS #${selectedRecord ? String(selectedRecord.os) : ""}` : `Equipamento #${selectedRecord ? String(selectedRecord.Id_cod) : ""}`}
+            </DialogTitle>
+            <DialogDescription className="text-xs md:text-sm">
+              Detalhamento técnico do registro selecionado no relatório.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="p-4 md:p-6 flex-1 overflow-y-auto">
             {activeReport === "Rel_Missao_Consolidado" ? (
               <ServicoInternoExternoForm initialData={selectedRecord} onCancel={() => setSelectedRecord(null)} onSubmit={() => setSelectedRecord(null)} />
             ) : (

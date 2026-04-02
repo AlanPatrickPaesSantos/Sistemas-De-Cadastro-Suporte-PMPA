@@ -61,10 +61,42 @@ export const ServicoInternoExternoForm = ({
 
   useEffect(() => {
     if (initialData) {
-      reset(initialData);
+      const fmtDate = (d: any) => {
+        if (!d) return "";
+        const date = new Date(d);
+        return isNaN(date.getTime()) ? "" : date.toISOString().split('T')[0];
+      };
+
+      reset({
+        os: String(initialData.os || initialData.Id_cod || ""),
+        secao: initialData.secao || initialData.Seção_Ditel || initialData.Seção || initialData.Secao || "",
+        unidade: initialData.unidade || initialData.Unidade || "",
+        data: fmtDate(initialData.data || initialData.Data_Ent || initialData.Data),
+        tecnicos: initialData.tecnicos || initialData.Tecnico || initialData.Técnicos || initialData.Técnico || "",
+        def_recla: initialData.def_recla || initialData.Defeito_Recl || initialData.Defeito || "",
+        solicitante: initialData.solicitante || initialData.Solicitante || "",
+        n_pae: initialData.n_pae || initialData.Nº_PAE || "",
+        servico: initialData.servico || initialData.Serviço || "",
+        analise: initialData.analise || initialData.Analise_Tecnica || initialData.Analise || "",
+        observacao: initialData.observacao || initialData.Observaçoes || initialData.Observacao || "",
+        solucao: initialData.solucao || initialData.Solução || initialData.Solucao || initialData.Soluçao || "",
+      });
     } else {
-      reset({});
-      // Fetch próxima OS apenas quando for um registro novo
+      reset({
+        os: "",
+        secao: "",
+        unidade: "",
+        data: new Date().toISOString().split('T')[0],
+        tecnicos: "",
+        def_recla: "",
+        solicitante: "",
+        n_pae: "",
+        servico: "",
+        analise: "",
+        observacao: "",
+        solucao: "",
+      });
+      
       const fetchNextOs = async () => {
         try {
           const res = await fetch(`${API_BASE}/missoes/next-os`);
@@ -74,10 +106,6 @@ export const ServicoInternoExternoForm = ({
           console.error("Erro ao puxar próxima OS", err);
         }
       };
-      
-      const today = new Date().toISOString().split('T')[0];
-      
-      setValue("data", today);
       
       fetchNextOs();
     }
