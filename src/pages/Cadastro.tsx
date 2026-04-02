@@ -21,6 +21,7 @@ const Cadastro = () => {
   const [printType, setPrintType] = useState<'laudo' | 'saida'>('laudo');
   const [isNavLoading, setIsNavLoading] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [novoFormKey, setNovoFormKey] = useState(0);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -102,7 +103,8 @@ const Cadastro = () => {
       const result = await res.json();
       if (result.success) {
         toast.success(`✅ Equipamento cadastrado! OS nº ${result.os}`);
-        // Limpa o registro selecionado para resetar o formulário e permitir um novo cadastro imediato
+        // Força a limpeza profunda resetando a chave do componente
+        setNovoFormKey(prev => prev + 1);
         setSelectedRecord(null);
       } else {
         toast.error("Erro ao salvar: " + (result.error || "Tente novamente."));
@@ -169,6 +171,7 @@ const Cadastro = () => {
         <div className="bg-card rounded-lg shadow-[var(--shadow-card)] border border-border p-4 mb-4">
           <div className="mb-4">
             <CadastroForm
+              key={novoFormKey}
               id="novo-form"
               onSubmit={handleSubmit}
               onCancel={() => navigate("/")}
