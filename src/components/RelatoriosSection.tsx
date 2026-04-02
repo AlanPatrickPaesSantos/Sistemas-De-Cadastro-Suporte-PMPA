@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Calendar, Settings, ChevronRight, Loader2, Search, X, Activity, Printer } from "lucide-react";
+import { FileText, Calendar, Settings, ChevronRight, Loader2, Search, X, Activity, Printer, Wrench } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -48,22 +48,35 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
   const handleGenerateReportFromParams = async (start: string, end: string) => {
     setIsLoading(true);
     try {
-      const countUrl = `${API_BASE}/missoes/count?startDate=${start}&endDate=${end}`;
+      const isMissions = activeReport === "Rel_Missao_Consolidado";
+      const endpoint = isMissions ? "missoes" : "servicos";
+      const statusParam = isMissions ? "" : "&status=PENDENTE";
+
+      const countUrl = `${API_BASE}/${endpoint}/count?startDate=${start}&endDate=${end}${statusParam}`;
       const countResp = await fetch(countUrl);
       const exactStats = await countResp.json();
 
-      const listUrl = `${API_BASE}/missoes?startDate=${start}&endDate=${end}`;
+      const listUrl = `${API_BASE}/${endpoint}?startDate=${start}&endDate=${end}${statusParam}`;
       const listResp = await fetch(listUrl);
       const data = await listResp.json();
       
       setResults(Array.isArray(data) ? data : []);
-      setStats({
-        total: exactStats?.total || 0,
-        interno: exactStats?.interno || 0,
-        externo: exactStats?.externo || 0,
-        remoto: exactStats?.remoto || 0,
-        pendente: exactStats?.pendente || 0,
-      });
+      
+      if (isMissions) {
+        setStats({
+          total: exactStats?.total || 0,
+          interno: exactStats?.interno || 0,
+          externo: exactStats?.externo || 0,
+          remoto: exactStats?.remoto || 0,
+          pendente: exactStats?.pendente || 0,
+        });
+      } else {
+        // Para manutenção, mapeamos o count simples para o total
+        setStats({
+          total: exactStats?.count || 0,
+          interno: 0, externo: 0, remoto: 0, pendente: exactStats?.count || 0
+        });
+      }
     } catch (error) {
       console.error("Erro no gatilho automático:", error);
     } finally {
@@ -74,31 +87,37 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
   const handleGenerateReport = async () => {
     setIsLoading(true);
     try {
-      // Usa rota de contagem EXATA para missões (sem limite)
-      const countUrl = `${API_BASE}/missoes/count?startDate=${filters.startDate}&endDate=${filters.endDate}`;
+      const isMissions = activeReport === "Rel_Missao_Consolidado";
+      const endpoint = isMissions ? "missoes" : "servicos";
+      const statusParam = isMissions ? "" : "&status=PENDENTE";
+
+      // Usa rota de contagem EXATA
+      const countUrl = `${API_BASE}/${endpoint}/count?startDate=${filters.startDate}&endDate=${filters.endDate}${statusParam}`;
       const countResp = await fetch(countUrl);
       if (!countResp.ok) throw new Error("Erro na resposta do servidor");
       const exactStats = await countResp.json();
 
-      // Também busca os primeiros registros para exibir na lista (até 500)
-      const listUrl = `${API_BASE}/missoes?startDate=${filters.startDate}&endDate=${filters.endDate}`;
+      // Também busca os registros para exibir na lista
+      const listUrl = `${API_BASE}/${endpoint}?startDate=${filters.startDate}&endDate=${filters.endDate}${statusParam}`;
       const listResp = await fetch(listUrl);
-      if (!listResp.ok) throw new Error("Erro ao buscar lista de missões");
+      if (!listResp.ok) throw new Error("Erro ao buscar registros");
       const data = await listResp.json();
       setResults(Array.isArray(data) ? data : []);
 
-      if (exactStats.total === 0) {
-        alert("Nenhuma missão encontrada para este período.");
+      if (isMissions) {
+        setStats({
+          total: exactStats?.total || 0,
+          interno: exactStats?.interno || 0,
+          externo: exactStats?.externo || 0,
+          remoto: exactStats?.remoto || 0,
+          pendente: exactStats?.pendente || 0,
+        });
+      } else {
+        setStats({
+          total: exactStats?.count || 0,
+          interno: 0, externo: 0, remoto: 0, pendente: exactStats?.count || 0
+        });
       }
-
-      // Usa contagens EXATAS do banco (não calcula pelo array que pode estar limitado)
-      setStats({
-        total: exactStats?.total || 0,
-        interno: exactStats?.interno || 0,
-        externo: exactStats?.externo || 0,
-        remoto: exactStats?.remoto || 0,
-        pendente: exactStats?.pendente || 0,
-      });
     } catch (error) {
       console.error("Erro ao gerar relatório:", error);
       alert("Houve um erro ao conectar com o servidor. Por favor, tente novamente.");
@@ -321,6 +340,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           <div className="space-y-3">
             {[
               { icon: Activity, id: "Rel_Missao_Consolidado", title: "Consolidado Missões", desc: "Relatório de serviços Int/Ext" },
+              { icon: Wrench, id: "Rel_Manutencao_Pendente", title: "Manutenções Pendentes", desc: "Lista de equipamentos em manutenção" },
             ].map((item) => (
               <Button 
                 key={item.id}

@@ -96,7 +96,11 @@ const Index = () => {
               onClick={() => {
                 const now = new Date();
                 const yearStart = `${now.getFullYear()}-01-01`;
-                navigate(`/cadastro?status=PENDENTE&startDate=${yearStart}`);
+                const yearEnd = `${now.getFullYear()}-12-31`; // Até o fim do ano
+                setExternalReportTrigger({ 
+                  id: "Rel_Manutencao_Pendente", 
+                  dateRange: { start: yearStart, end: yearEnd } 
+                });
               }}
               className="group bg-card border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all relative overflow-hidden cursor-pointer hover:border-pmpa-red/30 active:scale-[0.98]"
             >
