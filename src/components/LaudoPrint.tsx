@@ -77,7 +77,7 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
       </div>
 
       {/* Row 2: Grid Info */}
-      <div className="grid grid-cols-6 gap-4 mb-4 font-bold uppercase text-[9px] border-b border-black pb-1">
+      <div className="grid grid-cols-6 gap-4 mb-2 font-bold uppercase text-[9px]">
         <div>Unidade</div>
         <div>Nº PAE</div>
         <div>RP/PM</div>
