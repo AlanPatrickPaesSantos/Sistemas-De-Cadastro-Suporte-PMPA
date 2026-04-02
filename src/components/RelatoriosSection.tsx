@@ -173,10 +173,10 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           .logo { width: 60px; height: 60px; object-fit: contain; }
           .header-text { text-align: center; flex: 1; font-weight: bold; text-transform: uppercase; font-size: 8.5pt; line-height: 1.4; }
           .header-text .ditel { font-size: 11pt; }
-          .doc-title { text-align: center; font-weight: 900; text-transform: uppercase; text-decoration: underline; font-size: 11pt; margin: 8px 0; }
+          .doc-title { text-align: center; font-weight: 900; text-transform: uppercase; font-size: 11pt; margin: 8px 0; }
           .meta { display: flex; justify-content: space-between; font-size: 8pt; font-weight: bold; border-bottom: 1px dotted black; padding-bottom: 4px; margin-bottom: 8px; }
           section { margin-bottom: 10px; }
-          .section-title { font-size: 9pt; font-weight: 900; text-transform: uppercase; border-bottom: 1px solid black; margin-bottom: 5px; padding-bottom: 2px; letter-spacing: 0.5px; }
+          .section-title { font-size: 9pt; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; padding-bottom: 2px; letter-spacing: 0.5px; }
           table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
           th, td { border: 1px solid black; padding: 4px 8px; font-size: 8.5pt; text-align: center; }
           th { background-color: #e8e8e8; font-weight: 900; text-transform: uppercase; font-size: 8pt; }

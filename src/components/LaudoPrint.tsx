@@ -97,16 +97,16 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
       {/* Defeitos */}
       <div className="space-y-3 flex-1 mb-2">
         <div>
-          <h3 className="font-bold underline uppercase mb-1">Defeito Reclamado:</h3>
+          <h3 className="font-bold uppercase mb-1">Defeito Reclamado:</h3>
           <p className="min-h-[2rem]">{data.Defeito_Recl || 'Não informado.'}</p>
         </div>
         <div>
-          <h3 className="font-bold underline uppercase mb-1">Defeito Constatado / Análise Técnica:</h3>
+          <h3 className="font-bold uppercase mb-1">Defeito Constatado / Análise Técnica:</h3>
           <p className="min-h-[2rem]">{data.Analise_Tecnica || 'Sob análise.'}</p>
         </div>
         {type === 'laudo' && (
           <div>
-            <h3 className="font-bold underline uppercase mb-1">Laudo Técnico:</h3>
+            <h3 className="font-bold uppercase mb-1">Laudo Técnico:</h3>
             <p className="min-h-[2rem] font-medium">{data.Laudo_Tecnico}</p>
           </div>
         )}
