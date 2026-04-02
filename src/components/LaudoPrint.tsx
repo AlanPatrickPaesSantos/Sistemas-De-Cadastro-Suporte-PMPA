@@ -56,7 +56,7 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
       {/* Logos and Header */}
       <div className="flex justify-between items-start mb-4 relative">
         <div className="w-24 flex justify-start">
-          <img src="/pmpa-brasao.webp" alt="Logo PMPA" className="w-16 h-auto opacity-90 object-contain mix-blend-multiply" />
+          <img src="/logo-pmpa.png" alt="Logo PMPA" className="w-[70px] h-auto object-contain" />
         </div>
         <div className="text-center flex-1 font-bold uppercase space-y-0.5 text-[9px]">
           <p>Governo do Estado do Pará</p>
@@ -69,7 +69,7 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
           </h2>
         </div>
         <div className="w-24 flex justify-end">
-          <img src="/Logo Ditel.jpeg" alt="Logo DITEL" className="w-24 h-auto object-contain mix-blend-multiply translate-x-4 -translate-y-1" />
+          <img src="/Logo Ditel.jpeg" alt="Logo DITEL" className="w-28 h-auto object-contain translate-x-4 -translate-y-1" />
         </div>
       </div>
 

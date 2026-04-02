@@ -9,7 +9,7 @@ export const Header = () => {
       <div className="w-full flex h-[70px] md:h-[90px] items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-2 md:gap-3">
           <div className="translate-y-[2px] md:translate-y-[4px] flex items-center justify-center transition-all hover:scale-105">
-            <img src="/pmpa-brasao.webp" alt="Brasão PMPA" className="h-[50px] md:h-[80px] w-auto object-contain" />
+            <img src="/logo-pmpa.png" alt="Brasão PMPA" className="h-[50px] md:h-[80px] w-auto object-contain" />
           </div>
           <div className="flex flex-col justify-center -translate-y-[2px] md:-translate-y-[5px]">
             <h1 className="text-xl md:text-3xl font-extrabold tracking-tight text-pmpa-navy dark:text-white uppercase leading-none mb-0.5 md:mb-1">

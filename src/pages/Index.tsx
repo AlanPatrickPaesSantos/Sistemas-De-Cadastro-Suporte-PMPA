@@ -63,7 +63,7 @@ const Index = () => {
       <main className="container flex-1 px-6 pt-2 pb-4 relative">
         {/* Background Watermark */}
         <div className="absolute bottom-10 right-10 opacity-[0.03] pointer-events-none z-0">
-          <img src="/pmpa-brasao.webp" alt="PMPA Watermark" className="w-[450px] h-auto grayscale" />
+          <img src="/logo-pmpa.png" alt="PMPA Watermark" className="w-[450px] h-auto grayscale" />
         </div>
 
         <div className="relative z-10">
