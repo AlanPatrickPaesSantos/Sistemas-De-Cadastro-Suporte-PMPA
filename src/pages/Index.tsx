@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { NavigationCard } from "@/components/NavigationCard";
@@ -7,14 +7,50 @@ import { RelatoriosSection } from "@/components/RelatoriosSection";
 import { EqSuporteDialog } from "@/components/EqSuporteDialog";
 import { EqTelecomDialog } from "@/components/EqTelecomDialog";
 import { EqUnidadeDialog } from "@/components/EqUnidadeDialog";
-import { Database, Headphones, Phone, Building, Server, Shield, Wrench, Activity } from "lucide-react";
+import { Database, Headphones, Phone, Building, Server, Shield, Wrench, Activity, Loader2 } from "lucide-react";
 import pmpaBrasao from "@/assets/pmpa-brasao.png";
+import { API_BASE } from "@/lib/api-config";
+import { toast } from "sonner";
 
 const Index = () => {
   const navigate = useNavigate();
   const [eqSuporteOpen, setEqSuporteOpen] = useState(false);
   const [eqTelecomOpen, setEqTelecomOpen] = useState(false);
   const [eqUnidadeOpen, setEqUnidadeOpen] = useState(false);
+  const [stats, setStats] = useState({ maintenance: 0, missions: 0 });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        const now = new Date();
+        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+        const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+
+        // Busca Manutenções (Pendentes)
+        const [servResp, missResp] = await Promise.all([
+          fetch(`${API_BASE}/servicos/count?status=PENDENTE`),
+          fetch(`${API_BASE}/missoes/count?startDate=${firstDay}&endDate=${lastDay}`)
+        ]);
+
+        if (servResp.ok && missResp.ok) {
+          const servData = await servResp.json();
+          const missData = await missResp.json();
+          setStats({
+            maintenance: servData.count || 0,
+            missions: missData.total || 0
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao buscar estatísticas:", error);
+        toast.error("Erro ao carregar dados do dashboard.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardStats();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -54,7 +90,10 @@ const Index = () => {
           {/* Dashbaord Widgets */}
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             {/* Widget 1: Manutenção */}
-            <div className="group bg-card border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+            <div 
+              onClick={() => navigate("/cadastro")}
+              className="group bg-card border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all relative overflow-hidden cursor-pointer hover:border-pmpa-red/30 active:scale-[0.98]"
+            >
               <div className="absolute right-[-16px] bottom-[-16px] opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-500 pointer-events-none">
                 <Wrench className="w-32 h-32 text-pmpa-red" />
               </div>
@@ -66,14 +105,19 @@ const Index = () => {
                   <span className="text-xs font-semibold text-pmpa-red bg-pmpa-red/10 px-3 py-1 rounded-full">Atual</span>
                 </div>
                 <div>
-                  <p className="text-4xl font-black text-pmpa-navy dark:text-white mb-2">12</p>
+                  <p className="text-4xl font-black text-pmpa-navy dark:text-white mb-2 flex items-center gap-2">
+                    {isLoading ? <Loader2 className="h-8 w-8 animate-spin text-pmpa-red/30" /> : stats.maintenance}
+                  </p>
                   <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Equipamentos em Manutenção</p>
                 </div>
               </div>
             </div>
 
             {/* Widget 2: Serviços Int/Ext Mês */}
-            <div className="group bg-card border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+            <div 
+              onClick={() => navigate("/servico-interno-externo")}
+              className="group bg-card border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all relative overflow-hidden cursor-pointer hover:border-pmpa-navy/30 active:scale-[0.98]"
+            >
               <div className="absolute right-[-16px] bottom-[-16px] opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-500 pointer-events-none">
                 <Activity className="w-32 h-32 text-pmpa-navy" />
               </div>
@@ -85,7 +129,9 @@ const Index = () => {
                   <span className="text-xs font-semibold text-pmpa-navy bg-pmpa-navy/10 px-3 py-1 rounded-full">Neste Mês</span>
                 </div>
                 <div>
-                  <p className="text-4xl font-black text-pmpa-navy dark:text-white mb-2">45</p>
+                  <p className="text-4xl font-black text-pmpa-navy dark:text-white mb-2 flex items-center gap-2">
+                    {isLoading ? <Loader2 className="h-8 w-8 animate-spin text-pmpa-navy/30" /> : stats.missions}
+                  </p>
                   <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Serviços Int/Ext Realizados</p>
                 </div>
               </div>
