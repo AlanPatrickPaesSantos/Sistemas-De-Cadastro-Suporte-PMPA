@@ -29,6 +29,23 @@ app.get('/api/status', (req, res) => {
   res.json({ status: 'Rodando', database: mongoose.connection.readyState === 1 ? 'Conectado' : 'Desconectado' });
 });
 
+// [ADMIN TEMPORÁRIO] Rota para limpeza de registros de teste superiores a 2692
+app.get('/api/admin/cleanup-tests', async (req, res) => {
+  try {
+    const resServico = await Servico.deleteMany({ Id_cod: { $gt: 2692 } });
+    const resMissao = await Missao.deleteMany({ os: { $gt: 2692 } });
+    res.json({ 
+      success: true, 
+      message: 'Faxina DITEL concluída com sucesso!',
+      removidosServicos: resServico.deletedCount,
+      removidosMissoes: resMissao.deletedCount,
+      novaUltimaOS: 2692
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // ====== ROTA DE AUTENTICAÇÃO ======
 app.post('/api/auth/login', async (req, res) => {
   try {
