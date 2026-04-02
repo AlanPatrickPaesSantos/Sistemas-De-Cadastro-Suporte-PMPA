@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeft, Search, Loader2, FileText, ChevronLeft, ChevronRight, Printer } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { LaudoPrint } from "@/components/LaudoPrint";
+import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const Cadastro = () => {
@@ -17,9 +18,39 @@ const Cadastro = () => {
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNext, setHasNext] = useState(false);
+  const [searchParams] = useSearchParams();
   const [printType, setPrintType] = useState<'laudo' | 'saida'>('laudo');
   const [isNavLoading, setIsNavLoading] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  // Busca automática via URL (ex: Dashboard)
+  useEffect(() => {
+    const statusParam = searchParams.get("status");
+    const startDateParam = searchParams.get("startDate");
+
+    if (statusParam || startDateParam) {
+      const autoFetch = async () => {
+        setIsLoading(true);
+        try {
+          const url = new URL(`${API_BASE}/servicos`);
+          if (statusParam) url.searchParams.append("status", statusParam);
+          if (startDateParam) url.searchParams.append("startDate", startDateParam);
+          
+          const response = await fetch(url.toString());
+          const data = await response.json();
+          setResults(data);
+          if (data.length > 0) {
+            toast.info(`🛒 Exibindo ${data.length} equipamentos encontrados.`);
+          }
+        } catch (error) {
+          console.error("Erro na busca automática:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      autoFetch();
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchResults = async () => {

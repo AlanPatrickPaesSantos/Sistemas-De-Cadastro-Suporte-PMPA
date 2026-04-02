@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, Calendar, Settings, ChevronRight, Loader2, Search, X, Activity, Printer } from "lucide-react";
@@ -12,7 +12,12 @@ import { LaudoPrint } from "./LaudoPrint";
 // Removido import de RelatorioMissaoPrint para usar janela isolada
 
 
-export const RelatoriosSection = () => {
+interface RelatoriosSectionProps {
+  externalTrigger?: { id: string; dateRange?: { start: string; end: string } } | null;
+  onTriggerClean?: () => void;
+}
+
+export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: RelatoriosSectionProps) => {
   const [activeReport, setActiveReport] = useState<string | null>(null);
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +26,50 @@ export const RelatoriosSection = () => {
   const [stats, setStats] = useState({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0 });
 
   const [printType, setPrintType] = useState<'laudo' | 'saida'>('laudo');
+
+  // Gatilho Externo (vido do Dashboard)
+  useEffect(() => {
+    if (externalTrigger && externalTrigger.id === "Rel_Missao_Consolidado") {
+      const start = externalTrigger.dateRange?.start || "";
+      const end = externalTrigger.dateRange?.end || "";
+      
+      setFilters({ startDate: start, endDate: end });
+      setActiveReport(externalTrigger.id);
+      
+      // Pequeno delay para garantir que os estados foram aplicados antes da busca
+      setTimeout(() => {
+        handleGenerateReportFromParams(start, end);
+      }, 100);
+      
+      onTriggerClean?.();
+    }
+  }, [externalTrigger]);
+
+  const handleGenerateReportFromParams = async (start: string, end: string) => {
+    setIsLoading(true);
+    try {
+      const countUrl = `${API_BASE}/missoes/count?startDate=${start}&endDate=${end}`;
+      const countResp = await fetch(countUrl);
+      const exactStats = await countResp.json();
+
+      const listUrl = `${API_BASE}/missoes?startDate=${start}&endDate=${end}`;
+      const listResp = await fetch(listUrl);
+      const data = await listResp.json();
+      
+      setResults(Array.isArray(data) ? data : []);
+      setStats({
+        total: exactStats?.total || 0,
+        interno: exactStats?.interno || 0,
+        externo: exactStats?.externo || 0,
+        remoto: exactStats?.remoto || 0,
+        pendente: exactStats?.pendente || 0,
+      });
+    } catch (error) {
+      console.error("Erro no gatilho automático:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   const handleGenerateReport = async () => {
     setIsLoading(true);

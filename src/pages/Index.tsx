@@ -19,6 +19,7 @@ const Index = () => {
   const [eqUnidadeOpen, setEqUnidadeOpen] = useState(false);
   const [stats, setStats] = useState({ maintenance: 0, missions: 0 });
   const [isLoading, setIsLoading] = useState(true);
+  const [externalReportTrigger, setExternalReportTrigger] = useState<{ id: string; dateRange?: { start: string; end: string } } | null>(null);
 
   useEffect(() => {
     const fetchDashboardStats = async () => {
@@ -92,7 +93,11 @@ const Index = () => {
           <div className="grid sm:grid-cols-2 gap-4 mb-4">
             {/* Widget 1: Manutenção */}
             <div 
-              onClick={() => navigate("/cadastro")}
+              onClick={() => {
+                const now = new Date();
+                const yearStart = `${now.getFullYear()}-01-01`;
+                navigate(`/cadastro?status=PENDENTE&startDate=${yearStart}`);
+              }}
               className="group bg-card border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all relative overflow-hidden cursor-pointer hover:border-pmpa-red/30 active:scale-[0.98]"
             >
               <div className="absolute right-[-16px] bottom-[-16px] opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-500 pointer-events-none">
@@ -116,7 +121,15 @@ const Index = () => {
 
             {/* Widget 2: Serviços Int/Ext Mês */}
             <div 
-              onClick={() => navigate("/servico-interno-externo")}
+              onClick={() => {
+                const now = new Date();
+                const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+                const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+                setExternalReportTrigger({ 
+                  id: "Rel_Missao_Consolidado", 
+                  dateRange: { start: firstDay, end: lastDay } 
+                });
+              }}
               className="group bg-card border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all relative overflow-hidden cursor-pointer hover:border-pmpa-navy/30 active:scale-[0.98]"
             >
               <div className="absolute right-[-16px] bottom-[-16px] opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-500 pointer-events-none">
@@ -142,7 +155,7 @@ const Index = () => {
           {/* Main Content Grid */}
           <div className="grid lg:grid-cols-2 gap-4">
             <ConsultasSection />
-            <RelatoriosSection />
+            <RelatoriosSection externalTrigger={externalReportTrigger} onTriggerClean={() => setExternalReportTrigger(null)} />
           </div>
         </div>
       </main>
