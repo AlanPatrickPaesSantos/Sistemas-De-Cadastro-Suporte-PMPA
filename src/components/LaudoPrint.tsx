@@ -26,7 +26,7 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
     try {
       // Se já estiver no formato brasileiro DD/MM/AAAA, retorna direto
       if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) return dateStr;
-      
+
       const date = new Date(dateStr);
       if (isNaN(date.getTime())) return dateStr;
 
@@ -34,7 +34,7 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
       const day = String(date.getUTCDate()).padStart(2, '0');
       const month = String(date.getUTCMonth() + 1).padStart(2, '0');
       const year = date.getUTCFullYear();
-      
+
       return `${day}/${month}/${year}`;
     } catch {
       return dateStr;
@@ -64,14 +64,14 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
           <p>Polícia Militar do Pará</p>
           <p>Departamento Geral de Administração</p>
           <p className="text-[10px] mt-1">Diretoria de Telemática</p>
-          <h2 className="text-sm mt-[10cm] font-black tracking-wide">
+          <h2 className="text-sm mt-6 font-black tracking-wide">
             {type === 'saida' ? 'RELATÓRIO DE SAÍDA DE EQUIPAMENTO' : 'RELATÓRIO DE LAUDO TÉCNICO'}
           </h2>
         </div>
         <div className="w-32 flex justify-end translate-x-2">
-          <img 
-            src="/Logo Ditel.jpeg" 
-            alt="Logo DITEL" 
+          <img
+            src="/Logo Ditel.jpeg"
+            alt="Logo DITEL"
             style={{ height: '85px', width: 'auto', objectFit: 'contain', imageRendering: '-webkit-optimize-contrast' }}
           />
         </div>
