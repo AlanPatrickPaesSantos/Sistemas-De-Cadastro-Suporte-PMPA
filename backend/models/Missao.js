@@ -3,14 +3,14 @@ const mongoose = require('mongoose');
 const MissaoSchema = new mongoose.Schema({
   os: { type: Number, unique: true },
   secao: String,
-  unidade: String,
+  unidade: { type: String, index: true },
   data: String,
   horario: String,
   tecnicos: String,
   def_recla: String,
-  solicitante: String,
+  solicitante: { type: String, index: true },
   n_pae: String,
-  servico: String,
+  servico: { type: String, index: true },
   analise: String,
   observacao: String,
   solucao: String

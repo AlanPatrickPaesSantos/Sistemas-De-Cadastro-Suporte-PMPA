@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { NavigationCard } from "@/components/NavigationCard";
 import { ConsultasSection } from "@/components/ConsultasSection";
-import { RelatoriosSection } from "@/components/RelatoriosSection";
-import { EqSuporteDialog } from "@/components/EqSuporteDialog";
-import { EqTelecomDialog } from "@/components/EqTelecomDialog";
-import { EqUnidadeDialog } from "@/components/EqUnidadeDialog";
+// Lazy load components that are not needed immediately
+const RelatoriosSection = lazy(() => import("@/components/RelatoriosSection").then(m => ({ default: m.RelatoriosSection })));
+const EqSuporteDialog = lazy(() => import("@/components/EqSuporteDialog").then(m => ({ default: m.EqSuporteDialog })));
+const EqTelecomDialog = lazy(() => import("@/components/EqTelecomDialog").then(m => ({ default: m.EqTelecomDialog })));
+const EqUnidadeDialog = lazy(() => import("@/components/EqUnidadeDialog").then(m => ({ default: m.EqUnidadeDialog })));
+
 import { Database, Headphones, Phone, Building, Server, Shield, Wrench, Activity, Loader2 } from "lucide-react";
-import pmpaBrasao from "@/assets/pmpa-brasao.png";
 import { API_BASE } from "@/lib/api-config";
 import { toast } from "sonner";
 
@@ -62,7 +63,7 @@ const Index = () => {
       <main className="container flex-1 px-6 pt-2 pb-4 relative">
         {/* Background Watermark */}
         <div className="absolute bottom-10 right-10 opacity-[0.03] pointer-events-none z-0">
-          <img src={pmpaBrasao} alt="PMPA Watermark" className="w-[450px] h-auto grayscale" />
+          <img src="/pmpa-brasao.webp" alt="PMPA Watermark" className="w-[450px] h-auto grayscale" />
         </div>
 
         <div className="relative z-10">
@@ -159,7 +160,13 @@ const Index = () => {
           {/* Main Content Grid */}
           <div className="grid lg:grid-cols-2 gap-4">
             <ConsultasSection />
-            <RelatoriosSection externalTrigger={externalReportTrigger} onTriggerClean={() => setExternalReportTrigger(null)} />
+            <Suspense fallback={
+              <div className="flex items-center justify-center p-12 bg-card border border-border/60 rounded-2xl animate-pulse">
+                <Loader2 className="h-8 w-8 animate-spin text-pmpa-navy/20" />
+              </div>
+            }>
+              <RelatoriosSection externalTrigger={externalReportTrigger} onTriggerClean={() => setExternalReportTrigger(null)} />
+            </Suspense>
           </div>
         </div>
       </main>
@@ -182,9 +189,11 @@ const Index = () => {
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-pmpa-navy" />
       </footer>
 
-      <EqSuporteDialog open={eqSuporteOpen} onOpenChange={setEqSuporteOpen} />
-      <EqTelecomDialog open={eqTelecomOpen} onOpenChange={setEqTelecomOpen} />
-      <EqUnidadeDialog open={eqUnidadeOpen} onOpenChange={setEqUnidadeOpen} />
+      <Suspense fallback={null}>
+        <EqSuporteDialog open={eqSuporteOpen} onOpenChange={setEqSuporteOpen} />
+        <EqTelecomDialog open={eqTelecomOpen} onOpenChange={setEqTelecomOpen} />
+        <EqUnidadeDialog open={eqUnidadeOpen} onOpenChange={setEqUnidadeOpen} />
+      </Suspense>
     </div>
   );
 };
