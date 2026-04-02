@@ -90,7 +90,8 @@ app.get('/api/servicos', async (req, res) => {
     }
 
     if (status) {
-      query.Serviço = status;
+      // Busca insensível a maiúsculas/minúsculas para manter consistência com a rota de contagem
+      query.Serviço = { $regex: new RegExp(`^${status}$`, 'i') };
     }
 
     const servicos = await Servico.find(query).limit(50).sort({ Id_cod: -1 });

@@ -171,25 +171,36 @@ const Cadastro = () => {
             )}
           </div>
 
-          {/* Dropdown de Resultados */}
-          {/* Lista de Resultados Rápidos */}
+          {/* Dropdown de Resultados ou Lista Fixa se filtrado */}
           {Array.isArray(results) && results.length > 0 && (
-            <div className="absolute z-50 left-0 right-0 top-full mt-1 rounded-lg border border-border/40 bg-card shadow-lg overflow-hidden divide-y divide-border/20 max-h-[280px] overflow-y-auto">
+            <div className={`mt-1 rounded-xl border-2 border-primary/20 bg-card shadow-2xl overflow-hidden divide-y divide-border/20 max-h-[400px] overflow-y-auto mb-4 ${searchParams.get("status") ? "relative border-pmpa-red/30" : "absolute z-50 left-0 right-0 top-full"}`}>
+              <div className="bg-muted/30 px-4 py-2 flex justify-between items-center sticky top-0 z-10 backdrop-blur-sm border-b">
+                <span className="text-[10px] font-black uppercase tracking-tighter text-muted-foreground">
+                  {searchParams.get("status") ? "OS Pendentes Encontradas" : "Resultados da Pesquisa"} ({results.length})
+                </span>
+                {searchParams.get("status") && (
+                   <Button variant="ghost" size="sm" onClick={() => setResults([])} className="h-6 text-[10px] font-bold text-pmpa-red hover:bg-pmpa-red/10">LIMPAR</Button>
+                )}
+              </div>
               {results.map((item) => (
                 <button
                   key={item._id}
                   onClick={async () => { await loadRecord(item); }}
-                  className="w-full text-left px-4 py-3 hover:bg-primary/5 transition-colors group flex items-center justify-between"
+                  className="w-full text-left px-4 py-4 hover:bg-primary/5 transition-all group flex items-center justify-between border-l-4 border-transparent hover:border-primary"
                 >
-                  <div className="space-y-0.5">
-                    <p className="text-sm font-semibold text-foreground">
-                      ID: {item.Id_cod} — {item.T_EquipSuporte || item.T_EquipTelecom}
+                  <div className="space-y-1">
+                    <p className="text-sm font-black text-pmpa-navy dark:text-white flex items-center gap-2">
+                       <span className="bg-pmpa-navy/10 px-2 py-0.5 rounded text-[10px]">OS #{item.Id_cod}</span>
+                       {item.T_EquipSuporte || item.T_EquipTelecom}
                     </p>
-                    <p className="text-[11px] text-muted-foreground uppercase tracking-wider">
-                      {item.Unidade} | Série: {item.Nº_Serie}
+                    <p className="text-[11px] text-muted-foreground uppercase font-bold tracking-wide">
+                      {item.Unidade} <span className="mx-1 opacity-20">|</span> Série: {item.Nº_Serie} <span className="mx-1 opacity-20">|</span> Técnico: {item.Tecnico || 'N/A'}
                     </p>
                   </div>
-                  <FileText className="h-4 w-4 text-muted-foreground group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all" />
+                  <div className="flex flex-col items-end gap-1">
+                     <FileText className="h-5 w-5 text-pmpa-navy/30 group-hover:text-primary transition-all" />
+                     <span className="text-[9px] font-black text-pmpa-red">ABRIR FICHA</span>
+                  </div>
                 </button>
               ))}
             </div>
