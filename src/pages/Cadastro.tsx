@@ -43,19 +43,20 @@ const Cadastro = () => {
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Carrega um registro e verifica adjacentes
+  // Carrega um registro e verifica adjacentes (Turbo Mode)
   const loadRecord = async (item: any) => {
     try {
       const res = await fetch(`${API_BASE}/servicos/${item.Id_cod}`);
-      const fresh = await res.json();
-      setSelectedRecord(fresh);
-      const [prevRes, nextRes] = await Promise.all([
-        fetch(`${API_BASE}/servicos/${fresh.Id_cod}/prev`),
-        fetch(`${API_BASE}/servicos/${fresh.Id_cod}/next`),
-      ]);
-      setHasPrev(prevRes.ok);
-      setHasNext(nextRes.ok);
-    } catch {
+      if (!res.ok) throw new Error("Falha ao carregar registro");
+      
+      const data = await res.json();
+      if (!data || !data.record) throw new Error("Dados inválidos");
+
+      setSelectedRecord(data.record);
+      setHasPrev(data.hasPrev);
+      setHasNext(data.hasNext);
+    } catch (err) {
+      console.error("Erro ao carregar:", err);
       setSelectedRecord(item);
       setHasPrev(false);
       setHasNext(false);
@@ -65,7 +66,7 @@ const Cadastro = () => {
     setResults([]);
   };
 
-  // Navega para OS anterior ou próxima
+  // Navega para OS anterior ou próxima (Turbo Mode: Single Call)
   const navigateTo = async (direction: "prev" | "next") => {
     if (!selectedRecord || isNavLoading) return;
     setIsNavLoading(true);
@@ -73,17 +74,15 @@ const Cadastro = () => {
       const res = await fetch(`${API_BASE}/servicos/${selectedRecord.Id_cod}/${direction}`);
       if (!res.ok) throw new Error("Registro não encontrado");
       
-      const record = await res.json();
-      if (!record || !record.Id_cod) throw new Error("Dados inválidos");
+      const data = await res.json();
+      if (!data || !data.record) throw new Error("Dados inválidos");
 
-      const [prevRes, nextRes] = await Promise.all([
-        fetch(`${API_BASE}/servicos/${record.Id_cod}/prev`),
-        fetch(`${API_BASE}/servicos/${record.Id_cod}/next`),
-      ]);
-
-      setSelectedRecord(record);
-      setHasPrev(prevRes.ok);
-      setHasNext(nextRes.ok);
+      setSelectedRecord(data.record);
+      setHasPrev(data.hasPrev);
+      setHasNext(data.hasNext);
+      
+      // Feedback visual opcional: scroll suave para o topo do formulário se necessário
+      // window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       console.error("Erro ao navegar:", err);
       toast.error("Não há mais registros nesta direção.");

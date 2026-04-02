@@ -138,36 +138,55 @@ app.get('/api/servicos/next-os', async (req, res) => {
   }
 });
 
-// Get single record
+// Get single record with Navigation Flags (Turbo Mode)
 app.get('/api/servicos/:id', async (req, res) => {
   try {
-    const servico = await Servico.findOne({ Id_cod: parseInt(req.params.id) });
-    if (!servico) return res.status(404).json({ error: 'Registro não encontrado' });
-    res.json(servico);
+    const id_num = parseInt(req.params.id);
+    const record = await Servico.findOne({ Id_cod: id_num });
+    if (!record) return res.status(404).json({ error: 'Registro não encontrado' });
+
+    const [hasPrev, hasNext] = await Promise.all([
+      Servico.exists({ Id_cod: { $lt: id_num } }),
+      Servico.exists({ Id_cod: { $gt: id_num } })
+    ]);
+
+    res.json({ record, hasPrev: !!hasPrev, hasNext: !!hasNext });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Registro anterior (Id_cod imediatamente menor)
+// Registro anterior (Turbo Mode: Single Call)
 app.get('/api/servicos/:id/prev', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const prev = await Servico.findOne({ Id_cod: { $lt: id } }).sort({ Id_cod: -1 });
-    if (!prev) return res.status(404).json({ error: 'Sem registro anterior' });
-    res.json(prev);
+    const record = await Servico.findOne({ Id_cod: { $lt: id } }).sort({ Id_cod: -1 });
+    if (!record) return res.status(404).json({ error: 'Sem registro anterior' });
+
+    const [hasPrev, hasNext] = await Promise.all([
+      Servico.exists({ Id_cod: { $lt: record.Id_cod } }),
+      Servico.exists({ Id_cod: { $gt: record.Id_cod } })
+    ]);
+
+    res.json({ record, hasPrev: !!hasPrev, hasNext: !!hasNext });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Próximo registro (Id_cod imediatamente maior)
+// Próximo registro (Turbo Mode: Single Call)
 app.get('/api/servicos/:id/next', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const next = await Servico.findOne({ Id_cod: { $gt: id } }).sort({ Id_cod: 1 });
-    if (!next) return res.status(404).json({ error: 'Sem próximo registro' });
-    res.json(next);
+    const record = await Servico.findOne({ Id_cod: { $gt: id } }).sort({ Id_cod: 1 });
+    if (!record) return res.status(404).json({ error: 'Sem próximo registro' });
+
+    const [hasPrev, hasNext] = await Promise.all([
+      Servico.exists({ Id_cod: { $lt: record.Id_cod } }),
+      Servico.exists({ Id_cod: { $gt: record.Id_cod } })
+    ]);
+
+    res.json({ record, hasPrev: !!hasPrev, hasNext: !!hasNext });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

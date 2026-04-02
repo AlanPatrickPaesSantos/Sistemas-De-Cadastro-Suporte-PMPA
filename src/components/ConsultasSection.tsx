@@ -46,16 +46,16 @@ export const ConsultasSection = () => {
   const loadRecord = async (record: any) => {
     try {
       const res = await fetch(`${API_BASE}/servicos/${record.Id_cod}`);
-      const fresh = await res.json();
-      setSelectedRecord(fresh);
-      // Verifica se existem registros adjacentes
-      const [prevRes, nextRes] = await Promise.all([
-        fetch(`${API_BASE}/servicos/${fresh.Id_cod}/prev`),
-        fetch(`${API_BASE}/servicos/${fresh.Id_cod}/next`),
-      ]);
-      setHasPrev(prevRes.ok);
-      setHasNext(nextRes.ok);
-    } catch {
+      if (!res.ok) throw new Error("Erro ao carregar");
+      
+      const data = await res.json();
+      if (!data || !data.record) throw new Error("Dados inválidos");
+
+      setSelectedRecord(data.record);
+      setHasPrev(data.hasPrev);
+      setHasNext(data.hasNext);
+    } catch (err) {
+      console.error("Erro ao carregar:", err);
       setSelectedRecord(record);
       setHasPrev(false);
       setHasNext(false);
@@ -70,18 +70,12 @@ export const ConsultasSection = () => {
       const res = await fetch(`${API_BASE}/servicos/${selectedRecord.Id_cod}/${direction}`);
       if (!res.ok) throw new Error('Registro não encontrado');
       
-      const record = await res.json();
-      if (!record || !record.Id_cod) throw new Error('Dados inválidos recebidos');
+      const data = await res.json();
+      if (!data || !data.record) throw new Error('Dados inválidos recebidos');
 
-      // Verifica adjacentes para a NOVA os
-      const [prevRes, nextRes] = await Promise.all([
-        fetch(`${API_BASE}/servicos/${record.Id_cod}/prev`),
-        fetch(`${API_BASE}/servicos/${record.Id_cod}/next`),
-      ]);
-      
-      setSelectedRecord(record);
-      setHasPrev(prevRes.ok);
-      setHasNext(nextRes.ok);
+      setSelectedRecord(data.record);
+      setHasPrev(data.hasPrev);
+      setHasNext(data.hasNext);
     } catch (err) {
       console.error('Erro ao navegar:', err);
       toast.error('Não há mais registros nesta direção.');
