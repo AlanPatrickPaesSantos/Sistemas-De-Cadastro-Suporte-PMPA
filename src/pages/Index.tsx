@@ -24,12 +24,13 @@ const Index = () => {
     const fetchDashboardStats = async () => {
       try {
         const now = new Date();
+        const yearStart = `${now.getFullYear()}-01-01`;
         const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
         const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
 
-        // Busca Manutenções (Pendentes)
+        // Busca Manutenções (Pendentes desde o início do ano)
         const [servResp, missResp] = await Promise.all([
-          fetch(`${API_BASE}/servicos/count?status=PENDENTE`),
+          fetch(`${API_BASE}/servicos/count?status=PENDENTE&startDate=${yearStart}`),
           fetch(`${API_BASE}/missoes/count?startDate=${firstDay}&endDate=${lastDay}`)
         ]);
 
