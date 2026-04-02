@@ -68,7 +68,7 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
             {type === 'saida' ? 'RELATÓRIO DE SAÍDA DE EQUIPAMENTO' : 'RELATÓRIO DE LAUDO TÉCNICO'}
           </h2>
         </div>
-        <div className="w-32 flex justify-end translate-x-6">
+        <div className="w-32 flex justify-end translate-x-2">
           <img 
             src="/Logo Ditel.jpeg" 
             alt="Logo DITEL" 
