@@ -112,8 +112,8 @@ export const ServicoInternoExternoForm = ({
   }, [initialData, reset, setValue]);
 
   return (
-    <form id={id} onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full overflow-hidden">
-      <div className="flex-1 overflow-y-auto pr-3 space-y-4 custom-scrollbar px-1 py-1">
+    <form id={id} onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-1 py-1">
+      <div className="space-y-4">
         
         {/* Row 1: OS, Seção, Unidade */}
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-3 pt-1">

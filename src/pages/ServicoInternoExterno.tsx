@@ -119,8 +119,8 @@ const ServicoInternoExterno = () => {
           </div>
         )}
 
-        {/* Form Container */}
-        <div className="bg-card rounded-lg shadow-[var(--shadow-card)] border border-border p-3 flex-1 min-h-0 flex flex-col overflow-hidden">
+        {/* Form Container: Now wrapping content naturally */}
+        <div className="bg-card rounded-lg shadow-[var(--shadow-card)] border border-border p-4 md:p-6 mb-8">
           <ServicoInternoExternoForm 
             key={selectedRecord ? `edit-${selectedRecord.os}` : "new"}
             id="missao-form"
@@ -128,27 +128,28 @@ const ServicoInternoExterno = () => {
             onSubmit={handleSubmit}
             onCancel={() => navigate("/")}
           />
-        </div>
+          
+          {/* Action Buttons: Glued to the form bottom */}
+          <div className="mt-6 pt-6 border-t border-border/40 flex flex-col sm:flex-row gap-3 justify-end w-full">
+            <Button
+              variant="outline"
+              onClick={() => {
+                if (selectedRecord) setSelectedRecord(null);
+                else navigate("/");
+              }}
+              className="w-full sm:w-48 h-12 border-2 border-slate-200 text-slate-600 font-bold text-lg uppercase tracking-tight hover:bg-slate-50 order-last sm:order-first"
+            >
+              VOLTAR
+            </Button>
 
-        <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-end w-full mb-8">
-          <Button
-            variant="outline"
-            onClick={() => {
-              if (selectedRecord) setSelectedRecord(null);
-              else navigate("/");
-            }}
-            className="w-full sm:w-48 h-12 border-2 border-slate-200 text-slate-600 font-bold text-lg uppercase tracking-tight hover:bg-slate-50 order-last sm:order-first"
-          >
-            VOLTAR
-          </Button>
-
-          <Button
-            type="submit"
-            form="missao-form"
-            className="flex-1 md:max-w-[400px] h-12 bg-pmpa-navy hover:bg-pmpa-navy/90 text-white font-black text-lg shadow-lg border-2 border-white/10 uppercase tracking-tight"
-          >
-            {selectedRecord ? "ATUALIZAR MISSÃO" : "SALVAR MISSÃO"}
-          </Button>
+            <Button
+              type="submit"
+              form="missao-form"
+              className="flex-1 md:max-w-[400px] h-12 bg-pmpa-navy hover:bg-pmpa-navy/90 text-white font-black text-lg shadow-lg border-2 border-white/10 uppercase tracking-tight"
+            >
+              {selectedRecord ? "ATUALIZAR MISSÃO" : "SALVAR MISSÃO"}
+            </Button>
+          </div>
         </div>
 
       </div>
