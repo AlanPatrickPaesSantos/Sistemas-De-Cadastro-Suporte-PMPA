@@ -41,16 +41,16 @@ app.post('/api/auth/login', async (req, res) => {
     if (!user) {
       return res.status(401).json({ success: false, error: 'Acesso Negado: Usuário incorreto ou inexistente.' });
     }
-    
+
     const senhaValida = await bcrypt.compare(password, user.password);
     if (!senhaValida) {
       return res.status(401).json({ success: false, error: 'Acesso Negado: Senha inválida.' });
     }
-    
+
     // Gera emissão de chave para 24 horas usando variável de ambiente
     const SECRET = process.env.JWT_SECRET || 'DitelPMPA-Seguranca-2026';
     const token = jwt.sign({ id: user._id, username: user.username, papel: user.papel }, SECRET, { expiresIn: '24h' });
-    
+
     res.json({ success: true, token, username: user.username, papel: user.papel });
   } catch (err) {
     console.error('Erro no login:', err);
@@ -85,8 +85,8 @@ app.get('/api/servicos', async (req, res) => {
 
     if (startDate || endDate) {
       query.Data_Ent = {};
-      if (startDate) query.Data_Ent.$gte = new Date(startDate);
-      if (endDate) query.Data_Ent.$lte = new Date(endDate + 'T23:59:59');
+      if (startDate) query.Data_Ent.$gte = new Date(startDate).toISOString();
+      if (endDate) query.Data_Ent.$lte = new Date(endDate + 'T23:59:59').toISOString();
     }
 
     if (status) {
@@ -109,8 +109,8 @@ app.get('/api/servicos/count', async (req, res) => {
 
     if (startDate || endDate) {
       query.Data_Ent = {};
-      if (startDate) query.Data_Ent.$gte = new Date(startDate);
-      if (endDate) query.Data_Ent.$lte = new Date(endDate + 'T23:59:59');
+      if (startDate) query.Data_Ent.$gte = new Date(startDate).toISOString();
+      if (endDate) query.Data_Ent.$lte = new Date(endDate + 'T23:59:59').toISOString();
     }
 
     if (status) {
@@ -304,8 +304,8 @@ app.get('/api/missoes', verificarToken, async (req, res) => {
 
     if (startDate || endDate) {
       query.data = {};
-      if (startDate) query.data.$gte = startDate;
-      if (endDate) query.data.$lte = endDate;
+      if (startDate) query.data.$gte = new Date(startDate).toISOString();
+      if (endDate) query.data.$lte = new Date(endDate + 'T23:59:59').toISOString();
     }
 
     if (servico) {
@@ -317,7 +317,7 @@ app.get('/api/missoes', verificarToken, async (req, res) => {
       Missao.find(query).limit(500).sort({ os: -1 }),
       Missao.countDocuments(query)
     ]);
-    
+
     res.set('X-Total-Count', total);
     res.json(missoes);
   } catch (err) {
@@ -331,8 +331,8 @@ app.get('/api/missoes/count', async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
     let dateQuery = {};
-    if (startDate) dateQuery.$gte = startDate;
-    if (endDate) dateQuery.$lte = endDate;
+    if (startDate) dateQuery.$gte = new Date(startDate).toISOString();
+    if (endDate) dateQuery.$lte = new Date(endDate + 'T23:59:59').toISOString();
     const baseQuery = (startDate || endDate) ? { data: dateQuery } : {};
 
     const [total, interno, externo, remoto, pendente] = await Promise.all([
@@ -396,7 +396,7 @@ app.put('/api/missoes/:id', async (req, res) => {
   try {
     const os = parseInt(req.params.id);
     const data = req.body;
-    
+
     // Proteger IDs
     delete data._id;
     delete data.os;

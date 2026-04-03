@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const ServicoSchema = new mongoose.Schema({
   Id_cod: { type: Number, unique: true },
-  Data_Ent: { type: Date, index: true },
+  Data_Ent: { type: String, index: true },
   Tecnico: String,
   Seção_Ditel: String,
   T_EquipTelecom: String,
