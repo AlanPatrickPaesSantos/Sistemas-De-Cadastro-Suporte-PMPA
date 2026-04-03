@@ -350,10 +350,10 @@ app.get('/api/missoes/count', async (req, res) => {
 
     const [total, interno, externo, remoto, pendente] = await Promise.all([
       Missao.countDocuments(baseQuery),
-      Missao.countDocuments({ ...baseQuery, servico: 'interno' }),
-      Missao.countDocuments({ ...baseQuery, servico: 'externo' }),
-      Missao.countDocuments({ ...baseQuery, servico: 'remoto' }),
-      Missao.countDocuments({ ...baseQuery, servico: 'pendente' }),
+      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^interno$/i } }),
+      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^externo$/i } }),
+      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^remoto$/i } }),
+      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^pendente$/i } }),
     ]);
 
     res.json({ total, interno, externo, remoto, pendente });
