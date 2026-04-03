@@ -7,67 +7,26 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Carregamento de Modelos (Adicionado ao topo para garantir sincronização)
-const Servico = require('./models/Servico');
-const Unidade = require('./models/Unidade');
-const Missao = require('./models/Missao');
-const Usuario = require('./models/Usuario');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
-  .then(async () => {
-    console.log(`✅ Conectado ao MongoDB [${process.env.NODE_ENV === 'production' ? 'CLOUD' : 'LOCAL'}]`);
-    
-    // Auto-Sincronização Cronológica (Garante que relatórios vejam datas brasileiras antigas)
-    try {
-      const toISO = (d) => (d && typeof d === 'string' && d.includes('/')) ? d.split('/').reverse().join('-') : null;
-
-      // 1. Sincronizar Serviços
-      const servs = await Servico.find({ $or: [{ Data_Ent: /\// }, { Data_Envio: /\// }, { Data_Retorno: /\// }, { Data_Saida: /\// }] });
-      for (const s of servs) {
-        const upd = {};
-        const de = toISO(s.Data_Ent); if(de) upd.Data_Ent = de;
-        const dv = toISO(s.Data_Envio); if(dv) upd.Data_Envio = dv;
-        const dr = toISO(s.Data_Retorno); if(dr) upd.Data_Retorno = dr;
-        const ds = toISO(s.Data_Saida); if(ds) upd.Data_Saida = ds;
-        if (Object.keys(upd).length > 0) await Servico.updateOne({ _id: s._id }, { $set: upd });
-      }
-
-      // 2. Sincronizar Missões
-      const mis = await Missao.find({ data: /\// });
-      for (const m of mis) {
-        const dt = toISO(m.data);
-        if (dt) await Missao.updateOne({ _id: m._id }, { $set: { data: dt } });
-      }
-      if (servs.length > 0 || mis.length > 0) console.log(`🌪️ Faxina Cronológica: ${servs.length + mis.length} registros sincronizados.`);
-    } catch (e) { console.log("⚠️ Sincronização de datas aguardando carregamento de modelos..."); }
-  })
+  .then(() => console.log(`✅ Conectado ao MongoDB [${process.env.NODE_ENV === 'production' ? 'CLOUD' : 'LOCAL'}]`))
   .catch(err => console.error('❌ Erro ao conectar ao MongoDB:', err));
 
+const Servico = require('./models/Servico');
+const Unidade = require('./models/Unidade');
+const Missao = require('./models/Missao');
+const Usuario = require('./models/Usuario');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const verificarToken = require('./middleware/authMiddleware');
 
-// [DEBUG TEMPORÁRIO] Verificar data da última OS real
-app.get('/api/admin/debug-os-date', async (req, res) => {
-  try {
-    const lastReal = await Servico.findOne({ Id_cod: 2692 });
-    const lastMission = await Missao.findOne().sort({ os: -1 });
-    const countApril = await Servico.countDocuments({ Data_Ent: { $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1) } });
-    
-    res.json({ 
-      success: true, 
-      os_2692_date: lastReal ? lastReal.Data_Ent : "Não encontrada",
-      last_mission_os: lastMission ? lastMission.os : "Nenhuma",
-      count_servicos_april: countApril
-    });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
+// Status
+app.get('/api/status', (req, res) => {
+  res.json({ status: 'Rodando', database: mongoose.connection.readyState === 1 ? 'Conectado' : 'Desconectado' });
 });
 
 // ====== ROTA DE AUTENTICAÇÃO ======
@@ -82,16 +41,16 @@ app.post('/api/auth/login', async (req, res) => {
     if (!user) {
       return res.status(401).json({ success: false, error: 'Acesso Negado: Usuário incorreto ou inexistente.' });
     }
-
+    
     const senhaValida = await bcrypt.compare(password, user.password);
     if (!senhaValida) {
       return res.status(401).json({ success: false, error: 'Acesso Negado: Senha inválida.' });
     }
-
+    
     // Gera emissão de chave para 24 horas usando variável de ambiente
     const SECRET = process.env.JWT_SECRET || 'DitelPMPA-Seguranca-2026';
     const token = jwt.sign({ id: user._id, username: user.username, papel: user.papel }, SECRET, { expiresIn: '24h' });
-
+    
     res.json({ success: true, token, username: user.username, papel: user.papel });
   } catch (err) {
     console.error('Erro no login:', err);
@@ -358,7 +317,7 @@ app.get('/api/missoes', verificarToken, async (req, res) => {
       Missao.find(query).limit(500).sort({ os: -1 }),
       Missao.countDocuments(query)
     ]);
-
+    
     res.set('X-Total-Count', total);
     res.json(missoes);
   } catch (err) {
@@ -378,10 +337,10 @@ app.get('/api/missoes/count', async (req, res) => {
 
     const [total, interno, externo, remoto, pendente] = await Promise.all([
       Missao.countDocuments(baseQuery),
-      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^interno$/i } }),
-      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^externo$/i } }),
-      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^remoto$/i } }),
-      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^pendente$/i } }),
+      Missao.countDocuments({ ...baseQuery, servico: 'interno' }),
+      Missao.countDocuments({ ...baseQuery, servico: 'externo' }),
+      Missao.countDocuments({ ...baseQuery, servico: 'remoto' }),
+      Missao.countDocuments({ ...baseQuery, servico: 'pendente' }),
     ]);
 
     res.json({ total, interno, externo, remoto, pendente });
@@ -437,7 +396,7 @@ app.put('/api/missoes/:id', async (req, res) => {
   try {
     const os = parseInt(req.params.id);
     const data = req.body;
-
+    
     // Proteger IDs
     delete data._id;
     delete data.os;

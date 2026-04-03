@@ -30,10 +30,10 @@ const Index = () => {
         const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
         const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
 
-        // Busca Manutenções (Pendentes desde o início do ano) e Missões (Total desde o início do ano)
+        // Busca Manutenções (Pendentes desde o início do ano)
         const [servResp, missResp] = await Promise.all([
           fetch(`${API_BASE}/servicos/count?status=PENDENTE&startDate=${yearStart}`),
-          fetch(`${API_BASE}/missoes/count?startDate=${yearStart}&endDate=${lastDay}`)
+          fetch(`${API_BASE}/missoes/count?startDate=${firstDay}&endDate=${lastDay}`)
         ]);
 
         if (servResp.ok && missResp.ok) {
@@ -128,11 +128,11 @@ const Index = () => {
             <div 
               onClick={() => {
                 const now = new Date();
-                const yearStart = `${now.getFullYear()}-01-01`;
+                const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
                 const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
                 setExternalReportTrigger({ 
                   id: "Rel_Missao_Consolidado", 
-                  dateRange: { start: yearStart, end: lastDay } 
+                  dateRange: { start: firstDay, end: lastDay } 
                 });
               }}
               className="group bg-card border border-border/60 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all relative overflow-hidden cursor-pointer hover:border-pmpa-navy/30 active:scale-[0.98]"
