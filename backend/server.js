@@ -7,6 +7,14 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// Carregamento de Modelos (Adicionado ao topo para garantir sincronização)
+const Servico = require('./models/Servico');
+const Unidade = require('./models/Unidade');
+const Missao = require('./models/Missao');
+const Usuario = require('./models/Usuario');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -18,8 +26,6 @@ mongoose.connect(process.env.MONGODB_URI)
     
     // Auto-Sincronização Cronológica (Garante que relatórios vejam datas brasileiras antigas)
     try {
-      const Servico = mongoose.model('Servico');
-      const Missao = mongoose.model('Missao');
       const toISO = (d) => (d && typeof d === 'string' && d.includes('/')) ? d.split('/').reverse().join('-') : null;
 
       // 1. Sincronizar Serviços
@@ -44,12 +50,6 @@ mongoose.connect(process.env.MONGODB_URI)
   })
   .catch(err => console.error('❌ Erro ao conectar ao MongoDB:', err));
 
-const Servico = require('./models/Servico');
-const Unidade = require('./models/Unidade');
-const Missao = require('./models/Missao');
-const Usuario = require('./models/Usuario');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const verificarToken = require('./middleware/authMiddleware');
 
 // [DEBUG TEMPORÁRIO] Verificar data da última OS real
