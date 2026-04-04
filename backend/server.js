@@ -309,6 +309,7 @@ app.get('/api/missoes', verificarToken, async (req, res) => {
     }
 
     if (servico) {
+      // Busca exata mas insensível a maiúsculas (ex: interno, INTERNO, Interno)
       query.servico = { $regex: new RegExp(`^\\s*${servico}\\s*$`, 'i') };
     }
 
@@ -337,10 +338,10 @@ app.get('/api/missoes/count', async (req, res) => {
 
     const [total, interno, externo, remoto, pendente] = await Promise.all([
       Missao.countDocuments(baseQuery),
-      Missao.countDocuments({ ...baseQuery, servico: 'interno' }),
-      Missao.countDocuments({ ...baseQuery, servico: 'externo' }),
-      Missao.countDocuments({ ...baseQuery, servico: 'remoto' }),
-      Missao.countDocuments({ ...baseQuery, servico: 'pendente' }),
+      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^\s*interno\s*$/i } }),
+      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^\s*externo\s*$/i } }),
+      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^\s*remoto\s*$/i } }),
+      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^\s*pendente\s*$/i } }),
     ]);
 
     res.json({ total, interno, externo, remoto, pendente });
