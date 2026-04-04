@@ -412,29 +412,33 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
               )}
             </div>
 
-            {/* Resumo Estatístico (Visível em Missões) - Compacto no Mobile */}
+            {/* Resumo Estatístico (Visível em Missões) - Compacto no Mobile com Indicador de Scroll */}
             {activeReport === "Rel_Missao_Consolidado" && results.length > 0 && (
-              <div className="flex md:grid md:grid-cols-5 gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 print:hidden custom-scrollbar">
-                <div className="bg-muted/40 p-2 md:p-3 rounded-lg border border-border/50 min-w-[80px] flex-shrink-0">
-                  <p className="text-[8px] md:text-[10px] font-black uppercase text-muted-foreground">Total</p>
-                  <p className="text-lg md:text-2xl font-black text-foreground">{String(stats.total || 0)}</p>
+              <div className="relative group/scroll print:hidden">
+                <div className="flex md:grid md:grid-cols-5 gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 custom-scrollbar scroll-smooth">
+                  <div className="bg-muted/40 p-2 md:p-3 rounded-lg border border-border/50 min-w-[100px] flex-shrink-0">
+                    <p className="text-[8px] md:text-[10px] font-black uppercase text-muted-foreground">Total</p>
+                    <p className="text-lg md:text-2xl font-black text-foreground">{String(stats.total || 0)}</p>
+                  </div>
+                  <div className="bg-blue-500/10 p-2 md:p-3 rounded-lg border border-blue-500/20 min-w-[100px] flex-shrink-0">
+                    <p className="text-[8px] md:text-[10px] font-black uppercase text-blue-500">Internas</p>
+                    <p className="text-lg md:text-2xl font-black text-blue-600 dark:text-blue-400">{String(stats.interno || 0)}</p>
+                  </div>
+                  <div className="bg-emerald-500/10 p-2 md:p-3 rounded-lg border border-emerald-500/20 min-w-[100px] flex-shrink-0">
+                    <p className="text-[8px] md:text-[10px] font-black uppercase text-emerald-500">Externas</p>
+                    <p className="text-lg md:text-2xl font-black text-emerald-600 dark:text-emerald-400">{String(stats.externo || 0)}</p>
+                  </div>
+                  <div className="bg-purple-500/10 p-2 md:p-3 rounded-lg border border-purple-500/20 min-w-[100px] flex-shrink-0">
+                    <p className="text-[8px] md:text-[10px] font-black uppercase text-purple-500">Remotas</p>
+                    <p className="text-lg md:text-2xl font-black text-purple-600 dark:text-purple-400">{String(stats.remoto || 0)}</p>
+                  </div>
+                  <div className="bg-orange-500/10 p-2 md:p-3 rounded-lg border border-orange-500/20 min-w-[100px] flex-shrink-0">
+                    <p className="text-[8px] md:text-[10px] font-black uppercase text-orange-500">Pendentes</p>
+                    <p className="text-lg md:text-2xl font-black text-orange-600 dark:text-orange-400">{String(stats.pendente || 0)}</p>
+                  </div>
                 </div>
-                <div className="bg-blue-500/10 p-2 md:p-3 rounded-lg border border-blue-500/20 min-w-[80px] flex-shrink-0">
-                  <p className="text-[8px] md:text-[10px] font-black uppercase text-blue-500">Internas</p>
-                  <p className="text-lg md:text-2xl font-black text-blue-600 dark:text-blue-400">{String(stats.interno || 0)}</p>
-                </div>
-                <div className="bg-emerald-500/10 p-2 md:p-3 rounded-lg border border-emerald-500/20 min-w-[80px] flex-shrink-0">
-                  <p className="text-[8px] md:text-[10px] font-black uppercase text-emerald-500">Externas</p>
-                  <p className="text-lg md:text-2xl font-black text-emerald-600 dark:text-emerald-400">{String(stats.externo || 0)}</p>
-                </div>
-                <div className="bg-purple-500/10 p-2 md:p-3 rounded-lg border border-purple-500/20 min-w-[80px] flex-shrink-0">
-                  <p className="text-[8px] md:text-[10px] font-black uppercase text-purple-500">Remotas</p>
-                  <p className="text-lg md:text-2xl font-black text-purple-600 dark:text-purple-400">{String(stats.remoto || 0)}</p>
-                </div>
-                <div className="bg-orange-500/10 p-2 md:p-3 rounded-lg border border-orange-500/20 min-w-[80px] flex-shrink-0">
-                  <p className="text-[8px] md:text-[10px] font-black uppercase text-orange-500">Pendentes</p>
-                  <p className="text-lg md:text-2xl font-black text-orange-600 dark:text-orange-400">{String(stats.pendente || 0)}</p>
-                </div>
+                {/* Indica que há scroll para o lado no mobile */}
+                <div className="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-background/50 to-transparent pointer-events-none md:hidden" />
               </div>
             )}
 
@@ -476,7 +480,14 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                         {activeReport === "Rel_Missao_Consolidado" ? "Tipo" : "Status"}
                       </p>
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        (String(item.servico) === 'externo' || String(item.Serviço) === 'PRONTO') ? 'bg-green-500/10 text-green-600 dark:text-green-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'
+                        (() => {
+                          const val = String(item.servico || item.Serviço || "").toLowerCase();
+                          if (val.includes("externo")) return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+                          if (val.includes("interno")) return "bg-blue-500/10 text-blue-600 dark:text-blue-400";
+                          if (val.includes("remoto")) return "bg-purple-500/10 text-purple-600 dark:text-purple-400";
+                          if (val.includes("pronto")) return "bg-green-500/10 text-green-600 dark:text-green-400";
+                          return "bg-amber-500/10 text-amber-600 dark:text-amber-400";
+                        })()
                       }`}>
                         {activeReport === "Rel_Missao_Consolidado" ? String(item.servico || "N/A") : String(item.Serviço || "PENDENTE")}
                       </span>
