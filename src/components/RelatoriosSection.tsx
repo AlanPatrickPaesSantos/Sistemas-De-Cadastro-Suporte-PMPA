@@ -52,8 +52,11 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     setIsLoading(true);
     try {
       const isMissions = reportId === "Rel_Missao_Consolidado";
+      const isEquipments = reportId === "Rel_Equipamentos";
       const endpoint = isMissions ? "missoes" : "servicos";
-      const statusParam = isMissions ? "" : "&status=PENDENTE";
+      // Não forçamos status PENDENTE para o relatório consolidado de equipamentos, 
+      // pois queremos ver tanto PRONTO quanto PENDENTE.
+      const statusParam = (isMissions || isEquipments) ? "" : "&status=PENDENTE";
       const currentQ = queryText !== undefined ? queryText : filters.q;
       const searchQuery = currentQ ? `&q=${encodeURIComponent(currentQ)}` : "";
 
