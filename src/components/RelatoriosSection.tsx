@@ -496,7 +496,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
               <div className="relative group/scroll print:hidden">
                 <div className="flex md:grid md:grid-cols-3 gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 custom-scrollbar scroll-smooth">
                   <div className="bg-muted/40 p-2 md:p-3 rounded-lg border border-border/50 min-w-[100px] flex-shrink-0">
-                    <p className="text-[8px] md:text-[10px] font-black uppercase text-muted-foreground tracking-tighter">Total O.S. (Pento+Pronto)</p>
+                    <p className="text-[8px] md:text-[10px] font-black uppercase text-muted-foreground tracking-tighter">Total O.S.</p>
                     <p className="text-lg md:text-2xl font-black text-foreground">{String((stats.pendente || 0) + (stats.pronto || 0))}</p>
                   </div>
                   <div 
