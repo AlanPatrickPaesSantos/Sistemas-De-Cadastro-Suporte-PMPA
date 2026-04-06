@@ -14,7 +14,7 @@ import { toast } from "sonner";
 
 
 interface RelatoriosSectionProps {
-  externalTrigger?: { id: string; dateRange?: { start: string; end: string } } | null;
+  externalTrigger?: { id: string; dateRange?: { start: string; end: string }; q?: string } | null;
   onTriggerClean?: () => void;
 }
 
@@ -33,13 +33,14 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     if (externalTrigger && externalTrigger.id) {
       const start = externalTrigger.dateRange?.start || "";
       const end = externalTrigger.dateRange?.end || "";
+      const query = externalTrigger.q || "";
       
-      setFilters({ startDate: start, endDate: end, q: "" });
+      setFilters({ startDate: start, endDate: end, q: query });
       setActiveReport(externalTrigger.id);
       
       // Pequeno delay para garantir que os estados foram aplicados antes da busca
       setTimeout(() => {
-        handleGenerateReportFromParams(start, end);
+        handleGenerateReportFromParams(start, end, query);
       }, 100);
       
       onTriggerClean?.();
@@ -47,13 +48,14 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
   }, [externalTrigger]);
 
   // Função unificada para busca de dados (Estatísticas + Lista)
-  const fetchReportData = async (start: string, end: string, reportId: string) => {
+  const fetchReportData = async (start: string, end: string, reportId: string, queryText?: string) => {
     setIsLoading(true);
     try {
       const isMissions = reportId === "Rel_Missao_Consolidado";
       const endpoint = isMissions ? "missoes" : "servicos";
       const statusParam = isMissions ? "" : "&status=PENDENTE";
-      const searchQuery = filters.q ? `&q=${encodeURIComponent(filters.q)}` : "";
+      const currentQ = queryText !== undefined ? queryText : filters.q;
+      const searchQuery = currentQ ? `&q=${encodeURIComponent(currentQ)}` : "";
 
       // 1. Busca Contagens Exatas
       const countUrl = `${API_BASE}/${endpoint}/count?startDate=${start}&endDate=${end}${statusParam}${searchQuery}`;
@@ -104,14 +106,14 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     }
   };
 
-  const handleGenerateReportFromParams = async (start: string, end: string) => {
+  const handleGenerateReportFromParams = async (start: string, end: string, queryText?: string) => {
     if (!activeReport) return;
-    await fetchReportData(start, end, activeReport);
+    await fetchReportData(start, end, activeReport, queryText);
   };
   
   const handleGenerateReport = async () => {
     if (!activeReport) return;
-    await fetchReportData(filters.startDate, filters.endDate, activeReport);
+    await fetchReportData(filters.startDate, filters.endDate, activeReport, filters.q);
   };
 
   const handleSave = async (data: any) => {
@@ -465,15 +467,27 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
               <div className="relative group/scroll print:hidden">
                 <div className="flex md:grid md:grid-cols-3 gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 custom-scrollbar scroll-smooth">
                   <div className="bg-muted/40 p-2 md:p-3 rounded-lg border border-border/50 min-w-[100px] flex-shrink-0">
-                    <p className="text-[8px] md:text-[10px] font-black uppercase text-muted-foreground">Total O.S.</p>
-                    <p className="text-lg md:text-2xl font-black text-foreground">{String(stats.total || 0)}</p>
+                    <p className="text-[8px] md:text-[10px] font-black uppercase text-muted-foreground tracking-tighter">Total O.S. (Pento+Pronto)</p>
+                    <p className="text-lg md:text-2xl font-black text-foreground">{String((stats.pendente || 0) + (stats.pronto || 0))}</p>
                   </div>
-                  <div className="bg-orange-500/10 p-2 md:p-3 rounded-lg border border-orange-500/20 min-w-[100px] flex-shrink-0">
+                  <div 
+                    onClick={() => {
+                        setFilters(f => ({...f, q: "PENDENTE"}));
+                        setTimeout(handleGenerateReport, 50);
+                    }}
+                    className="bg-orange-500/10 p-2 md:p-3 rounded-lg border border-orange-500/20 min-w-[100px] flex-shrink-0 cursor-pointer hover:bg-orange-500/20 active:scale-[0.97] transition-all"
+                  >
                     <p className="text-[8px] md:text-[10px] font-black uppercase text-orange-500">Em Manutenção</p>
                     <p className="text-lg md:text-2xl font-black text-orange-600 dark:text-orange-400">{String(stats.pendente || 0)}</p>
                   </div>
-                  <div className="bg-emerald-500/10 p-2 md:p-3 rounded-lg border border-emerald-500/20 min-w-[100px] flex-shrink-0">
-                    <p className="text-[8px] md:text-[10px] font-black uppercase text-emerald-500">Pronto para Entrega</p>
+                  <div 
+                    onClick={() => {
+                        setFilters(f => ({...f, q: "PRONTO"}));
+                        setTimeout(handleGenerateReport, 50);
+                    }}
+                    className="bg-emerald-500/10 p-2 md:p-3 rounded-lg border border-emerald-500/20 min-w-[100px] flex-shrink-0 cursor-pointer hover:bg-emerald-500/20 active:scale-[0.97] transition-all"
+                  >
+                    <p className="text-[8px] md:text-[10px] font-black uppercase text-emerald-500">PRONTO</p>
                     <p className="text-lg md:text-2xl font-black text-emerald-600 dark:text-emerald-400">{String(stats.pronto || 0)}</p>
                   </div>
                 </div>
