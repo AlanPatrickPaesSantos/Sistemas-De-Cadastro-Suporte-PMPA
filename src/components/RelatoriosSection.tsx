@@ -134,7 +134,9 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       const res = await fetch(`${API_BASE}/${endpoint}/${id}`);
       if (res.ok) {
         const fullData = await res.json();
-        setSelectedRecord(fullData);
+        // A API de serviços retorna um envelope { record, hasPrev, hasNext },
+        // enquanto a de missões retorna o objeto direto.
+        setSelectedRecord(isMissions ? fullData : fullData.record);
       } else {
         setSelectedRecord(item);
       }
@@ -465,14 +467,26 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                         #{activeReport === "Rel_Missao_Consolidado" ? String(item.os || "---") : String(item.Id_cod || "---")}
                       </p>
                     </div>
-                    <div className="md:col-span-2 space-y-0.5">
+                    <div className="md:col-span-1 space-y-0.5">
                       <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
                         {activeReport === "Rel_Missao_Consolidado" ? "Unidade / Solicitante" : "Equipamento / Unidade"}
                       </p>
-                      <p className="font-semibold text-foreground">
+                      <p className="font-semibold text-foreground truncate">
                         {activeReport === "Rel_Missao_Consolidado" 
                           ? `${String(item.unidade || "N/A")} - ${String(item.solicitante || 'N/A')}`
                           : `${String(item.T_EquipSuporte || item.T_EquipTelecom || "N/A")} - ${String(item.Unidade || "N/A")}`}
+                      </p>
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Data Ref.</p>
+                      <p className="font-bold text-foreground">
+                        {(() => {
+                           const d = item.Data_Saida || item.saidaEquip || item.data || item.Data_Ent;
+                           if (!d) return "---";
+                           if (typeof d === 'string' && d.includes('/')) return d.split(' ')[0];
+                           const date = new Date(d);
+                           return isNaN(date.getTime()) ? "---" : date.toLocaleDateString('pt-BR');
+                        })()}
                       </p>
                     </div>
                     <div className="space-y-0.5">

@@ -19,6 +19,7 @@ const ServicoSchema = new mongoose.Schema({
   Data_Envio: Date,
   Data_Retorno: Date,
   Data_Saida: Date,
+  saidaEquip: String,
   Bateria: String,
   telefone: String,
   Laudo_Tecnico: String,

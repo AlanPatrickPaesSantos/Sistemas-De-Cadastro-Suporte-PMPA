@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parser');
+const { parse, isValid } = require('date-fns');
 require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const Servico = require('../models/Servico');
@@ -15,21 +16,43 @@ async function importEquipment() {
             .on('data', (data) => results.push(data))
             .on('end', async () => {
                 console.log(`\n--- Importando ${results.length} Equipamentos... ---`);
+                let success = 0;
+                let failed = 0;
+                
                 for (let row of results) {
-                    const id = parseInt(row['ID']);
-                    const update = {
-                        Defeito_Recl: row['Defeito'],
-                        Analise_Tecnica: row['Analise'],
-                        saidaEquip: row['Data Saida']
-                    };
-                    
-                    if (row['Data Saida'] && row['Data Saida'].match(/^\d{1,2}\/\d{1,2}\/\d{4}$/)) {
-                        const [d, m, y] = row['Data Saida'].split('/');
-                        update.dataRetorno = new Date(`${y}-${m}-${d}T12:00:00Z`);
+                    try {
+                        const id = parseInt(row['ID']);
+                        if (isNaN(id)) continue;
+
+                        const dataSaidaRaw = (row['Data Saida'] || "").trim();
+                        const update = {
+                            Defeito_Recl: (row['Defeito'] || "").trim(),
+                            Analise_Tecnica: (row['Analise'] || "").trim(),
+                            saidaEquip: dataSaidaRaw
+                        };
+                        
+                        // Tenta converter Data de Saída para o objeto Date do MongoDB
+                        if (dataSaidaRaw) {
+                            // Tenta formato DD/MM/YYYY
+                            let parsedDate = parse(dataSaidaRaw, 'd/M/yyyy', new Date());
+                            if (!isValid(parsedDate)) {
+                                // Tenta formato DD/MM/YY
+                                parsedDate = parse(dataSaidaRaw, 'd/M/yy', new Date());
+                            }
+
+                            if (isValid(parsedDate)) {
+                                update.Data_Saida = parsedDate;
+                            }
+                        }
+                        
+                        await Servico.updateOne({ Id_cod: id }, { $set: update });
+                        success++;
+                    } catch (err) {
+                        console.error(`Erro no registro ID ${row['ID']}:`, err.message);
+                        failed++;
                     }
-                    
-                    await Servico.updateOne({ Id_cod: id }, { $set: update });
                 }
+                console.log(`Sucesso: ${success}, Falhas: ${failed}`);
                 resolve();
             });
     });
@@ -43,31 +66,44 @@ async function importMissions() {
             .on('data', (data) => results.push(data))
             .on('end', async () => {
                 console.log(`\n--- Importando ${results.length} Missões... ---`);
+                let success = 0;
                 for (let row of results) {
-                    const os = parseInt(row['OS']);
-                    const update = {
-                        def_recla: row['Defeito'],
-                        analise: row['Analise'],
-                        solucao: row['Solucao'],
-                        horario: row['Horario'],
-                        relatorio: row['Relatorio']
-                    };
-                    await Missao.updateOne({ os: os }, { $set: update });
+                    try {
+                        const os = parseInt(row['OS']);
+                        if (isNaN(os)) continue;
+
+                        const update = {
+                            def_recla: (row['Defeito'] || "").trim(),
+                            analise: (row['Analise'] || "").trim(),
+                            solucao: (row['Solucao'] || "").trim(),
+                            horario: (row['Horario'] || "").trim(),
+                            relatorio: (row['Relatorio'] || "").trim()
+                        };
+                        await Missao.updateOne({ os: os }, { $set: update });
+                        success++;
+                    } catch (err) {
+                        console.error(`Erro na Missão OS ${row['OS']}:`, err.message);
+                    }
                 }
+                console.log(`Sucesso: ${success} missões.`);
                 resolve();
             });
     });
 }
 
 async function main() {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Conectado ao MongoDB para importação via CSV...');
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        console.log('Conectado ao MongoDB para importação via CSV...');
 
-    await importEquipment();
-    await importMissions();
+        await importEquipment();
+        await importMissions();
 
-    mongoose.connection.close();
-    console.log('\n>>> REPARO DE DADOS CONCLUÍDO! <<<');
+        mongoose.connection.close();
+        console.log('\n>>> REPARO DE DADOS CONCLUÍDO! <<<');
+    } catch (err) {
+        console.error('Erro na conexão:', err.message);
+    }
 }
 
 main();
