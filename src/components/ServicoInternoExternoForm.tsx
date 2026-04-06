@@ -65,6 +65,10 @@ export const ServicoInternoExternoForm = ({
     if (initialData) {
       const fmtDate = (d: any) => {
         if (!d) return "";
+        if (typeof d === 'string' && d.includes('/')) {
+          const [day, month, year] = d.split('/');
+          return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        }
         const date = new Date(d);
         return isNaN(date.getTime()) ? "" : date.toISOString().split('T')[0];
       };

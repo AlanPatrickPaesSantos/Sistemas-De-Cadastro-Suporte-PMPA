@@ -87,6 +87,11 @@ export const CadastroForm = ({ onSubmit, initialData, id = "cadastro-form" }: Ca
     if (initialData) {
       const fmtDate = (d: any) => {
         if (!d) return "";
+        if (typeof d === 'string' && d.includes('/')) {
+          // Handle DD/MM/YYYY from legacy data
+          const [day, month, year] = d.split('/');
+          return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        }
         const date = new Date(d);
         return isNaN(date.getTime()) ? "" : date.toISOString().split('T')[0];
       };
@@ -111,7 +116,7 @@ export const CadastroForm = ({ onSubmit, initialData, id = "cadastro-form" }: Ca
         dataRetorno: fmtDate(initialData.Data_Retorno || initialData.dataRetorno),
         laudoTecnico: initialData.Laudo_Tecnico || initialData.laudoTecnico || "",
         telefone: initialData.telefone || initialData.Telefone || "",
-        saidaEquip: initialData.Data_Saida || initialData.saidaEquip || "",
+        saidaEquip: fmtDate(initialData.Data_Saida || initialData.saidaEquip),
         fonteCabo: initialData.fonteCabo === true || initialData.fonteCabo === 'true' || false,
       });
     } else {
