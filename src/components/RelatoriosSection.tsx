@@ -14,7 +14,7 @@ import { toast } from "sonner";
 
 
 interface RelatoriosSectionProps {
-  externalTrigger?: { id: string; dateRange?: { start: string; end: string }; q?: string } | null;
+  externalTrigger?: { id: string; dateRange?: { start: string; end: string }; q?: string; status?: string } | null;
   onTriggerClean?: () => void;
 }
 
@@ -22,7 +22,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
   const [activeReport, setActiveReport] = useState<string | null>(null);
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "" });
+  const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "" });
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [stats, setStats] = useState({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0 });
 
@@ -34,13 +34,14 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       const start = externalTrigger.dateRange?.start || "";
       const end = externalTrigger.dateRange?.end || "";
       const query = externalTrigger.q || "";
+      const statusValue = externalTrigger.status || "";
       
-      setFilters({ startDate: start, endDate: end, q: query });
+      setFilters({ startDate: start, endDate: end, q: query, status: statusValue });
       setActiveReport(externalTrigger.id);
       
       // Pequeno delay para garantir que os estados foram aplicados antes da busca
       setTimeout(() => {
-        handleGenerateReportFromParams(start, end, query);
+        handleGenerateReportFromParams(start, end, query, statusValue);
       }, 100);
       
       onTriggerClean?.();
@@ -48,15 +49,18 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
   }, [externalTrigger]);
 
   // Função unificada para busca de dados (Estatísticas + Lista)
-  const fetchReportData = async (start: string, end: string, reportId: string, queryText?: string) => {
+  const fetchReportData = async (start: string, end: string, reportId: string, queryText?: string, statusText?: string) => {
     setIsLoading(true);
     try {
       const isMissions = reportId === "Rel_Missao_Consolidado";
       const isEquipments = reportId === "Rel_Equipamentos";
       const endpoint = isMissions ? "missoes" : "servicos";
-      // Não forçamos status PENDENTE para o relatório consolidado de equipamentos, 
-      // pois queremos ver tanto PRONTO quanto PENDENTE.
-      const statusParam = (isMissions || isEquipments) ? "" : "&status=PENDENTE";
+      
+      // Se houver statusText ou filters.status, usamos ele estritamente
+      // Caso contrário, se for relatórios de missões ou específico, o statusParam fica vazio.
+      const currentStatus = statusText !== undefined ? statusText : filters.status;
+      const statusParam = currentStatus ? `&status=${currentStatus}` : (isMissions || isEquipments ? "" : "&status=PENDENTE");
+      
       const currentQ = queryText !== undefined ? queryText : filters.q;
       const searchQuery = currentQ ? `&q=${encodeURIComponent(currentQ)}` : "";
 
@@ -109,14 +113,14 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     }
   };
 
-  const handleGenerateReportFromParams = async (start: string, end: string, queryText?: string) => {
+  const handleGenerateReportFromParams = async (start: string, end: string, queryText?: string, statusText?: string) => {
     if (!activeReport) return;
-    await fetchReportData(start, end, activeReport, queryText);
+    await fetchReportData(start, end, activeReport, queryText, statusText);
   };
   
   const handleGenerateReport = async () => {
     if (!activeReport) return;
-    await fetchReportData(filters.startDate, filters.endDate, activeReport, filters.q);
+    await fetchReportData(filters.startDate, filters.endDate, activeReport, filters.q, filters.status);
   };
 
   const handleSave = async (data: any) => {
@@ -393,7 +397,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           setActiveReport(null);
           setResults([]);
           setStats({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0 });
-          setFilters({ startDate: "", endDate: "", q: "" });
+          setFilters({ startDate: "", endDate: "", q: "", status: "" });
         }
       }}>
         <DialogContent className="max-w-5xl w-[95vw] sm:w-full max-h-[92vh] overflow-hidden flex flex-col p-4 md:p-6 border-border/50 shadow-2xl">
@@ -414,13 +418,34 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                 <Input type="date" value={filters.endDate} onChange={(e) => setFilters({...filters, endDate: e.target.value})} />
               </div>
               <div className="space-y-1.5 flex-1 min-w-[200px]">
-                <label className="text-xs font-bold text-foreground uppercase tracking-wider">Busca Rápida (OS, Unidade, Nome)</label>
-                <Input 
-                  placeholder="Pesquisar..." 
-                  value={filters.q} 
-                  onChange={(e) => setFilters({...filters, q: e.target.value})} 
-                  onKeyDown={(e) => e.key === "Enter" && handleGenerateReport()}
-                />
+                <div className="flex justify-between items-center mb-1">
+                  <label className="text-xs font-bold text-foreground uppercase tracking-wider">Busca Rápida</label>
+                  {filters.status && (
+                    <span className={`text-[9px] font-black px-1.5 py-0.5 rounded uppercase ${filters.status === 'PRONTO' ? 'bg-emerald-500/20 text-emerald-600' : 'bg-orange-500/20 text-orange-600'}`}>
+                      Filtro: {filters.status}
+                    </span>
+                  )}
+                </div>
+                <div className="relative">
+                  <Input 
+                    placeholder="Pesquisar..." 
+                    value={filters.q} 
+                    onChange={(e) => setFilters({...filters, q: e.target.value, status: ""})} 
+                    onKeyDown={(e) => e.key === "Enter" && handleGenerateReport()}
+                    className={filters.status ? "border-primary/50 bg-primary/5" : ""}
+                  />
+                  {filters.status && (
+                    <button 
+                      onClick={() => {
+                        setFilters(f => ({...f, status: ""}));
+                        setTimeout(handleGenerateReport, 50);
+                      }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded-md transition-colors"
+                    >
+                      <X className="h-3 w-3 text-muted-foreground" />
+                    </button>
+                  )}
+                </div>
               </div>
               
               <Button onClick={handleGenerateReport} className="bg-pmpa-navy hover:bg-pmpa-navy/90 gap-2 h-10 px-6">
@@ -475,20 +500,20 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                   </div>
                   <div 
                     onClick={() => {
-                        setFilters(f => ({...f, q: "PENDENTE"}));
+                        setFilters(f => ({...f, q: "", status: "PENDENTE"}));
                         setTimeout(handleGenerateReport, 50);
                     }}
-                    className="bg-orange-500/10 p-2 md:p-3 rounded-lg border border-orange-500/20 min-w-[100px] flex-shrink-0 cursor-pointer hover:bg-orange-500/20 active:scale-[0.97] transition-all"
+                    className={`bg-orange-500/10 p-2 md:p-3 rounded-lg border min-w-[100px] flex-shrink-0 cursor-pointer hover:bg-orange-500/20 active:scale-[0.97] transition-all ${filters.status === "PENDENTE" ? "ring-2 ring-orange-500 border-orange-500 bg-orange-500/20" : "border-orange-500/20"}`}
                   >
                     <p className="text-[8px] md:text-[10px] font-black uppercase text-orange-500">Em Manutenção</p>
                     <p className="text-lg md:text-2xl font-black text-orange-600 dark:text-orange-400">{String(stats.pendente || 0)}</p>
                   </div>
                   <div 
                     onClick={() => {
-                        setFilters(f => ({...f, q: "PRONTO"}));
+                        setFilters(f => ({...f, q: "", status: "PRONTO"}));
                         setTimeout(handleGenerateReport, 50);
                     }}
-                    className="bg-emerald-500/10 p-2 md:p-3 rounded-lg border border-emerald-500/20 min-w-[100px] flex-shrink-0 cursor-pointer hover:bg-emerald-500/20 active:scale-[0.97] transition-all"
+                    className={`bg-emerald-500/10 p-2 md:p-3 rounded-lg border min-w-[100px] flex-shrink-0 cursor-pointer hover:bg-emerald-500/20 active:scale-[0.97] transition-all ${filters.status === "PRONTO" ? "ring-2 ring-emerald-500 border-emerald-500 bg-emerald-500/20" : "border-emerald-500/20"}`}
                   >
                     <p className="text-[8px] md:text-[10px] font-black uppercase text-emerald-500">PRONTO</p>
                     <p className="text-lg md:text-2xl font-black text-emerald-600 dark:text-emerald-400">{String(stats.pronto || 0)}</p>
