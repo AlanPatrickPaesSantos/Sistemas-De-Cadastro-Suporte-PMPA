@@ -26,7 +26,8 @@ const formSchema = z.object({
   def_recla: z.string().optional(),
   solicitante: z.string().optional(),
   n_pae: z.string().optional(),
-  servico: z.string().min(1, "Serviço é obrigatório"),
+  servico: z.string().optional(), // Status (Pronto/Pendente)
+  categoria: z.string().min(1, "Categoria é obrigatória"), // Tipo (Interno/Externo)
   horario: z.string().optional(),
   analise: z.string().optional(),
   observacao: z.string().optional(),
@@ -87,7 +88,12 @@ export const ServicoInternoExternoForm = ({
         def_recla: initialData.def_recla || initialData.Defeito_Recl || initialData.Defeito || "",
         solicitante: initialData.solicitante || initialData.Solicitante || "",
         n_pae: initialData.n_pae || initialData.Nº_PAE || "",
-        servico: String(initialData.servico || initialData.Serviço || "").toLowerCase(),
+        servico: String(initialData.servico || "").toUpperCase() === "PENDENTE" 
+          ? "PENDENTE" 
+          : "PRONTO",
+        categoria: String(initialData.categoria || initialData.servico || "").toLowerCase().includes("pendente")
+          ? "interno" // Fallback if it was Pendente
+          : String(initialData.categoria || initialData.servico || "interno").toLowerCase(),
         horario: initialData.horario || initialData.Horário || "",
         analise: initialData.analise || initialData.Analise_Tecnica || initialData.Analise || "",
         observacao: initialData.observacao || initialData.Observaçoes || initialData.Observacao || "",
@@ -104,7 +110,8 @@ export const ServicoInternoExternoForm = ({
         def_recla: "",
         solicitante: "",
         n_pae: "",
-        servico: "",
+        servico: "PRONTO",
+        categoria: "interno",
         solucao: "",
       });
       
@@ -193,18 +200,28 @@ export const ServicoInternoExternoForm = ({
           </div>
 
           <div className="space-y-1.5 lg:col-span-1">
-            <Label htmlFor="servico" className="text-sm font-bold uppercase text-pmpa-navy">Serviço *</Label>
-            <Select onValueChange={(value) => setValue("servico", value)} value={watch("servico")}>
-              <SelectTrigger className={`h-10 ${errors.servico ? "border-destructive" : ""}`}>
+            <Label htmlFor="categoria" className="text-sm font-bold uppercase text-pmpa-navy">Categoria *</Label>
+            <Select onValueChange={(value) => setValue("categoria", value)} value={watch("categoria")}>
+              <SelectTrigger className={`h-10 ${errors.categoria ? "border-destructive" : ""}`}>
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="interno">Interno</SelectItem>
                 <SelectItem value="externo">Externo</SelectItem>
                 <SelectItem value="remoto">Remoto</SelectItem>
-                <SelectItem value="pendente">Pendente</SelectItem>
-                <SelectItem value="manutencao">Manutenção</SelectItem>
-                <SelectItem value="instalacao">Instalação</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-1.5 lg:col-span-1">
+            <Label htmlFor="servico" className="text-sm font-bold uppercase text-pmpa-navy">Status *</Label>
+            <Select onValueChange={(value) => setValue("servico", value)} value={watch("servico")}>
+              <SelectTrigger className={`h-10 ${errors.servico ? "border-destructive" : ""}`}>
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="PRONTO">PRONTO</SelectItem>
+                <SelectItem value="PENDENTE">PENDENTE</SelectItem>
               </SelectContent>
             </Select>
           </div>

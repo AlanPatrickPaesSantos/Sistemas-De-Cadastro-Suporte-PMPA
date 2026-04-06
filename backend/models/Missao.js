@@ -11,6 +11,7 @@ const MissaoSchema = new mongoose.Schema({
   solicitante: { type: String, index: true },
   n_pae: String,
   servico: { type: String, index: true },
+  categoria: { type: String, index: true },
   analise: String,
   observacao: String,
   solucao: String,
