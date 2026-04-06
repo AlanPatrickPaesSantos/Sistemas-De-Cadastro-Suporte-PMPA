@@ -69,14 +69,14 @@ export const ServicoInternoExternoForm = ({
 
       reset({
         os: String(initialData.os || initialData.Id_cod || ""),
-        secao: initialData.secao || initialData.Seção_Ditel || initialData.Seção || initialData.Secao || "",
+        secao: String(initialData.secao || initialData.Seção_Ditel || initialData.Seção || initialData.Secao || "").toUpperCase(),
         unidade: initialData.unidade || initialData.Unidade || "",
         data: fmtDate(initialData.data || initialData.Data_Ent || initialData.Data),
         tecnicos: initialData.tecnicos || initialData.Tecnico || initialData.Técnicos || initialData.Técnico || "",
         def_recla: initialData.def_recla || initialData.Defeito_Recl || initialData.Defeito || "",
         solicitante: initialData.solicitante || initialData.Solicitante || "",
         n_pae: initialData.n_pae || initialData.Nº_PAE || "",
-        servico: initialData.servico || initialData.Serviço || "",
+        servico: String(initialData.servico || initialData.Serviço || "").toLowerCase(),
         analise: initialData.analise || initialData.Analise_Tecnica || initialData.Analise || "",
         observacao: initialData.observacao || initialData.Observaçoes || initialData.Observacao || "",
         solucao: initialData.solucao || initialData.Solução || initialData.Solucao || initialData.Soluçao || "",
@@ -195,18 +195,44 @@ export const ServicoInternoExternoForm = ({
 
           <div className="space-y-1.5 md:col-span-2">
             <Label htmlFor="def_recla" className="text-sm font-bold uppercase text-pmpa-navy">Defeito/Reclamação</Label>
-            <Input id="def_recla" {...register("def_recla")} placeholder="Descreva brevemente" className="h-10" />
+            <Textarea 
+              id="def_recla" 
+              {...register("def_recla")} 
+              placeholder="Descreva o defeito" 
+              className="h-20" 
+            />
           </div>
         </div>
 
-        {/* Areas: Solução Aplicada (Único campo de detalhamento agora) */}
+        {/* Areas: Detalhamento */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="analise" className="text-sm font-bold uppercase text-pmpa-navy">Análise Técnica</Label>
+            <Textarea 
+              id="analise" 
+              {...register("analise")} 
+              placeholder="Descreva a análise técnica..." 
+              className="min-h-[100px] text-base border-pmpa-navy/20 focus-visible:ring-pmpa-navy shadow-inner bg-card" 
+            />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="observacao" className="text-sm font-bold uppercase text-pmpa-navy">Observações</Label>
+            <Textarea 
+              id="observacao" 
+              {...register("observacao")} 
+              placeholder="Observações adicionais..." 
+              className="min-h-[100px] text-base border-pmpa-navy/20 focus-visible:ring-pmpa-navy shadow-inner bg-card" 
+            />
+          </div>
+        </div>
+
         <div className="space-y-1.5 pb-2">
           <Label htmlFor="solucao" className="text-sm font-bold uppercase text-pmpa-navy">Solução Aplicada</Label>
           <Textarea 
             id="solucao" 
             {...register("solucao")} 
             placeholder="Descreva a solução aplicada na missão..." 
-            className="min-h-[150px] text-base resize-none border-pmpa-navy/20 focus-visible:ring-pmpa-navy shadow-inner bg-card" 
+            className="min-h-[120px] text-base border-pmpa-navy/20 focus-visible:ring-pmpa-navy shadow-inner bg-card" 
           />
         </div>
       </div>

@@ -469,7 +469,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                       <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
                         {activeReport === "Rel_Missao_Consolidado" ? "Unidade / Solicitante" : "Equipamento / Unidade"}
                       </p>
-                      <p className="font-semibold text-foreground truncate">
+                      <p className="font-semibold text-foreground">
                         {activeReport === "Rel_Missao_Consolidado" 
                           ? `${String(item.unidade || "N/A")} - ${String(item.solicitante || 'N/A')}`
                           : `${String(item.T_EquipSuporte || item.T_EquipTelecom || "N/A")} - ${String(item.Unidade || "N/A")}`}

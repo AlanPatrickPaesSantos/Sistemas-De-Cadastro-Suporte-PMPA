@@ -103,8 +103,8 @@ export const CadastroForm = ({ onSubmit, initialData, id = "cadastro-form" }: Ca
         nSerie: initialData.Nº_Serie || initialData.nSerie || "",
         defeitoRecl: initialData.Defeito_Recl || initialData.defeitoRecl || "",
         analiseTecnica: initialData.Analise_Tecnica || initialData.analiseTecnica || "",
-        servico: initialData.Serviço || initialData.servico || "",
-        garantia: initialData.Garantia || initialData.garantia || "",
+        servico: String(initialData.Serviço || initialData.servico || "").toUpperCase(),
+        garantia: String(initialData.Garantia || initialData.garantia || "").toLowerCase().replace('não', 'nao').replace('não', 'nao'),
         dataEnvio: fmtDate(initialData.Data_Envio || initialData.dataEnvio),
         dataRetorno: fmtDate(initialData.Data_Retorno || initialData.dataRetorno),
         laudoTecnico: initialData.Laudo_Tecnico || initialData.laudoTecnico || "",
@@ -157,20 +157,37 @@ export const CadastroForm = ({ onSubmit, initialData, id = "cadastro-form" }: Ca
             <TabsContent value="identificacao" className="m-0 space-y-5">
               <div className="space-y-3">
                 <h3 className="text-sm font-bold text-pmpa-navy uppercase tracking-widest border-b border-border/50 pb-1">Informações Principais</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <FormField control={form.control} name="os" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-semibold text-muted-foreground">OS (Gerada Automática)</FormLabel>
+                      <FormLabel className="text-sm font-semibold text-muted-foreground">OS (Auto)</FormLabel>
                       <FormControl><Input className="h-10 bg-muted/40 font-mono font-bold text-pmpa-navy" readOnly {...field} value={initialData ? field.value : nextOs} /></FormControl>
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="tecnico" render={({ field }) => (
-                    <FormItem className="md:col-span-2"><FormLabel className="text-sm font-semibold">Técnico Responsável</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
+                    <FormItem className="md:col-span-1"><FormLabel className="text-sm font-semibold">Técnico Responsável</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
+                  )} />
+                  <FormField control={form.control} name="secaoDitel" render={({ field }) => (
+                    <FormItem className="md:col-span-1">
+                      <FormLabel className="text-sm font-semibold">Seção</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl><SelectTrigger className="h-10"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
+                        <SelectContent><SelectItem value="SUPORTE">Suporte</SelectItem><SelectItem value="TELECOM">Telecom</SelectItem></SelectContent>
+                      </Select>
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="telefone" render={({ field }) => (
+                    <FormItem><FormLabel className="text-sm font-semibold">Telefone</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
                   )} />
                 </div>
-                <FormField control={form.control} name="tEquipSuporte" render={({ field }) => (
-                  <FormItem><FormLabel className="text-sm font-semibold">Tipo de Equipamento</FormLabel><EquipCombobox value={field.value} onChange={field.onChange} /></FormItem>
-                )} />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <FormField control={form.control} name="tEquipSuporte" render={({ field }) => (
+                    <FormItem className="md:col-span-2"><FormLabel className="text-sm font-semibold">Tipo de Equipamento</FormLabel><EquipCombobox value={field.value} onChange={field.onChange} /></FormItem>
+                  )} />
+                  <FormField control={form.control} name="bateria" render={({ field }) => (
+                    <FormItem><FormLabel className="text-sm font-semibold">Bateria</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
+                  )} />
+                </div>
               </div>
 
               <div className="space-y-4 pt-4 border-t border-border/20">
@@ -212,10 +229,10 @@ export const CadastroForm = ({ onSubmit, initialData, id = "cadastro-form" }: Ca
                 <h3 className="text-sm font-bold text-pmpa-navy uppercase tracking-widest border-b border-border/50 pb-1">Diagnóstico</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="defeitoRecl" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">Defeito Reclamado</FormLabel><FormControl><Textarea className="resize-none h-32" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-sm font-semibold">Defeito Reclamado</FormLabel><FormControl><Textarea className="h-32" {...field} /></FormControl></FormItem>
                   )} />
                   <FormField control={form.control} name="analiseTecnica" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">Análise Técnica Preliminar</FormLabel><FormControl><Textarea className="resize-none h-32" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-sm font-semibold">Análise Técnica Preliminar</FormLabel><FormControl><Textarea className="h-32" {...field} /></FormControl></FormItem>
                   )} />
                 </div>
               </div>
@@ -256,13 +273,28 @@ export const CadastroForm = ({ onSubmit, initialData, id = "cadastro-form" }: Ca
                     </FormItem>
                   )} />
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField control={form.control} name="dataEnvio" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-semibold">Data de Envio (Manutenção Ext.)</FormLabel>
+                      <FormControl><Input type="date" className="h-10" {...field} /></FormControl>
+                    </FormItem>
+                  )} />
+                  <FormField control={form.control} name="dataRetorno" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-semibold">Data de Retorno (Manutenção Ext.)</FormLabel>
+                      <FormControl><Input type="date" className="h-10" {...field} /></FormControl>
+                    </FormItem>
+                  )} />
+                </div>
                 
                 <div className="grid grid-cols-1 gap-4">
                   <FormField control={form.control} name="laudoTecnico" render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-sm font-semibold">Laudo Técnico Final</FormLabel>
                       <FormControl>
-                        <Textarea className="resize-none h-32" {...field} />
+                        <Textarea className="h-32" {...field} />
                       </FormControl>
                     </FormItem>
                   )} />
