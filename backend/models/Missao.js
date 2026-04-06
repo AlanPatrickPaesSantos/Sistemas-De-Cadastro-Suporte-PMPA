@@ -13,7 +13,8 @@ const MissaoSchema = new mongoose.Schema({
   servico: { type: String, index: true },
   analise: String,
   observacao: String,
-  solucao: String
+  solucao: String,
+  relatorio: String
 }, {
   timestamps: true,
   collection: 'missoes'

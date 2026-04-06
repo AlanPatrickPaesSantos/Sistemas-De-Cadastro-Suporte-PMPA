@@ -27,9 +27,11 @@ const formSchema = z.object({
   solicitante: z.string().optional(),
   n_pae: z.string().optional(),
   servico: z.string().min(1, "Serviço é obrigatório"),
+  horario: z.string().optional(),
   analise: z.string().optional(),
   observacao: z.string().optional(),
   solucao: z.string().optional(),
+  relatorio: z.string().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -77,9 +79,11 @@ export const ServicoInternoExternoForm = ({
         solicitante: initialData.solicitante || initialData.Solicitante || "",
         n_pae: initialData.n_pae || initialData.Nº_PAE || "",
         servico: String(initialData.servico || initialData.Serviço || "").toLowerCase(),
+        horario: initialData.horario || initialData.Horário || "",
         analise: initialData.analise || initialData.Analise_Tecnica || initialData.Analise || "",
         observacao: initialData.observacao || initialData.Observaçoes || initialData.Observacao || "",
-        solucao: initialData.solucao || initialData.Solução || initialData.Solucao || initialData.Soluçao || "",
+        solucao: initialData.solucao || initialData.Solução || initialData.Solucao || initialData.Soluções || "",
+        relatorio: initialData.relatorio || initialData.Relatório || "",
       });
     } else {
       reset({
@@ -151,14 +155,19 @@ export const ServicoInternoExternoForm = ({
           </div>
         </div>
 
-        {/* Row 2: Data, Técnicos */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+        {/* Row 2: Data, Horário, Técnicos */}
+        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-3">
           <div className="space-y-1.5 lg:col-span-1">
             <Label htmlFor="data" className="text-sm font-bold uppercase text-pmpa-navy">Data *</Label>
             <Input id="data" type="date" {...register("data")} className={`h-10 ${errors.data ? "border-destructive" : ""}`} />
           </div>
 
-          <div className="space-y-1.5 md:col-span-3 lg:col-span-4">
+          <div className="space-y-1.5 lg:col-span-1">
+            <Label htmlFor="horario" className="text-sm font-bold uppercase text-pmpa-navy">Horário</Label>
+            <Input id="horario" {...register("horario")} placeholder="HH:MM" className="h-10" />
+          </div>
+
+          <div className="space-y-1.5 md:col-span-2 lg:col-span-4">
             <Label htmlFor="tecnicos" className="text-sm font-bold uppercase text-pmpa-navy">Técnicos</Label>
             <Input id="tecnicos" {...register("tecnicos")} placeholder="Nome dos técnicos" className="h-10" />
           </div>
@@ -233,6 +242,16 @@ export const ServicoInternoExternoForm = ({
             {...register("solucao")} 
             placeholder="Descreva a solução aplicada na missão..." 
             className="min-h-[120px] text-base border-pmpa-navy/20 focus-visible:ring-pmpa-navy shadow-inner bg-card" 
+          />
+        </div>
+
+        <div className="space-y-1.5 pb-2">
+          <Label htmlFor="relatorio" className="text-sm font-bold uppercase text-pmpa-navy">Relatório de Missão (Legado)</Label>
+          <Textarea 
+            id="relatorio" 
+            {...register("relatorio")} 
+            placeholder="Informações adicionais do relatório..." 
+            className="min-h-[100px] text-base border-pmpa-navy/20 focus-visible:ring-pmpa-navy shadow-inner bg-card" 
           />
         </div>
       </div>

@@ -30,6 +30,7 @@ const cadastroSchema = z.object({
   tecnico: z.string().optional(),
   secaoDitel: z.string().optional(),
   tEquipSuporte: z.string().optional(),
+  tEquipTelecom: z.string().optional(),
   solicitante: z.string().optional(),
   unidade: z.string().optional(),
   dataEnt: z.string().optional(),
@@ -94,7 +95,8 @@ export const CadastroForm = ({ onSubmit, initialData, id = "cadastro-form" }: Ca
         os: String(initialData.Id_cod || initialData.os || ""),
         tecnico: initialData.Tecnico || initialData.tecnico || initialData.Técnico || "",
         secaoDitel: initialData.Seção_Ditel || initialData.secaoDitel || "",
-        tEquipSuporte: initialData.T_EquipSuporte || initialData.T_EquipTelecom || initialData.tEquipSuporte || "",
+        tEquipSuporte: initialData.T_EquipSuporte || initialData.tEquipSuporte || "",
+        tEquipTelecom: initialData.T_EquipTelecom || initialData.tEquipTelecom || "",
         solicitante: initialData.Solicitante || initialData.solicitante || "",
         unidade: initialData.Unidade || initialData.unidade || "",
         dataEnt: fmtDate(initialData.Data_Ent || initialData.dataEnt),
@@ -180,10 +182,15 @@ export const CadastroForm = ({ onSubmit, initialData, id = "cadastro-form" }: Ca
                     <FormItem><FormLabel className="text-sm font-semibold">Telefone</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
                   )} />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="tEquipSuporte" render={({ field }) => (
-                    <FormItem className="md:col-span-2"><FormLabel className="text-sm font-semibold">Tipo de Equipamento</FormLabel><EquipCombobox value={field.value} onChange={field.onChange} /></FormItem>
+                    <FormItem><FormLabel className="text-sm font-semibold">Equipamento (Suporte/TI)</FormLabel><EquipCombobox value={field.value} onChange={field.onChange} /></FormItem>
                   )} />
+                  <FormField control={form.control} name="tEquipTelecom" render={({ field }) => (
+                    <FormItem><FormLabel className="text-sm font-semibold">Equipamento (Telecom/Rádio)</FormLabel><EquipCombobox value={field.value} onChange={field.onChange} /></FormItem>
+                  )} />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="bateria" render={({ field }) => (
                     <FormItem><FormLabel className="text-sm font-semibold">Bateria</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
                   )} />
