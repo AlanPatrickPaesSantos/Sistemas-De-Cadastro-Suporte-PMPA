@@ -24,7 +24,15 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
   const [isLoading, setIsLoading] = useState(false);
   const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "" });
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
-  const [stats, setStats] = useState({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0 });
+  const [stats, setStats] = useState<{
+    total: number;
+    interno: number;
+    externo: number;
+    remoto: number;
+    pendente: number;
+    pronto: number;
+    laudo: number;
+  }>({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0, laudo: 0 });
 
   const [printType, setPrintType] = useState<'laudo' | 'saida'>('laudo');
 
@@ -83,27 +91,31 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           externo: exactStats?.externo || 0,
           remoto: exactStats?.remoto || 0,
           pendente: exactStats?.pendente || 0,
-          pronto: 0
+          pronto: 0,
+          laudo: 0
         });
       } else {
         // Para Equipamentos, buscamos Total, Pendente e Pronto separadamente se necessário
         // Mas por padrão a busca principal já traz o que está no statusParam
         // Para uma visão consolidada, faremos buscas paralelas
-        const [pentoResp, prontoResp, totalResp] = await Promise.all([
+        const [pentoResp, prontoResp, laudoResp, totalResp] = await Promise.all([
           fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&status=PENDENTE${searchQuery}`),
           fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&status=PRONTO${searchQuery}`),
+          fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&status=LAUDO${searchQuery}`),
           fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}${searchQuery}`)
         ]);
         
         const pentoData = await pentoResp.json();
         const prontoData = await prontoResp.json();
+        const laudoData = await laudoResp.json();
         const totalData = await totalResp.json();
 
         setStats({
           total: totalData.count || 0,
           interno: 0, externo: 0, remoto: 0, 
           pendente: pentoData.count || 0,
-          pronto: prontoData.count || 0
+          pronto: prontoData.count || 0,
+          laudo: laudoData.count || 0
         });
       }
     } catch (error) {
@@ -396,7 +408,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
         if (!open) {
           setActiveReport(null);
           setResults([]);
-          setStats({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0 });
+          setStats({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0, laudo: 0 });
           setFilters({ startDate: "", endDate: "", q: "", status: "" });
         }
       }}>
@@ -494,10 +506,10 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
             {/* Resumo Estatístico Equipamentos */}
             {activeReport === "Rel_Equipamentos" && results.length > 0 && (
               <div className="relative group/scroll print:hidden">
-                <div className="flex md:grid md:grid-cols-3 gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 custom-scrollbar scroll-smooth">
+                <div className="flex md:grid md:grid-cols-4 gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 custom-scrollbar scroll-smooth">
                   <div className="bg-muted/40 p-2 md:p-3 rounded-lg border border-border/50 min-w-[100px] flex-shrink-0">
                     <p className="text-[8px] md:text-[10px] font-black uppercase text-muted-foreground tracking-tighter">Total O.S.</p>
-                    <p className="text-lg md:text-2xl font-black text-foreground">{String((stats.pendente || 0) + (stats.pronto || 0))}</p>
+                    <p className="text-lg md:text-2xl font-black text-foreground">{String((stats.pendente || 0) + (stats.pronto || 0) + (stats.laudo || 0))}</p>
                   </div>
                   <div 
                     onClick={() => {
@@ -509,6 +521,17 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                   >
                     <p className="text-[8px] md:text-[10px] font-black uppercase text-orange-500">Em Manutenção</p>
                     <p className="text-lg md:text-2xl font-black text-orange-600 dark:text-orange-400">{String(stats.pendente || 0)}</p>
+                  </div>
+                  <div 
+                    onClick={() => {
+                        const newFilters = { ...filters, q: "", status: "LAUDO" };
+                        setFilters(newFilters);
+                        fetchReportData(newFilters.startDate, newFilters.endDate, activeReport!, "", "LAUDO");
+                    }}
+                    className={`bg-blue-500/10 p-2 md:p-3 rounded-lg border min-w-[100px] flex-shrink-0 cursor-pointer hover:bg-blue-500/20 active:scale-[0.97] transition-all ${filters.status === "LAUDO" ? "ring-2 ring-blue-500 border-blue-500 bg-blue-500/20" : "border-blue-500/20"}`}
+                  >
+                    <p className="text-[8px] md:text-[10px] font-black uppercase text-blue-500">LAUDO</p>
+                    <p className="text-lg md:text-2xl font-black text-blue-600 dark:text-blue-400">{String(stats.laudo || 0)}</p>
                   </div>
                   <div 
                     onClick={() => {
