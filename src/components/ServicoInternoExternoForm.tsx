@@ -225,8 +225,11 @@ export const ServicoInternoExternoForm = ({
               </SelectContent>
             </Select>
           </div>
+        </div>
 
-          <div className="space-y-1.5 md:col-span-2">
+        {/* Row 4: Descrições Técnicas (Lado a Lado) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
             <Label htmlFor="def_recla" className="text-sm font-bold uppercase text-pmpa-navy">Defeito/Reclamação</Label>
             <Textarea 
               id="def_recla" 
@@ -235,20 +238,19 @@ export const ServicoInternoExternoForm = ({
               className="min-h-[140px] text-base leading-relaxed p-4 border-pmpa-navy/20 focus:ring-pmpa-navy shadow-inner bg-card" 
             />
           </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="solucao" className="text-sm font-bold uppercase text-pmpa-navy">Solução Aplicada</Label>
+            <Textarea 
+              id="solucao" 
+              {...register("solucao")} 
+              placeholder="Descreva a solução aplicada na missão..." 
+              className="min-h-[140px] text-base leading-relaxed p-4 border-pmpa-navy/20 focus:ring-pmpa-navy shadow-inner bg-card" 
+            />
+          </div>
         </div>
 
-
-        <div className="space-y-1.5 pb-2">
-          <Label htmlFor="solucao" className="text-sm font-bold uppercase text-pmpa-navy">Solução Aplicada</Label>
-          <Textarea 
-            id="solucao" 
-            {...register("solucao")} 
-            placeholder="Descreva a solução aplicada na missão..." 
-            className="min-h-[120px] text-base border-pmpa-navy/20 focus-visible:ring-pmpa-navy shadow-inner bg-card" 
-          />
-        </div>
-
-        <div className="space-y-1.5 pb-2">
+        <div className="space-y-1.5 pb-2 pt-2 border-t border-border/40">
           <Label htmlFor="relatorio" className="text-sm font-bold uppercase text-pmpa-navy">Relatório de Missão (Legado)</Label>
           <Textarea 
             id="relatorio" 
