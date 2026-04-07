@@ -67,14 +67,14 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
             <p>SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA E DEFESA SOCIAL</p>
             <p>POLÍCIA MILITAR DO PARÁ</p>
             <p>DEPARTAMENTO GERAL DE ADMINISTRAÇÃO</p>
-            <p className="text-[12px] mt-1 font-black underline">DIRETORIA DE TELEMÁTICA</p>
+            <p className="text-[12px] mt-1 font-black">DIRETORIA DE TELEMÁTICA</p>
           </div>
           <div className="w-24 flex justify-end">
             <img src="/Logo Ditel.jpeg" alt="Logo Ditel" style={{ height: '75px', width: 'auto', objectFit: 'contain' }} />
           </div>
         </div>
 
-        <h1 className="text-center text-lg font-black uppercase mb-4 underline tracking-widest leading-none">Ordem de Serviço</h1>
+        <h1 className="text-center text-lg font-black uppercase mb-4 tracking-widest leading-none">Ordem de Serviço</h1>
 
         {/* Info Grid - Replicating PDF Rows */}
         <div className="space-y-3 mb-4">
@@ -91,8 +91,8 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
 
           <div className="border border-black p-2 bg-gray-50/20">
              <div className="flex justify-between items-center px-4 py-0.5">
-                <span className="text-[10px] font-black uppercase">DATA: <span className="font-bold underline ml-2">{formatDateBR(data.data) || '___/___/______'}</span></span>
-                <span className="text-[10px] font-black uppercase">HORÁRIO: <span className="font-bold underline ml-2">{data.horario || '__:__' || '___:___'}</span></span>
+                <span className="text-[10px] font-black uppercase">DATA: <span className="font-bold ml-2">{formatDateBR(data.data) || '___/___/______'}</span></span>
+                <span className="text-[10px] font-black uppercase">HORÁRIO: <span className="font-bold ml-2">{data.horario || '__:__' || '___:___'}</span></span>
              </div>
           </div>
 
@@ -110,7 +110,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
 
         {/* Descrição Section */}
         <div className="mb-4">
-          <h2 className="text-center font-black uppercase italic border border-black py-1 mb-0 text-[10px] bg-gray-100/50">Descrição e Informação</h2>
+          <h2 className="text-center font-black uppercase border border-black py-1 mb-0 text-[10px] bg-gray-100/50">Descrição e Informação</h2>
           <div className="border border-black border-t-0 p-3 min-h-[120px]">
             <p className="text-[9px] font-black uppercase mb-1">Defeito Reclamado / Constatado:</p>
             <p className="text-[12px] leading-snug whitespace-pre-wrap">{data.def_recla || 'CONFORME SOLICITADO.'}</p>
@@ -119,7 +119,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
 
         {/* Atendimento Section */}
         <div className="mb-4">
-          <h2 className="text-center font-black uppercase italic border border-black py-1 mb-0 text-[10px] bg-gray-100/50">Atendimento</h2>
+          <h2 className="text-center font-black uppercase border border-black py-1 mb-0 text-[10px] bg-gray-100/50">Atendimento</h2>
           <div className="grid grid-cols-2 border border-black border-t-0 divide-x divide-black">
             <div className="p-2">
               <span className="text-[9px] font-black uppercase block mb-1">Técnico:</span>
@@ -134,7 +134,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
 
         {/* Solução Section */}
         <div className="mb-6">
-          <h2 className="text-center font-black uppercase italic border border-black py-1 mb-0 text-[10px] bg-gray-100/50">Solução Aplicada</h2>
+          <h2 className="text-center font-black uppercase border border-black py-1 mb-0 text-[10px] bg-gray-100/50">Solução Aplicada</h2>
           <div className="border border-black border-t-0 p-3 min-h-[160px]">
             <div className="text-[12px] leading-snug whitespace-pre-wrap">
               {data.solucao ? (
