@@ -22,7 +22,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
   const [activeReport, setActiveReport] = useState<string | null>(null);
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "", bateria: false, bateria_vazia: false });
+  const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "", bateria: false });
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [stats, setStats] = useState<{
     total: number;
@@ -33,8 +33,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     pronto: number;
     laudo: number;
     bateria: number;
-    sem_bateria: number;
-  }>({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0, laudo: 0, bateria: 0, sem_bateria: 0 });
+  }>({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0, laudo: 0, bateria: 0 });
 
   const [printType, setPrintType] = useState<'laudo' | 'saida'>('laudo');
 
@@ -46,7 +45,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       const query = externalTrigger.q || "";
       const statusValue = externalTrigger.status || "";
       
-      setFilters({ startDate: start, endDate: end, q: query, status: statusValue });
+      setFilters({ startDate: start, endDate: end, q: query, status: statusValue, bateria: false });
       setActiveReport(externalTrigger.id);
       
       // Pequeno delay para garantir que os estados foram aplicados antes da busca
@@ -76,17 +75,14 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       
       const currentBateria = filters.bateria;
       const bateriaParam = currentBateria ? "&bateria=true" : "";
-      
-      const currentBateriaVazia = filters.bateria_vazia;
-      const bateriaVaziaParam = currentBateriaVazia ? "&bateria_vazia=true" : "";
 
       // 1. Busca Contagens Exatas
-      const countUrl = `${API_BASE}/${endpoint}/count?startDate=${start}&endDate=${end}${statusParam}${searchQuery}${bateriaParam}${bateriaVaziaParam}`;
+      const countUrl = `${API_BASE}/${endpoint}/count?startDate=${start}&endDate=${end}${statusParam}${searchQuery}${bateriaParam}`;
       const countResp = await fetch(countUrl);
       const exactStats = await countResp.json();
 
       // 2. Busca Registros para a Lista
-      const listUrl = `${API_BASE}/${endpoint}?startDate=${start}&endDate=${end}${statusParam}${searchQuery}${bateriaParam}${bateriaVaziaParam}`;
+      const listUrl = `${API_BASE}/${endpoint}?startDate=${start}&endDate=${end}${statusParam}${searchQuery}${bateriaParam}`;
       const listResp = await fetch(listUrl);
       const data = await listResp.json();
       
@@ -101,19 +97,17 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           pendente: exactStats?.pendente || 0,
           pronto: 0,
           laudo: 0,
-          bateria: 0,
-          sem_bateria: 0
+          bateria: 0
         });
       } else {
         // Para Equipamentos, buscamos Total, Pendente e Pronto separadamente se necessário
         // Mas por padrão a busca principal já traz o que está no statusParam
         // Para uma visão consolidada, faremos buscas paralelas
-        const [pentoResp, prontoResp, laudoResp, bateriaResp, bateriaVaziaResp, totalResp] = await Promise.all([
+        const [pentoResp, prontoResp, laudoResp, bateriaResp, totalResp] = await Promise.all([
           fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&status=PENDENTE${searchQuery}`),
           fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&status=PRONTO${searchQuery}`),
           fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&status=LAUDO${searchQuery}`),
           fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&bateria=true${searchQuery}`),
-          fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&bateria_vazia=true${searchQuery}`),
           fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}${searchQuery}`)
         ]);
         
@@ -121,7 +115,6 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
         const prontoData = await prontoResp.json();
         const laudoData = await laudoResp.json();
         const bateriaData = await bateriaResp.json();
-        const bateriaVaziaData = await bateriaVaziaResp.json();
         const totalData = await totalResp.json();
 
         setStats({
@@ -130,8 +123,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           pendente: pentoData.count || 0,
           pronto: prontoData.count || 0,
           laudo: laudoData.count || 0,
-          bateria: bateriaData.count || 0,
-          sem_bateria: bateriaVaziaData.count || 0
+          bateria: bateriaData.count || 0
         });
       }
     } catch (error) {
@@ -424,8 +416,8 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
         if (!open) {
           setActiveReport(null);
           setResults([]);
-          setStats({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0, laudo: 0, bateria: 0, sem_bateria: 0 });
-          setFilters({ startDate: "", endDate: "", q: "", status: "", bateria: false, bateria_vazia: false });
+          setStats({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0, laudo: 0, bateria: 0 });
+          setFilters({ startDate: "", endDate: "", q: "", status: "", bateria: false });
         }
       }}>
         <DialogContent className="max-w-5xl w-[95vw] sm:w-full max-h-[92vh] overflow-hidden flex flex-col p-4 md:p-6 border-border/50 shadow-2xl">
@@ -458,24 +450,19 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                       Filtro: BATERIA
                     </span>
                   )}
-                  {filters.bateria_vazia && (
-                    <span className="text-[9px] font-black px-1.5 py-0.5 rounded uppercase bg-rose-500/20 text-rose-600">
-                      Filtro: SEM BATERIA
-                    </span>
-                  )}
                 </div>
                 <div className="relative">
                   <Input 
                     placeholder="Pesquisar..." 
                     value={filters.q} 
-                    onChange={(e) => setFilters({...filters, q: e.target.value, status: "", bateria: false, bateria_vazia: false})} 
+                    onChange={(e) => setFilters({...filters, q: e.target.value, status: "", bateria: false})} 
                     onKeyDown={(e) => e.key === "Enter" && handleGenerateReport()}
-                    className={(filters.status || filters.bateria || filters.bateria_vazia) ? "border-primary/50 bg-primary/5" : ""}
+                    className={(filters.status || filters.bateria) ? "border-primary/50 bg-primary/5" : ""}
                   />
-                  {(filters.status || filters.bateria || filters.bateria_vazia) && (
+                  {(filters.status || filters.bateria) && (
                     <button 
                       onClick={() => {
-                        const newFilters = { ...filters, status: "", bateria: false, bateria_vazia: false };
+                        const newFilters = { ...filters, status: "", bateria: false };
                         setFilters(newFilters);
                         fetchReportData(newFilters.startDate, newFilters.endDate, activeReport!, "", "");
                       }}
@@ -530,8 +517,8 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
             )}
 
             {activeReport === "Rel_Equipamentos" && results.length > 0 && (
-              <div className="relative overflow-hidden print:hidden border-border/40 pb-4">
-                <div className="flex flex-nowrap md:grid md:grid-cols-6 gap-2 overflow-x-auto pb-4 px-1 md:pb-0 custom-scrollbar scroll-smooth snap-x snap-mandatory">
+              <div className="relative overflow-hidden print:hidden border-b border-border/20 mb-4 pb-2 z-10">
+                <div className="flex flex-nowrap md:grid md:grid-cols-5 gap-2 overflow-x-auto pb-4 px-1 md:pb-0 custom-scrollbar scroll-smooth snap-x snap-mandatory">
                   
                   <div className="bg-muted/40 p-2 md:p-3 rounded-lg border border-border/50 min-w-[110px] md:min-w-0 flex-shrink-0 snap-start">
                     <p className="text-[8px] md:text-[10px] font-black uppercase text-muted-foreground tracking-tighter">Total O.S.</p>
@@ -540,7 +527,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
 
                   <div 
                     onClick={() => {
-                        const newFilters = { ...filters, q: "", status: "PENDENTE", bateria: false, bateria_vazia: false };
+                        const newFilters = { ...filters, q: "", status: "PENDENTE", bateria: false };
                         setFilters(newFilters);
                         fetchReportData(newFilters.startDate, newFilters.endDate, activeReport!, "", "PENDENTE");
                     }}
@@ -552,7 +539,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
 
                   <div 
                     onClick={() => {
-                        const newFilters = { ...filters, q: "", status: "LAUDO", bateria: false, bateria_vazia: false };
+                        const newFilters = { ...filters, q: "", status: "LAUDO", bateria: false };
                         setFilters(newFilters);
                         fetchReportData(newFilters.startDate, newFilters.endDate, activeReport!, "", "LAUDO");
                     }}
@@ -564,31 +551,19 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
 
                   <div 
                     onClick={() => {
-                        const newFilters = { ...filters, q: "", status: "", bateria: true, bateria_vazia: false };
+                        const newFilters = { ...filters, q: "", status: "", bateria: true };
                         setFilters(newFilters);
                         fetchReportData(newFilters.startDate, newFilters.endDate, activeReport!, "", "");
                     }}
                     className={`bg-amber-500/10 p-2 md:p-3 rounded-lg border min-w-[110px] md:min-w-0 flex-shrink-0 cursor-pointer hover:bg-amber-500/20 active:scale-[0.97] transition-all snap-start ${filters.bateria ? "ring-2 ring-amber-500 border-amber-500 bg-amber-500/20" : "border-amber-500/20"}`}
                   >
-                    <p className="text-[8px] md:text-[10px] font-black uppercase text-amber-500">C/ Bateria</p>
+                    <p className="text-[8px] md:text-[10px] font-black uppercase text-amber-500">Bateria</p>
                     <p className="text-sm md:text-xl font-black text-amber-600 dark:text-amber-400">{String(stats.bateria || 0)}</p>
                   </div>
 
                   <div 
                     onClick={() => {
-                        const newFilters = { ...filters, q: "", status: "", bateria: false, bateria_vazia: true };
-                        setFilters(newFilters);
-                        fetchReportData(newFilters.startDate, newFilters.endDate, activeReport!, "", "");
-                    }}
-                    className={`bg-rose-500/10 p-2 md:p-3 rounded-lg border min-w-[110px] md:min-w-0 flex-shrink-0 cursor-pointer hover:bg-rose-500/20 active:scale-[0.97] transition-all snap-start ${filters.bateria_vazia ? "ring-2 ring-rose-500 border-rose-500 bg-rose-500/20" : "border-rose-500/20"}`}
-                  >
-                    <p className="text-[8px] md:text-[10px] font-black uppercase text-rose-500 text-xs!">S/ Bateria</p>
-                    <p className="text-sm md:text-xl font-black text-rose-600 dark:text-rose-400">{String(stats.sem_bateria || 0)}</p>
-                  </div>
-
-                  <div 
-                    onClick={() => {
-                        const newFilters = { ...filters, q: "", status: "PRONTO", bateria: false, bateria_vazia: false };
+                        const newFilters = { ...filters, q: "", status: "PRONTO", bateria: false };
                         setFilters(newFilters);
                         fetchReportData(newFilters.startDate, newFilters.endDate, activeReport!, "", "PRONTO");
                     }}
