@@ -538,7 +538,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                 <button 
                   key={item._id || `report-item-${index}`}
                   onClick={() => loadDetail(item)}
-                  className="w-full text-left p-4 hover:bg-primary/5 transition-colors group flex items-center justify-between"
+                  className="w-full text-left p-4 hover:bg-primary/5 transition-colors group flex flex-col relative pr-10"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1">
                     <div className="space-y-0.5">
@@ -608,7 +608,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                     </div>
                   </div>
 
-                  <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-pmpa-navy/20 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="absolute right-4 top-6 h-5 w-5 text-pmpa-navy/20 group-hover:text-primary group-hover:translate-x-1 transition-all" />
                 </button>
               ))}
             </div>
