@@ -138,7 +138,7 @@ const Cadastro = () => {
               title="Registro Anterior"
             >
               <ChevronLeft className="h-4 w-4" />
-              <span className="hidden sm:inline font-bold text-[10px] uppercase">Anterior</span>
+              <span className="font-bold text-[10px] uppercase">Anterior</span>
             </Button>
             
             <div className="w-px h-4 bg-border/60 mx-1" />
@@ -151,7 +151,7 @@ const Cadastro = () => {
               className="h-8 gap-1 text-pmpa-navy hover:bg-pmpa-navy/10 px-2"
               title="Próximo Registro"
             >
-              <span className="hidden sm:inline font-bold text-[10px] uppercase">Próximo</span>
+              <span className="font-bold text-[10px] uppercase">Próximo</span>
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>

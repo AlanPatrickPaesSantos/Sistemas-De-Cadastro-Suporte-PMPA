@@ -357,7 +357,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, initialData, id = "c
               disabled={!initialData}
             >
               <Printer className="h-4 w-4" />
-              <span className="hidden xs:inline">Laudo</span>
+              <span className="font-bold text-[13px] uppercase">Laudo</span>
             </Button>
             <Button
               type="button"
@@ -367,7 +367,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, initialData, id = "c
               disabled={!initialData}
             >
               <Printer className="h-4 w-4" />
-              <span className="hidden xs:inline">Saída</span>
+              <span className="font-bold text-[13px] uppercase">Saída</span>
             </Button>
           </div>
           
