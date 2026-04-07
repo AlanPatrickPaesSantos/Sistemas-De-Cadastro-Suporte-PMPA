@@ -68,7 +68,7 @@ app.use('/api/unidades', verificarToken);
 // Busca e filtros de serviços (listagem com limite)
 app.get('/api/servicos', async (req, res) => {
   try {
-    const { q, startDate, endDate, status, bateria } = req.query;
+    const { q, startDate, endDate, status, bateria, bateria_vazia } = req.query;
     let query = {};
 
     if (q) {
@@ -101,6 +101,14 @@ app.get('/api/servicos', async (req, res) => {
       query.Bateria = { $ne: "", $exists: true };
     }
 
+    if (bateria_vazia === "true") {
+      // Filtrar onde o campo Bateria está vazio ou não existe
+      query.$or = [
+        { Bateria: "" },
+        { Bateria: { $exists: false } }
+      ];
+    }
+
     const servicos = await Servico.find(query).limit(50).sort({ Id_cod: -1 });
     res.json(servicos);
   } catch (err) {
@@ -111,7 +119,7 @@ app.get('/api/servicos', async (req, res) => {
 // Contagem EXATA de serviços para relatórios (sem limite)
 app.get('/api/servicos/count', async (req, res) => {
   try {
-    const { startDate, endDate, status, bateria } = req.query;
+    const { startDate, endDate, status, bateria, bateria_vazia } = req.query;
     let query = {};
 
     if (startDate || endDate) {
@@ -127,6 +135,13 @@ app.get('/api/servicos/count', async (req, res) => {
 
     if (bateria === "true") {
       query.Bateria = { $ne: "", $exists: true };
+    }
+
+    if (bateria_vazia === "true") {
+      query.$or = [
+        { Bateria: "" },
+        { Bateria: { $exists: false } }
+      ];
     }
 
     const total = await Servico.countDocuments(query);
