@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { ServicoInternoExternoForm } from "@/components/ServicoInternoExternoForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Search, Loader2, Target } from "lucide-react";
+import { ArrowLeft, Search, Loader2, Target, Printer } from "lucide-react";
+import { MissaoPrint } from "@/components/MissaoPrint";
 import { toast } from "sonner";
 import { API_BASE } from "@/lib/api-config";
 
@@ -69,6 +70,10 @@ const ServicoInternoExterno = () => {
       console.error("Erro ao salvar:", err);
       toast.error("Erro de conexão com o servidor.");
     }
+  };
+
+  const handlePrint = () => {
+    window.print();
   };
 
   return (
@@ -144,6 +149,17 @@ const ServicoInternoExterno = () => {
               VOLTAR
             </Button>
 
+            {selectedRecord && (
+              <Button
+                type="button"
+                onClick={handlePrint}
+                className="w-full sm:w-48 h-12 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg uppercase tracking-tight shadow-md flex gap-2"
+              >
+                <Printer className="h-5 w-5" />
+                IMPRIMIR O.S.
+              </Button>
+            )}
+
             <Button
               type="submit"
               form="missao-form"
@@ -153,6 +169,9 @@ const ServicoInternoExterno = () => {
             </Button>
           </div>
         </div>
+
+        {/* Componente de Impressão (Invisível na UI, aparece no Print) */}
+        {selectedRecord && <MissaoPrint data={selectedRecord} />}
 
       </div>
     </div>
