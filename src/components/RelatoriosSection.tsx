@@ -627,13 +627,13 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                         {activeReport === "Rel_Missao_Consolidado" ? "Tipo" : "Status"}
                       </p>
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${(() => {
-                          const val = String(item.servico || item.Serviço || "").toLowerCase();
-                          if (val.includes("externo")) return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
-                          if (val.includes("interno")) return "bg-blue-500/10 text-blue-600 dark:text-blue-400";
-                          if (val.includes("remoto")) return "bg-purple-500/10 text-purple-600 dark:text-purple-400";
-                          if (val.includes("pronto")) return "bg-green-500/10 text-green-600 dark:text-green-400";
-                          return "bg-amber-500/10 text-amber-600 dark:text-amber-400";
-                        })()
+                        const val = String(item.servico || item.Serviço || "").toLowerCase();
+                        if (val.includes("externo")) return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
+                        if (val.includes("interno")) return "bg-blue-500/10 text-blue-600 dark:text-blue-400";
+                        if (val.includes("remoto")) return "bg-purple-500/10 text-purple-600 dark:text-purple-400";
+                        if (val.includes("pronto")) return "bg-green-500/10 text-green-600 dark:text-green-400";
+                        return "bg-amber-500/10 text-amber-600 dark:text-amber-400";
+                      })()
                         }`}>
                         {activeReport === "Rel_Missao_Consolidado" ? String(item.servico || "N/A") : String(item.Serviço || "PENDENTE")}
                       </span>
@@ -679,19 +679,19 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           </DialogHeader>
           <div className="p-4 md:p-6 flex-1 overflow-y-auto">
             {activeReport === "Rel_Missao_Consolidado" ? (
-              <ServicoInternoExternoForm 
-                id="report-detail-form" 
-                initialData={selectedRecord} 
-                onCancel={() => setSelectedRecord(null)} 
+              <ServicoInternoExternoForm
+                id="report-detail-form"
+                initialData={selectedRecord}
+                onCancel={() => setSelectedRecord(null)}
                 onSubmit={handleSave}
                 onPrint={(type) => { setPrintType(type); setTimeout(() => window.print(), 100); }}
                 isEditMode={!!selectedRecord}
               />
             ) : (
-              <CadastroForm 
-                id="report-detail-form" 
-                initialData={selectedRecord} 
-                onCancel={() => setSelectedRecord(null)} 
+              <CadastroForm
+                id="report-detail-form"
+                initialData={selectedRecord}
+                onCancel={() => setSelectedRecord(null)}
                 onSubmit={handleSave}
                 onPrint={(type) => { setPrintType(type); setTimeout(() => window.print(), 100); }}
                 isEditMode={!!selectedRecord}

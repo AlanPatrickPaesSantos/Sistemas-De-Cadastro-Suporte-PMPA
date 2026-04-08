@@ -181,7 +181,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
             </TabsTrigger>
           </TabsList>
 
-          <div className="flex-1 overflow-y-auto px-1 md:px-4 pb-28 custom-scrollbar relative">
+          <div className="flex-1 overflow-y-auto px-1 md:px-4 pb-4 custom-scrollbar relative">
             
             {/* ABA 1: IDENTIFICAÇÃO */}
             <TabsContent value="identificacao" className="m-0 space-y-5">
@@ -362,7 +362,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
         </Tabs>
 
         {/* Barra de Ações Interna ao Formulário */}
-        <div className="mt-6 pt-4 border-t bg-muted/20 flex flex-nowrap items-center justify-between gap-2 md:gap-3 sticky bottom-0 bg-card z-30 p-2 md:p-3 -mx-2 md:-mx-4 shadow-[0_-8px_30px_rgb(0,0,0,0.06)] rounded-b-xl">
+        <div className="mt-6 pt-4 border-t bg-muted/20 flex flex-nowrap items-center justify-between gap-2 md:gap-3 p-2 md:p-3 -mx-2 md:-mx-4 rounded-b-xl">
           <div className="flex gap-2">
             {onNavigate && (
               <Button

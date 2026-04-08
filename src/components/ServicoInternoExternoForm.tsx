@@ -142,7 +142,7 @@ export const ServicoInternoExternoForm = ({
 
   return (
     <form id={id} onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-1 py-1">
-      <div className="space-y-4 pb-24">
+      <div className="space-y-4">
         
         {/* Row 1: OS, Seção, Unidade */}
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-3 pt-1">
@@ -272,7 +272,7 @@ export const ServicoInternoExternoForm = ({
         </div>
 
         {/* Barra de Ações Interna ao Formulário */}
-        <div className="mt-6 pt-4 border-t bg-muted/20 flex flex-nowrap items-center justify-between gap-2 md:gap-3 sticky bottom-0 bg-card z-30 p-2 md:p-3 -mx-2 md:-mx-4 shadow-[0_-8px_30px_rgb(0,0,0,0.06)] rounded-b-xl">
+        <div className="mt-6 pt-4 border-t bg-muted/20 flex flex-nowrap items-center justify-between gap-2 md:gap-3 p-2 md:p-3 -mx-2 md:-mx-4 rounded-b-xl">
           <div className="flex gap-2">
             {onNavigate && (
               <Button
