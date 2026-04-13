@@ -291,27 +291,6 @@ export const ServicoInternoExternoForm = ({
             <Button
               type="button"
               variant="outline"
-              onClick={() => onPrint?.('entrada')}
-              className="h-10 md:h-12 gap-1 md:gap-2 text-pmpa-navy border-pmpa-navy/30 hover:bg-pmpa-navy/5 font-bold px-2 md:px-4 flex-1 sm:flex-none"
-              disabled={!initialData}
-            >
-              <Printer className="h-4 w-4 md:h-5 md:w-5" />
-              <span className="text-[10px] md:text-[13px] uppercase">Entrada</span>
-            </Button>
-            
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onPrint?.('laudo')}
-              className="h-10 md:h-12 gap-1 md:gap-2 text-pmpa-navy border-pmpa-navy/30 hover:bg-pmpa-navy/5 font-bold px-2 md:px-4 flex-1 sm:flex-none"
-              disabled={!initialData}
-            >
-              <Printer className="h-4 w-4 md:h-5 md:w-5" />
-              <span className="text-[10px] md:text-[13px] uppercase">Laudo</span>
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
               onClick={() => onPrint?.('saida')}
               className="h-10 md:h-12 gap-1 md:gap-2 text-pmpa-navy border-pmpa-navy/30 hover:bg-pmpa-navy/5 font-bold px-2 md:px-4 flex-1 sm:flex-none"
               disabled={!initialData}
