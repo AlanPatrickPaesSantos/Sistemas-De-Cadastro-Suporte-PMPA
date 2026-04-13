@@ -362,8 +362,8 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
         </Tabs>
 
         {/* Barra de Ações Interna ao Formulário */}
-        <div className="mt-6 bg-muted/20 flex flex-nowrap items-center justify-between gap-2 md:gap-3 p-2 md:p-3 -mx-2 md:-mx-4 rounded-b-xl">
-          <div className="flex gap-2">
+        <div className="mt-6 bg-muted/20 flex flex-col md:flex-row items-center justify-between gap-3 p-2 md:p-3 -mx-2 md:-mx-4 rounded-b-xl">
+          <div className="flex flex-wrap md:flex-nowrap w-full md:w-auto gap-2 justify-center md:justify-start">
             {onNavigate && (
               <Button
                 type="button"
@@ -411,7 +411,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
             </Button>
           </div>
           
-          <div className="flex gap-2 items-center">
+          <div className="flex flex-wrap md:flex-nowrap w-full md:w-auto gap-2 items-center justify-center md:justify-end">
             <Button
               type="submit"
               className="bg-pmpa-navy hover:bg-pmpa-navy/90 text-white h-10 md:h-12 px-6 md:px-12 font-black shadow-lg uppercase tracking-tight text-xs md:text-lg border-2 border-white/10"
