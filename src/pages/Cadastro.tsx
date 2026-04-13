@@ -16,7 +16,7 @@ const Cadastro = () => {
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNext, setHasNext] = useState(false);
-  const [printType, setPrintType] = useState<'laudo' | 'saida'>('laudo');
+  const [printType, setPrintType] = useState<'laudo' | 'saida' | 'entrada'>('laudo');
   const [isNavLoading, setIsNavLoading] = useState(false);
   const [novoFormKey, setNovoFormKey] = useState(0);
 

@@ -17,7 +17,7 @@ export const ConsultasSection = () => {
   const [hasPrev, setHasPrev] = useState(false);
   const [hasNext, setHasNext] = useState(false);
   const [isNavLoading, setIsNavLoading] = useState(false);
-  const [printType, setPrintType] = useState<'laudo' | 'saida'>('laudo');
+  const [printType, setPrintType] = useState<'laudo' | 'saida' | 'entrada'>('laudo');
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   useEffect(() => {
@@ -71,140 +71,131 @@ export const ConsultasSection = () => {
       if (!res.ok) throw new Error('Registro não encontrado');
       
       const data = await res.json();
-      if (!data || !data.record) throw new Error('Dados inválidos recebidos');
-
-      setSelectedRecord(data.record);
-      setHasPrev(data.hasPrev);
-      setHasNext(data.hasNext);
+      if (data && data.record) {
+        setSelectedRecord(data.record);
+        setHasPrev(data.hasPrev);
+        setHasNext(data.hasNext);
+      }
     } catch (err) {
-      console.error('Erro ao navegar:', err);
-      toast.error('Não há mais registros nesta direção.');
+      toast.error("Erro ao navegar");
     } finally {
       setIsNavLoading(false);
     }
   };
 
-  const handleSelectRecord = async (record: any) => {
-    await loadRecord(record);
-  };
-
   return (
-    <>
-      <Card className="overflow-hidden shadow-[var(--shadow-card)] border-border/60 hover:shadow-[var(--shadow-card-hover)] transition-shadow duration-300">
-        <div className="h-1 bg-primary" />
-        <div className="p-6">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-              <Search className="h-5 w-5 text-primary" />
-            </div>
-            <h2 className="text-lg font-bold text-foreground tracking-tight">Consultas</h2>
-          </div>
-
-          <div className="space-y-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Buscar por ID, Série ou RP..."
-                className="pl-10 bg-muted/30 border-border/60 focus:border-primary/40 transition-colors"
-              />
-              {isLoading && (
-                <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-primary" />
-              )}
-            </div>
-
-            {/* Lista de Resultados Rápidos */}
-            {Array.isArray(results) && results.length > 0 && (
-              <div className="rounded-lg border border-border/40 bg-card overflow-hidden divide-y divide-border/20 shadow-sm animate-in fade-in slide-in-from-top-2 duration-300 max-h-[300px] overflow-y-auto custom-scrollbar">
-                {results.map((item) => (
-                  <button
-                    key={item._id}
-                    onClick={() => handleSelectRecord(item)}
-                    className="w-full text-left p-3 hover:bg-primary/5 transition-colors group flex items-center justify-between"
-                  >
-                    <div className="space-y-0.5">
-                      <p className="text-sm font-semibold text-foreground">
-                        ID: {item.Id_cod} - {item.T_EquipSuporte || item.T_EquipTelecom}
-                      </p>
-                      <p className="text-[11px] text-muted-foreground uppercase tracking-wider">
-                        {item.Unidade} | Série: {item.Nº_Serie}
-                      </p>
-                      <p className="text-[10px] text-foreground/60 line-clamp-1 italic mt-1">
-                        Defeito: {item.Defeito_Recl || "---"}
-                      </p>
-                    </div>
-                    <FileText className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+    <div className="space-y-6">
+      <div className="bg-card rounded-lg p-3 md:p-4 border border-border/50 shadow-sm mb-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <Input
+            placeholder="Buscar por ID, Série ou RP..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="pl-10 h-10 md:h-12 text-base font-medium border-pmpa-navy/20 focus-visible:ring-pmpa-navy shadow-inner"
+          />
         </div>
-      </Card>
+      </div>
 
-      {/* Modal de Detalhes Preenchido */}
-      <Dialog open={isDetailsOpen} onOpenChange={(open) => {
-        setIsDetailsOpen(open);
-        if (!open) setTimeout(() => setSelectedRecord(null), 300);
-      }}>
-        <DialogContent className="max-w-4xl w-[95vw] sm:w-full max-h-[92vh] overflow-hidden flex flex-col p-0 border-pmpa-navy/20">
-          <DialogHeader className="p-4 md:p-6 pb-2 border-b border-border/50 bg-pmpa-navy/5">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="px-2 py-0.5 rounded-full bg-pmpa-navy/10 text-pmpa-navy text-[10px] font-bold uppercase tracking-wider">Detalhamento de Registro</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {isLoading ? (
+          <div className="col-span-full py-12 flex flex-col items-center justify-center gap-3 text-muted-foreground">
+            <Loader2 className="h-8 w-8 animate-spin" />
+            <p className="font-bold">Buscando dados no sistema...</p>
+          </div>
+        ) : results.length > 0 ? (
+          results.map((record) => (
+            <Card
+              key={record.Id_cod}
+              className="group p-4 hover:shadow-md transition-all cursor-pointer border-l-4 border-l-pmpa-navy hover:bg-muted/30"
+              onClick={() => loadRecord(record)}
+            >
+              <div className="flex justify-between items-start mb-2">
+                <span className="text-sm font-black text-pmpa-navy bg-pmpa-navy/5 px-2 py-0.5 rounded">
+                  OS #{record.Id_cod}
+                </span>
+                <span className="text-[10px] font-bold text-muted-foreground uppercase">
+                  {new Date(record.Data_Ent).toLocaleDateString()}
+                </span>
+              </div>
+              <h3 className="font-bold text-foreground mb-1 group-hover:text-pmpa-navy transition-colors truncate">
+                {record.T_EquipSuporte || record.T_EquipTelecom}
+              </h3>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-bold uppercase">
+                  RP: {record.RP || "-"}
+                </span>
+                <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-bold uppercase">
+                  Unidade: {record.Unidade || "-"}
+                </span>
+              </div>
+            </Card>
+          ))
+        ) : query.length > 0 ? (
+          <div className="col-span-full py-12 text-center text-muted-foreground">
+            <p className="font-bold">Nenhum equipamento encontrado com a busca "{query}"</p>
+          </div>
+        ) : null}
+      </div>
+
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-[95vw] md:max-w-4xl p-0 h-[90vh] md:h-auto md:max-h-[95vh] overflow-hidden flex flex-col border-pmpa-navy/20">
+          <DialogHeader className="p-3 md:p-6 border-b bg-muted/30 shrink-0">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <DialogTitle className="text-xl md:text-2xl font-black text-pmpa-navy uppercase tracking-tight">
+                  Consulta de OS #{selectedRecord?.Id_cod}
+                </DialogTitle>
+                <DialogDescription className="text-xs uppercase font-bold tracking-widest text-muted-foreground">
+                  Visualização e Edição de Registro
+                </DialogDescription>
+              </div>
             </div>
-            <DialogTitle className="text-xl md:text-2xl font-bold text-pmpa-navy leading-tight">
-              Equipamento #{selectedRecord ? String(selectedRecord.Id_cod) : ""}
-            </DialogTitle>
-            <DialogDescription className="text-xs md:text-sm">
-              Visualizando dados do sistema PMPA / DITEL.
-            </DialogDescription>
           </DialogHeader>
 
-          <div className="p-4 md:p-6 flex-1 overflow-y-auto">
-            <CadastroForm
-              id="editar-consulta-form"
-              initialData={selectedRecord}
-              onSubmit={async (data) => {
-                try {
-                  const res = await fetch(
-                    `${API_BASE}/servicos/${selectedRecord?.Id_cod}`,
-                    {
+          <div className="flex-1 overflow-y-auto p-1 md:p-6 bg-card">
+            {selectedRecord && (
+              <CadastroForm
+                key={`details-${selectedRecord.Id_cod}`}
+                initialData={selectedRecord}
+                onSubmit={async (data) => {
+                  try {
+                    const res = await fetch(`${API_BASE}/servicos/${selectedRecord.Id_cod}`, {
                       method: "PUT",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify(data),
+                    });
+                    const result = await res.json();
+                    if (result.success) {
+                      toast.success("✅ Registro atualizado!");
+                      setSelectedRecord(result.record);
+                    } else {
+                      toast.error("Erro ao salvar.");
                     }
-                  );
-                  const result = await res.json();
-                  if (result.success) {
-                    toast.success(`✅ OS nº ${selectedRecord ? String(selectedRecord.Id_cod) : ""} atualizada com sucesso!`);
-                    setSelectedRecord(result.record);
-                    setResults(prev =>
-                      Array.isArray(prev) ? prev.map(r => r.Id_cod === result.record.Id_cod ? result.record : r) : []
-                    );
-                    setIsDetailsOpen(false);
-                    setTimeout(() => setSelectedRecord(null), 300);
-                  } else {
-                    toast.error("Erro ao salvar: " + (result.error || "Tente novamente."));
+                  } catch (err) {
+                    toast.error("Erro de conexão.");
                   }
-                } catch (err) {
-                  toast.error("Erro de conexão com o servidor.");
-                }
-              }}
-              onCancel={() => {
-                setIsDetailsOpen(false);
-                setTimeout(() => setSelectedRecord(null), 300);
-              }}
-              onPrint={(type) => { setPrintType(type); setTimeout(() => window.print(), 100); }}
-              onNavigate={navigateTo}
-              hasPrev={hasPrev}
-              hasNext={hasNext}
-              isEditMode={true}
-            />
-            {selectedRecord && <LaudoPrint data={selectedRecord} type={printType} />}
+                }}
+                onCancel={() => setIsDetailsOpen(false)}
+                onPrint={(type) => {
+                  setPrintType(type);
+                  setTimeout(() => window.print(), 100);
+                }}
+                onNavigate={navigateTo}
+                hasPrev={hasPrev}
+                hasNext={hasNext}
+                isEditMode={true}
+              />
+            )}
           </div>
         </DialogContent>
       </Dialog>
-    </>
+
+      {selectedRecord && (
+        <div className="hidden">
+          <LaudoPrint data={selectedRecord} type={printType} />
+        </div>
+      )}
+    </div>
   );
 };

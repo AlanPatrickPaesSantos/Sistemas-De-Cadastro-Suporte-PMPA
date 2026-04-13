@@ -43,7 +43,7 @@ interface ServicoInternoExternoFormProps {
   initialData?: any;
   onSubmit: (data: FormData) => void;
   onCancel: () => void;
-  onPrint?: (type: 'laudo' | 'saida') => void;
+  onPrint?: (type: 'laudo' | 'saida' | 'entrada') => void;
   onNavigate?: (dir: 'prev' | 'next') => void;
   hasPrev?: boolean;
   hasNext?: boolean;
@@ -287,6 +287,17 @@ export const ServicoInternoExternoForm = ({
                 <span className="hidden md:inline text-xs uppercase tracking-tighter">Anterior</span>
               </Button>
             )}
+            
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onPrint?.('entrada')}
+              className="h-10 md:h-12 gap-1 md:gap-2 text-pmpa-navy border-pmpa-navy/30 hover:bg-pmpa-navy/5 font-bold px-2 md:px-4 flex-1 sm:flex-none"
+              disabled={!initialData}
+            >
+              <Printer className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-[10px] md:text-[13px] uppercase">Entrada</span>
+            </Button>
             
             <Button
               type="button"

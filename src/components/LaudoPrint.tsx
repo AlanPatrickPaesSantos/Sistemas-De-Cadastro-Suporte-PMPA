@@ -18,7 +18,7 @@ interface LaudoData {
   Tecnico?: string;
 }
 
-export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: 'laudo' | 'saida' }) => {
+export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: 'laudo' | 'saida' | 'entrada' }) => {
   const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
 
   const formatDateBR = (dateStr?: string) => {
@@ -76,7 +76,9 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
 
       <div className="text-center mb-6">
         <h2 className="text-sm font-black tracking-wide">
-          {type === 'saida' ? 'RELATÓRIO DE SAÍDA DE EQUIPAMENTO' : 'RELATÓRIO DE LAUDO TÉCNICO'}
+          {type === 'saida' ? 'RELATÓRIO DE SAÍDA DE EQUIPAMENTO' : 
+           type === 'entrada' ? 'RELATÓRIO DE ENTRADA DE EQUIPAMENTO' : 
+           'RELATÓRIO DE LAUDO TÉCNICO'}
         </h2>
       </div>
 

@@ -35,7 +35,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     bateria: number;
   }>({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0, laudo: 0, bateria: 0 });
 
-  const [printType, setPrintType] = useState<'laudo' | 'saida'>('laudo');
+  const [printType, setPrintType] = useState<'laudo' | 'saida' | 'entrada'>('laudo');
 
   // Gatilho Externo (vido do Dashboard)
   useEffect(() => {
