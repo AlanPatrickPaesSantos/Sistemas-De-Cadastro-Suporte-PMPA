@@ -218,7 +218,9 @@ app.get('/api/servicos/:id/next', async (req, res) => {
   }
 });
 
-// Unidades
+// ====== ROTAS DE UNIDADES (SIMPLES E CRUD) ======
+
+// Lista simples (usada globalmente para Dropdowns)
 app.get('/api/unidades', async (req, res) => {
   try {
     const unidades = await Unidade.find({}, 'UNIDADE').sort({ UNIDADE: 1 });
@@ -227,6 +229,114 @@ app.get('/api/unidades', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Listagem detalhada para o Painel de Gestão (Busca)
+app.get('/api/unidades/list', async (req, res) => {
+  try {
+    const { q } = req.query;
+    let query = {};
+    
+    if (q) {
+      query.UNIDADE = { $regex: q, $options: 'i' };
+    }
+    
+    const unidades = await Unidade.find(query).sort({ ID_UNID_SEÇÃO: 1 });
+    res.json(unidades);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Obter próximo ID de unidade disponível
+app.get('/api/unidades/next-id', async (req, res) => {
+  try {
+    const last = await Unidade.findOne().sort({ ID_UNID_SEÇÃO: -1 });
+    res.json({ nextId: last && last.ID_UNID_SEÇÃO ? last.ID_UNID_SEÇÃO + 1 : 1 });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Criar nova Unidade
+app.post('/api/unidades', async (req, res) => {
+  try {
+    let { UNIDADE } = req.body;
+    if (!UNIDADE || UNIDADE.trim() === '') {
+      return res.status(400).json({ error: 'A sigla da unidade é obrigatória.' });
+    }
+    
+    UNIDADE = UNIDADE.trim().toUpperCase();
+    
+    // Check de duplicação ignorando maiúsculas/minúsculas
+    const existe = await Unidade.findOne({ UNIDADE: { $regex: new RegExp(`^\\s*${UNIDADE}\\s*$`, 'i') } });
+    
+    if (existe) {
+      return res.status(400).json({ error: 'Já existe uma unidade cadastrada com esta sigla.' });
+    }
+    
+    const last = await Unidade.findOne().sort({ ID_UNID_SEÇÃO: -1 });
+    const nextId = last && last.ID_UNID_SEÇÃO ? last.ID_UNID_SEÇÃO + 1 : 1;
+    
+    const novaUnidade = new Unidade({
+      ID_UNID_SEÇÃO: nextId,
+      UNIDADE: UNIDADE
+    });
+    
+    await novaUnidade.save();
+    res.status(201).json({ success: true, unidade: novaUnidade });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Atualizar Unidade
+app.put('/api/unidades/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    let { UNIDADE } = req.body;
+    
+    if (!UNIDADE || UNIDADE.trim() === '') {
+      return res.status(400).json({ error: 'A sigla da unidade é obrigatória.' });
+    }
+    
+    UNIDADE = UNIDADE.trim().toUpperCase();
+    
+    // Verifica se a sigla já existe em OUTRA unidade
+    const existe = await Unidade.findOne({ 
+      UNIDADE: { $regex: new RegExp(`^\\s*${UNIDADE}\\s*$`, 'i') },
+      ID_UNID_SEÇÃO: { $ne: id }
+    });
+    
+    if (existe) {
+      return res.status(400).json({ error: 'Já existe outra unidade cadastrada com esta sigla.' });
+    }
+    
+    const updated = await Unidade.findOneAndUpdate(
+      { ID_UNID_SEÇÃO: id },
+      { $set: { UNIDADE: UNIDADE } },
+      { new: true }
+    );
+    
+    if (!updated) return res.status(404).json({ error: 'Unidade não encontrada.' });
+    res.json({ success: true, unidade: updated });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Deletar Unidade
+app.delete('/api/unidades/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const deleted = await Unidade.findOneAndDelete({ ID_UNID_SEÇÃO: id });
+    
+    if (!deleted) return res.status(404).json({ error: 'Unidade não encontrada.' });
+    res.json({ success: true, message: 'Unidade removida com sucesso.' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 // Criar novo cadastro
 app.post('/api/servicos', async (req, res) => {
