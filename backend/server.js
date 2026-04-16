@@ -19,6 +19,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 const Servico = require('./models/Servico');
 const Unidade = require('./models/Unidade');
+const EqSuporte = require('./models/EqSuporte');
 const Missao = require('./models/Missao');
 const Usuario = require('./models/Usuario');
 const bcrypt = require('bcryptjs');
@@ -63,6 +64,7 @@ app.post('/api/auth/login', async (req, res) => {
 app.use('/api/servicos', verificarToken);
 app.use('/api/missoes', verificarToken);
 app.use('/api/unidades', verificarToken);
+app.use('/api/eqsuporte', verificarToken);
 
 
 // Busca e filtros de serviços (listagem com limite)
@@ -332,6 +334,114 @@ app.delete('/api/unidades/:id', async (req, res) => {
     
     if (!deleted) return res.status(404).json({ error: 'Unidade não encontrada.' });
     res.json({ success: true, message: 'Unidade removida com sucesso.' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+// ====== ROTAS DE EQUIPAMENTOS DE SUPORTE ======
+
+// Lista simples (usada globalmente para Dropdowns)
+app.get('/api/eqsuporte', async (req, res) => {
+  try {
+    const equips = await EqSuporte.find({}, 'EQUIPAMENTO').sort({ EQUIPAMENTO: 1 });
+    res.json(equips.map(e => e.EQUIPAMENTO));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Listagem detalhada para o Painel de Gestão (Busca)
+app.get('/api/eqsuporte/list', async (req, res) => {
+  try {
+    const { q } = req.query;
+    let query = {};
+    if (q) {
+      query.EQUIPAMENTO = { $regex: q, $options: 'i' };
+    }
+    const equips = await EqSuporte.find(query).sort({ ID_EQUIP: 1 });
+    res.json(equips);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Obter próximo ID disponível
+app.get('/api/eqsuporte/next-id', async (req, res) => {
+  try {
+    const last = await EqSuporte.findOne().sort({ ID_EQUIP: -1 });
+    res.json({ nextId: last && last.ID_EQUIP ? last.ID_EQUIP + 1 : 1 });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Criar novo Equipamento de Suporte
+app.post('/api/eqsuporte', async (req, res) => {
+  try {
+    let { EQUIPAMENTO } = req.body;
+    if (!EQUIPAMENTO || EQUIPAMENTO.trim() === '') {
+      return res.status(400).json({ error: 'O nome do equipamento é obrigatório.' });
+    }
+    EQUIPAMENTO = EQUIPAMENTO.trim();
+    
+    const existe = await EqSuporte.findOne({ EQUIPAMENTO: { $regex: new RegExp(`^\\s*${EQUIPAMENTO}\\s*$`, 'i') } });
+    if (existe) {
+      return res.status(400).json({ error: 'Já existe um equipamento cadastrado com este nome.' });
+    }
+    
+    const last = await EqSuporte.findOne().sort({ ID_EQUIP: -1 });
+    const nextId = last && last.ID_EQUIP ? last.ID_EQUIP + 1 : 1;
+    
+    const novo = new EqSuporte({ ID_EQUIP: nextId, EQUIPAMENTO });
+    await novo.save();
+    res.status(201).json({ success: true, equipamento: novo });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Atualizar Equipamento de Suporte
+app.put('/api/eqsuporte/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    let { EQUIPAMENTO } = req.body;
+    
+    if (!EQUIPAMENTO || EQUIPAMENTO.trim() === '') {
+      return res.status(400).json({ error: 'O nome do equipamento é obrigatório.' });
+    }
+    EQUIPAMENTO = EQUIPAMENTO.trim();
+    
+    const existe = await EqSuporte.findOne({ 
+      EQUIPAMENTO: { $regex: new RegExp(`^\\s*${EQUIPAMENTO}\\s*$`, 'i') },
+      ID_EQUIP: { $ne: id }
+    });
+    
+    if (existe) {
+      return res.status(400).json({ error: 'Já existe outro equipamento cadastrado com este nome.' });
+    }
+    
+    const updated = await EqSuporte.findOneAndUpdate(
+      { ID_EQUIP: id },
+      { $set: { EQUIPAMENTO: EQUIPAMENTO } },
+      { new: true }
+    );
+    
+    if (!updated) return res.status(404).json({ error: 'Equipamento não encontrado.' });
+    res.json({ success: true, equipamento: updated });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Deletar Equipamento de Suporte
+app.delete('/api/eqsuporte/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const deleted = await EqSuporte.findOneAndDelete({ ID_EQUIP: id });
+    if (!deleted) return res.status(404).json({ error: 'Equipamento não encontrado.' });
+    res.json({ success: true, message: 'Equipamento removido com sucesso.' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
