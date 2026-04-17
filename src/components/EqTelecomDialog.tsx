@@ -44,10 +44,12 @@ export const EqTelecomDialog = ({ open, onOpenChange }: EqTelecomDialogProps) =>
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[650px] p-0 overflow-hidden border-none shadow-2xl">
-        {/* Cabeçalho Institucional */}
-        <div className="bg-pmpa-navy p-5 text-white flex items-center justify-between">
-          <div className="flex items-center gap-3">
+      <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden border-slate-200/50 dark:border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.4)] backdrop-blur-3xl bg-white/95 dark:bg-slate-900/95 rounded-2xl">
+        <div className="bg-gradient-to-r from-[#004e9a] to-[#002f5c] p-6 text-white flex items-center justify-between relative overflow-hidden shadow-inner">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden flex justify-end items-center opacity-[0.05]">
+             <img src="/logo-pmpa.png" alt="watermark" className="w-64 h-auto scale-150 rotate-12 grayscale" />
+          </div>
+          <div className="flex items-center gap-4 relative z-10">
             <div className="p-2 bg-white/10 rounded-lg">
               <Phone className="h-6 w-6 text-white" />
             </div>
@@ -60,53 +62,53 @@ export const EqTelecomDialog = ({ open, onOpenChange }: EqTelecomDialogProps) =>
               </p>
             </div>
           </div>
-          <div className="flex gap-2 pr-12">
+          <div className="flex gap-2 relative z-10">
             <Button
               size="sm"
               variant="secondary"
               onClick={handleSave}
-              className="h-9 px-4 font-bold uppercase text-[11px] tracking-wider gap-2 shadow-sm"
+              className="h-10 px-5 font-bold uppercase text-[11px] tracking-wider gap-2 shadow-sm bg-blue-500 hover:bg-blue-400 text-white border-blue-400/50 hover:-translate-y-0.5 transition-all rounded-xl"
             >
-              <Save className="h-4 w-4" />
+              <Save className="h-4 w-4" strokeWidth={2.5} />
               Salvar
             </Button>
             <Button
               size="sm"
               variant="destructive"
               onClick={handleDelete}
-              className="h-9 px-4 font-bold uppercase text-[11px] tracking-wider gap-2 shadow-sm bg-pmpa-red hover:bg-pmpa-red/90"
+              className="h-10 px-5 font-bold uppercase text-[11px] tracking-wider gap-2 shadow-sm rounded-xl transition-all bg-red-500 hover:bg-red-400 hover:-translate-y-0.5 border-red-400/50"
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="h-4 w-4" strokeWidth={2.5} />
               Excluir
             </Button>
           </div>
         </div>
 
-        <div className="p-6 space-y-6 bg-background">
-          {/* Form Fields / Grid Corporativo */}
-          <div className="grid grid-cols-6 gap-4 p-5 rounded-2xl border border-border/60 bg-muted/20">
-            <div className="col-span-1 space-y-2">
-              <Label htmlFor="id" className="text-[11px] font-black uppercase text-pmpa-navy opacity-70">
+        <div className="p-8 space-y-8 bg-slate-50/50 dark:bg-slate-950/50 backdrop-blur-sm">
+          <div className="grid grid-cols-6 gap-6 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+            <div className="col-span-1 space-y-2.5">
+              <Label htmlFor="id" className="text-[11px] font-black uppercase text-[#004e9a] dark:text-blue-400 opacity-80 tracking-wider">
                 ID_
               </Label>
               <Input
                 id="id"
                 value={id}
                 onChange={(e) => setId(e.target.value)}
-                className="h-10 font-bold text-center bg-white border-border/80"
+                className="h-14 font-black text-center bg-slate-100 border-slate-200 text-xl text-slate-500 rounded-xl"
                 readOnly
               />
             </div>
 
-            <div className="col-span-5 space-y-2">
-              <Label htmlFor="municipal" className="text-[11px] font-black uppercase text-pmpa-navy opacity-70">
+            <div className="col-span-5 space-y-2.5">
+              <Label htmlFor="municipal" className="text-[11px] font-black uppercase text-[#004e9a] dark:text-blue-400 opacity-80 tracking-wider">
                 Municipal RU
               </Label>
               <Input
                 id="municipal"
+                autoFocus
                 value={municipalRu}
                 onChange={(e) => setMunicipalRu(e.target.value)}
-                className="h-10 font-semibold bg-white border-border/80"
+                className="h-14 font-black bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-lg text-slate-800 dark:text-slate-100 focus-visible:ring-2 focus-visible:ring-[#004e9a]/50 focus-visible:border-[#004e9a] uppercase shadow-inner rounded-xl transition-all"
                 placeholder="Identificação Municipal"
               />
             </div>

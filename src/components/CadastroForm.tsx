@@ -184,9 +184,12 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
           <div className="flex-1 overflow-y-auto px-1 md:px-4 pb-4 custom-scrollbar relative">
             
             {/* ABA 1: IDENTIFICAÇÃO */}
-            <TabsContent value="identificacao" className="m-0 space-y-5">
-              <div className="space-y-3">
-                <h3 className="text-sm font-bold text-pmpa-navy uppercase tracking-widest border-b border-border/50 pb-1">Informações Principais</h3>
+            <TabsContent value="identificacao" className="m-0 space-y-6">
+              <div className="p-6 bg-white/95 dark:bg-slate-900/95 border border-slate-200/60 dark:border-white/10 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] space-y-5 relative overflow-hidden transition-all focus-within:shadow-[0_8px_30px_rgba(0,78,154,0.08)] focus-within:border-[#004e9a]/30">
+                <div className="absolute top-0 left-0 w-1.5 bottom-0 bg-[#004e9a]/80" />
+                <h3 className="text-[13px] font-black text-[#004e9a] dark:text-blue-400 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#004e9a] animate-pulse" /> Informações Principais
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <FormField control={form.control} name="os" render={({ field }) => (
                     <FormItem>
@@ -225,9 +228,12 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 </div>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-border/20">
-                <h3 className="text-sm font-bold text-pmpa-navy uppercase tracking-widest border-b border-border/50 pb-1">Dados de Entrada</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="p-6 bg-white/95 dark:bg-slate-900/95 border border-slate-200/60 dark:border-white/10 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] space-y-5 relative overflow-hidden transition-all focus-within:shadow-[0_8px_30px_rgba(0,78,154,0.08)] focus-within:border-[#004e9a]/30">
+                <div className="absolute top-0 left-0 w-1.5 bottom-0 bg-emerald-500/80" />
+                <h3 className="text-[13px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Dados de Entrada
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <FormField control={form.control} name="solicitante" render={({ field }) => (
                     <FormItem><FormLabel className="text-sm font-semibold">Solicitante</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
                   )} />
@@ -272,8 +278,11 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
 
             {/* ABA 2: ANÁLISE & SERVIÇO */}
             <TabsContent value="analise" className="m-0 space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-sm font-bold text-pmpa-navy uppercase tracking-widest border-b border-border/50 pb-1">Diagnóstico</h3>
+              <div className="p-6 bg-white/95 dark:bg-slate-900/95 border border-slate-200/60 dark:border-white/10 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] space-y-5 relative overflow-hidden transition-all focus-within:shadow-[0_8px_30px_rgba(0,78,154,0.08)] focus-within:border-[#004e9a]/30">
+                <div className="absolute top-0 left-0 w-1.5 bottom-0 bg-yellow-500/80" />
+                <h3 className="text-[13px] font-black text-yellow-600 dark:text-yellow-400 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse" /> Diagnóstico
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="defeitoRecl" render={({ field }) => (
                     <FormItem><FormLabel className="text-sm font-bold uppercase text-pmpa-navy">Defeito Reclamado</FormLabel>
@@ -288,8 +297,11 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 </div>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-border/20">
-                <h3 className="text-sm font-bold text-pmpa-navy uppercase tracking-widest border-b border-border/50 pb-1">Conclusão e Saída</h3>
+              <div className="p-6 bg-white/95 dark:bg-slate-900/95 border border-slate-200/60 dark:border-white/10 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] space-y-5 relative overflow-hidden transition-all focus-within:shadow-[0_8px_30px_rgba(0,78,154,0.08)] focus-within:border-[#004e9a]/30">
+                <div className="absolute top-0 left-0 w-1.5 bottom-0 bg-purple-500/80" />
+                <h3 className="text-[13px] font-black text-purple-600 dark:text-purple-400 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" /> Conclusão e Saída
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <FormField control={form.control} name="servico" render={({ field }) => (
                     <FormItem><FormLabel className="text-sm font-semibold">Status do Serviço</FormLabel>

@@ -87,27 +87,27 @@ export const ConsultasSection = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-card rounded-lg p-3 md:p-4 border border-border/50 shadow-sm mb-4">
-        <div className="flex flex-col md:flex-row gap-2 relative">
+      <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl p-4 md:p-6 border border-slate-200/50 dark:border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.06)] mb-8 transition-all hover:shadow-[0_15px_50px_rgba(0,78,154,0.1)] group">
+        <div className="flex flex-col md:flex-row gap-3 relative">
           <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-full md:w-[180px] h-10 md:h-12 border-pmpa-navy/20 font-bold text-pmpa-navy bg-muted/20 focus:ring-pmpa-navy uppercase text-[11px] md:text-xs tracking-wider shrink-0">
+            <SelectTrigger className="w-full md:w-[220px] h-12 md:h-14 border-slate-200 dark:border-slate-700 font-bold text-[#004e9a] dark:text-blue-400 bg-slate-50 dark:bg-slate-800 focus:ring-[#004e9a] uppercase text-[11px] md:text-sm tracking-wider shrink-0 rounded-xl shadow-inner transition-colors group-hover:border-[#004e9a]/30">
               <SelectValue placeholder="Filtro" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all" className="font-semibold text-xs">🌐 TODAS AS CATEGORIAS</SelectItem>
-              <SelectItem value="os" className="font-semibold text-xs">🔢 NÚMERO DA OS</SelectItem>
-              <SelectItem value="serie" className="font-semibold text-xs">🔤 Nº DE SÉRIE</SelectItem>
-              <SelectItem value="rp" className="font-semibold text-xs">🏷️ NÚMERO DE RP</SelectItem>
-              <SelectItem value="unidade" className="font-semibold text-xs">🏢 UNIDADE / SIGLA</SelectItem>
+            <SelectContent className="rounded-xl border-slate-200 shadow-xl backdrop-blur-xl bg-white/95">
+              <SelectItem value="all" className="font-bold text-xs py-3 uppercase text-slate-700 focus:bg-blue-50 focus:text-[#004e9a] cursor-pointer"><span className="mr-2 opacity-70">🌐</span> TODAS AS CATEGORIAS</SelectItem>
+              <SelectItem value="os" className="font-bold text-xs py-3 uppercase text-slate-700 focus:bg-blue-50 focus:text-[#004e9a] cursor-pointer"><span className="mr-2 opacity-70">🔢</span> NÚMERO DA OS</SelectItem>
+              <SelectItem value="serie" className="font-bold text-xs py-3 uppercase text-slate-700 focus:bg-blue-50 focus:text-[#004e9a] cursor-pointer"><span className="mr-2 opacity-70">🔤</span> Nº DE SÉRIE</SelectItem>
+              <SelectItem value="rp" className="font-bold text-xs py-3 uppercase text-slate-700 focus:bg-blue-50 focus:text-[#004e9a] cursor-pointer"><span className="mr-2 opacity-70">🏷️</span> NÚMERO DE RP</SelectItem>
+              <SelectItem value="unidade" className="font-bold text-xs py-3 uppercase text-slate-700 focus:bg-blue-50 focus:text-[#004e9a] cursor-pointer"><span className="mr-2 opacity-70">🏢</span> UNIDADE / SIGLA</SelectItem>
             </SelectContent>
           </Select>
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <div className="relative flex-1 group/input">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-slate-400 transition-colors group-focus-within/input:text-[#004e9a]" />
             <Input
-              placeholder={filterType === 'all' ? "Buscar por ID, Série, RP, Unidade..." : "Digite o termo para buscar no filtro..."}
+              placeholder={filterType === 'all' ? "Buscar por ID, Série, RP, Unidade..." : "Digite o termo para buscar..."}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="pl-10 h-10 md:h-12 text-base font-medium border-pmpa-navy/20 focus-visible:ring-pmpa-navy shadow-inner w-full"
+              className="pl-14 h-12 md:h-14 text-base font-medium border-slate-200 dark:border-slate-700 focus-visible:ring-2 focus-visible:ring-[#004e9a]/50 focus-visible:border-[#004e9a] shadow-inner w-full rounded-xl bg-slate-50 dark:bg-slate-800 transition-all text-slate-800 dark:text-slate-100 placeholder:text-slate-400"
             />
           </div>
         </div>
@@ -123,25 +123,26 @@ export const ConsultasSection = () => {
           results.map((record) => (
             <Card
               key={record.Id_cod}
-              className="group p-4 hover:shadow-md transition-all cursor-pointer border-l-4 border-l-pmpa-navy hover:bg-muted/30"
+              className="group p-5 bg-white border border-slate-200/60 rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.03)] hover:shadow-[0_15px_35px_rgba(0,78,154,0.12)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer overflow-hidden relative"
               onClick={() => loadRecord(record)}
             >
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-sm font-black text-pmpa-navy bg-pmpa-navy/5 px-2 py-0.5 rounded">
+              <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-[#004e9a] to-[#002f5c] opacity-80 group-hover:opacity-100 transition-opacity" />
+              <div className="flex justify-between items-start mb-3 pl-2">
+                <span className="text-[13px] font-black text-white bg-[#004e9a] px-3 py-1 rounded-md shadow-sm tracking-wider">
                   OS #{record.Id_cod}
                 </span>
-                <span className="text-[10px] font-bold text-muted-foreground uppercase">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded-md">
                   {new Date(record.Data_Ent).toLocaleDateString()}
                 </span>
               </div>
-              <h3 className="font-bold text-foreground mb-1 group-hover:text-pmpa-navy transition-colors truncate">
-                {record.T_EquipSuporte || record.T_EquipTelecom}
+              <h3 className="font-bold text-slate-800 text-base mb-3 group-hover:text-[#004e9a] transition-colors truncate pl-2">
+                {record.T_EquipSuporte || record.T_EquipTelecom || "Equipamento Indefinido"}
               </h3>
-              <div className="flex flex-wrap gap-2 mt-2">
-                <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-bold uppercase">
+              <div className="flex flex-wrap gap-2 pl-2">
+                <span className="text-[11px] bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-1 rounded-lg font-bold uppercase shadow-sm">
                   RP: {record.RP || "-"}
                 </span>
-                <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded font-bold uppercase">
+                <span className="text-[11px] bg-blue-50 text-[#004e9a] border border-blue-100 px-2.5 py-1 rounded-lg font-bold uppercase shadow-sm">
                   Unidade: {record.Unidade || "-"}
                 </span>
               </div>

@@ -374,17 +374,19 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
 
   return (
     <>
-      <Card className="overflow-hidden shadow-[var(--shadow-card)] border-border/60 hover:shadow-[var(--shadow-card-hover)] transition-shadow duration-300">
-        <div className="h-1 bg-primary" />
-        <div className="p-6">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-              <FileText className="h-5 w-5 text-primary" />
+      <Card className="relative overflow-hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl border border-slate-200/50 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_15px_40px_rgba(0,78,154,0.1)] transition-all duration-500 group">
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#004e9a] to-[#002f5c] transform origin-left transition-transform duration-500" />
+        <div className="absolute -right-12 -top-12 w-32 h-32 bg-blue-100/50 dark:bg-blue-900/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
+        <div className="p-6 md:p-8 relative z-10">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/40 border border-blue-100 dark:border-blue-800 shadow-sm transition-transform group-hover:scale-110 duration-500">
+              <FileText className="h-6 w-6 text-[#004e9a] dark:text-blue-400 drop-shadow-sm" />
             </div>
-            <h2 className="text-lg font-bold text-foreground tracking-tight">Relatórios</h2>
+            <h2 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight drop-shadow-sm">Painel de Relatórios</h2>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-3 pt-2">
             {[
               { icon: Activity, id: "Rel_Missao_Consolidado", title: "Consolidado Missões", desc: "Relatório de serviços Int/Ext" },
               { icon: Wrench, id: "Rel_Equipamentos", title: "Consolidado Equipamentos", desc: "Relatório de Manutenção e Reparos" },
@@ -396,16 +398,16 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                   setResults([]);
                 }}
                 variant="outline"
-                className="w-full justify-start gap-3 h-auto py-3.5 border-[1.5px] border-border hover:bg-primary/5 hover:border-primary/20 transition-all group"
+                className="w-full justify-start gap-4 h-auto py-4 px-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-gradient-to-r hover:from-[#004e9a]/5 hover:to-transparent hover:border-[#004e9a]/40 transition-all duration-300 group/btn shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_20px_rgba(0,78,154,0.08)] hover:-translate-y-0.5"
               >
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                  <item.icon className="h-4 w-4" />
+                <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800 group-hover/btn:bg-white dark:group-hover/btn:bg-slate-800 shadow-sm border border-slate-100 dark:border-slate-700 transition-colors">
+                  <item.icon className="h-5 w-5 text-slate-500 group-hover/btn:text-[#004e9a]" strokeWidth={2.5} />
                 </div>
-                <div className="text-left flex-1">
-                  <p className="font-semibold text-sm group-hover:text-pmpa-navy transition-colors">{item.title}</p>
-                  <p className="text-xs text-muted-foreground group-hover:text-pmpa-navy/70 transition-colors">{item.desc}</p>
+                <div className="flex flex-col text-left">
+                  <span className="font-bold text-[14px] text-slate-700 dark:text-slate-200 group-hover/btn:text-[#004e9a] dark:group-hover/btn:text-blue-400 transition-colors tracking-wide">{item.title}</span>
+                  <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider">{item.desc}</span>
                 </div>
-                <ChevronRight className="h-4 w-4 text-pmpa-navy/40 opacity-0 group-hover:opacity-100 transition-all translate-x-1" />
+                <ChevronRight className="ml-auto h-5 w-5 text-slate-300 group-hover/btn:text-[#004e9a] transition-all group-hover/btn:translate-x-1" />
               </Button>
             ))}
           </div>
