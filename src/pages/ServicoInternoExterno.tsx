@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ServicoInternoExternoForm } from "@/components/ServicoInternoExternoForm";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Search, Loader2, Target, Printer } from "lucide-react";
+import { ArrowLeft, Search, Loader2, Printer } from "lucide-react";
 import { MissaoPrint } from "@/components/MissaoPrint";
 import { toast } from "sonner";
 import { API_BASE } from "@/lib/api-config";
@@ -86,9 +86,6 @@ const ServicoInternoExterno = () => {
           </Button>
           
           <div className="flex items-center gap-3">
-            <div className="bg-emerald-100 p-2 rounded-full hidden sm:block">
-              <Target className="h-5 w-5 text-emerald-700" />
-            </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-black text-pmpa-navy tracking-tight uppercase leading-tight">Gestão de Missões</h1>
               <p className="text-[10px] md:text-sm text-slate-500 font-bold uppercase tracking-widest leading-none">Serviços Internos e Externos</p>
