@@ -198,19 +198,19 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="tecnico" render={({ field }) => (
-                    <FormItem className="md:col-span-1"><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Técnico Responsável</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
+                    <FormItem className="md:col-span-1"><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Técnico Responsável</FormLabel><FormControl><Input className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                   <FormField control={form.control} name="secaoDitel" render={({ field }) => (
                     <FormItem className="md:col-span-1">
                       <FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Seção</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl><SelectTrigger className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
+                        <FormControl><SelectTrigger className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
                         <SelectContent><SelectItem value="SUPORTE">Suporte</SelectItem><SelectItem value="TELECOM">Telecom</SelectItem></SelectContent>
                       </Select>
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="telefone" render={({ field }) => (
-                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Telefone</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Telefone</FormLabel><FormControl><Input className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -223,7 +223,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="bateria" render={({ field }) => (
-                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Bateria</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Bateria</FormLabel><FormControl><Input className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                 </div>
               </div>
@@ -235,7 +235,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <FormField control={form.control} name="solicitante" render={({ field }) => (
-                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Solicitante</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Solicitante</FormLabel><FormControl><Input className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                   <FormField control={form.control} name="dataEnt" render={({ field }) => (
                     <FormItem>
@@ -258,13 +258,13 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <FormField control={form.control} name="nPae" render={({ field }) => (
-                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Nº PAE</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Nº PAE</FormLabel><FormControl><Input className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                   <FormField control={form.control} name="rp" render={({ field }) => (
-                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">RP</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">RP</FormLabel><FormControl><Input className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                   <FormField control={form.control} name="nSerie" render={({ field }) => (
-                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Nº Série / Patrimônio</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Nº Série / Patrimônio</FormLabel><FormControl><Input className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                 </div>
                 <FormField control={form.control} name="fonteCabo" render={({ field }) => (
@@ -286,12 +286,12 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="defeitoRecl" render={({ field }) => (
                     <FormItem><FormLabel className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Defeito Reclamado</FormLabel>
-                      <FormControl><Textarea {...field} className="min-h-[160px] text-sm leading-relaxed p-4 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium custom-scrollbar" /></FormControl>
+                      <FormControl><Textarea {...field} className="min-h-[160px] text-sm leading-relaxed p-4 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium custom-scrollbar" /></FormControl>
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="analiseTecnica" render={({ field }) => (
                     <FormItem><FormLabel className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Análise Técnica Preliminar</FormLabel>
-                      <FormControl><Textarea {...field} className="min-h-[160px] text-sm leading-relaxed p-4 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium custom-scrollbar" /></FormControl>
+                      <FormControl><Textarea {...field} className="min-h-[160px] text-sm leading-relaxed p-4 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium custom-scrollbar" /></FormControl>
                     </FormItem>
                   )} />
                 </div>
@@ -306,7 +306,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                   <FormField control={form.control} name="servico" render={({ field }) => (
                     <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Status do Serviço</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl><SelectTrigger className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
+                        <FormControl><SelectTrigger className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
                         <SelectContent>
                           <SelectItem value="PRONTO">PRONTO</SelectItem>
                           <SelectItem value="PENDENTE">PENDENTE</SelectItem>
@@ -318,7 +318,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                   <FormField control={form.control} name="garantia" render={({ field }) => (
                     <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Garantia</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl><SelectTrigger className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
+                        <FormControl><SelectTrigger className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
                         <SelectContent><SelectItem value="sim">Sim</SelectItem><SelectItem value="nao">Não</SelectItem></SelectContent>
                       </Select>
                     </FormItem>
@@ -341,19 +341,19 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                   <FormField control={form.control} name="saidaEquip" render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Quem Recebeu (Nome / RG)</FormLabel>
-                      <FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" placeholder="Nome do recebedor..." {...field} /></FormControl>
+                      <FormControl><Input className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" placeholder="Nome do recebedor..." {...field} /></FormControl>
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="dataEnvio" render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Data de Envio (Manutenção Ext.)</FormLabel>
-                      <FormControl><Input type="date" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl>
+                      <FormControl><Input type="date" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" {...field} /></FormControl>
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="dataRetorno" render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Data de Retorno (Manutenção Ext.)</FormLabel>
-                      <FormControl><Input type="date" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl>
+                      <FormControl><Input type="date" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" {...field} /></FormControl>
                     </FormItem>
                   )} />
                 </div>

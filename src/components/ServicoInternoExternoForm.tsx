@@ -158,14 +158,14 @@ export const ServicoInternoExternoForm = ({
               disabled
               {...register("os")}
               placeholder="Gerado Auto."
-              className={`h-11 bg-blue-50/40 border-[#004e9a]/20 text-[#004e9a] font-black text-lg text-center transition-all rounded-xl shadow-inner ${errors.os ? "border-destructive" : ""}`}
+              className={`h-11 bg-blue-50/40 dark:bg-blue-900/20 border-[#004e9a]/20 dark:border-[#004e9a]/40 text-[#004e9a] dark:text-blue-400 font-black text-lg text-center transition-all rounded-xl shadow-inner ${errors.os ? "border-destructive" : ""}`}
             />
           </div>
 
           <div className="space-y-1.5 md:col-span-2">
             <Label htmlFor="secao" className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Seção *</Label>
             <Select onValueChange={(value) => setValue("secao", value)} value={watch("secao")}>
-              <SelectTrigger className={`h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium ${errors.secao ? "border-destructive" : ""}`}>
+              <SelectTrigger className={`h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium ${errors.secao ? "border-destructive" : ""}`}>
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
               <SelectContent>
@@ -189,17 +189,17 @@ export const ServicoInternoExternoForm = ({
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-3">
           <div className="space-y-1.5 lg:col-span-1">
             <Label htmlFor="data" className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Data *</Label>
-            <Input id="data" type="date" {...register("data")} className={`h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium ${errors.data ? "border-destructive" : ""}`} />
+            <Input id="data" type="date" {...register("data")} className={`h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium ${errors.data ? "border-destructive" : ""}`} />
           </div>
 
           <div className="space-y-1.5 lg:col-span-1">
             <Label htmlFor="horario" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Horário</Label>
-            <Input id="horario" {...register("horario")} placeholder="HH:MM" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" />
+            <Input id="horario" {...register("horario")} placeholder="HH:MM" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" />
           </div>
 
           <div className="space-y-1.5 md:col-span-2 lg:col-span-4">
             <Label htmlFor="tecnicos" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Técnicos</Label>
-            <Input id="tecnicos" {...register("tecnicos")} placeholder="Nome dos técnicos" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" />
+            <Input id="tecnicos" {...register("tecnicos")} placeholder="Nome dos técnicos" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" />
           </div>
         </div>
 
@@ -207,18 +207,18 @@ export const ServicoInternoExternoForm = ({
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-3">
           <div className="space-y-1.5 md:col-span-2">
             <Label htmlFor="solicitante" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Solicitante</Label>
-            <Input id="solicitante" {...register("solicitante")} placeholder="Solicitante" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" />
+            <Input id="solicitante" {...register("solicitante")} placeholder="Solicitante" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" />
           </div>
 
           <div className="space-y-1.5 md:col-span-1">
             <Label htmlFor="n_pae" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Nº PAE</Label>
-            <Input id="n_pae" {...register("n_pae")} placeholder="PAE" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" />
+            <Input id="n_pae" {...register("n_pae")} placeholder="PAE" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" />
           </div>
 
           <div className="space-y-1.5 lg:col-span-1">
             <Label htmlFor="categoria" className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Categoria *</Label>
             <Select onValueChange={(value) => setValue("categoria", value)} value={watch("categoria")}>
-              <SelectTrigger className={`h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium ${errors.categoria ? "border-destructive" : ""}`}>
+              <SelectTrigger className={`h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium ${errors.categoria ? "border-destructive" : ""}`}>
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>
               <SelectContent>
@@ -232,7 +232,7 @@ export const ServicoInternoExternoForm = ({
           <div className="space-y-1.5 lg:col-span-1">
             <Label htmlFor="servico" className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Status *</Label>
             <Select onValueChange={(value) => setValue("servico", value)} value={watch("servico")}>
-              <SelectTrigger className={`h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium ${errors.servico ? "border-destructive" : ""}`}>
+              <SelectTrigger className={`h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium ${errors.servico ? "border-destructive" : ""}`}>
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -259,7 +259,7 @@ export const ServicoInternoExternoForm = ({
               id="def_recla" 
               {...register("def_recla")} 
               placeholder="Descreva o defeito" 
-              className="min-h-[140px] text-sm leading-relaxed p-4 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium custom-scrollbar" 
+              className="min-h-[140px] text-sm leading-relaxed p-4 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium custom-scrollbar" 
             />
           </div>
 
@@ -269,7 +269,7 @@ export const ServicoInternoExternoForm = ({
               id="solucao" 
               {...register("solucao")} 
               placeholder="Descreva a solução aplicada na missão..." 
-              className="min-h-[140px] text-sm leading-relaxed p-4 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium custom-scrollbar" 
+              className="min-h-[140px] text-sm leading-relaxed p-4 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium custom-scrollbar" 
             />
           </div>
         </div>
@@ -280,7 +280,7 @@ export const ServicoInternoExternoForm = ({
             id="relatorio" 
             {...register("relatorio")} 
             placeholder="Informações adicionais do relatório..." 
-            className="min-h-[100px] text-sm leading-relaxed p-4 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium custom-scrollbar" 
+            className="min-h-[100px] text-sm leading-relaxed p-4 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium custom-scrollbar" 
           />
         </div>
 
