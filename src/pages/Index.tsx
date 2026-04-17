@@ -112,11 +112,10 @@ const Index = () => {
                 <Wrench className="w-32 h-32 text-red-600" />
               </div>
               <div className="relative z-10 h-full flex flex-col justify-between">
-                 <div className="flex justify-between items-start mb-4">
+                <div className="flex justify-between items-start mb-4">
                   <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl group-hover:bg-red-100 transition-colors">
                     <Wrench className="w-5 h-5 text-red-500" />
                   </div>
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse mt-2" />
                 </div>
                 <div>
                   <p className="text-4xl font-black text-slate-800 dark:text-white tracking-tighter mb-1">
