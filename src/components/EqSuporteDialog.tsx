@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Save, Trash2, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, Headphones, Plus, Loader2 } from "lucide-react";
+import { Save, Trash2, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, Headphones, Plus, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 import { API_BASE } from "../lib/api-config";
 
@@ -256,6 +256,13 @@ export const EqSuporteDialog = ({ open, onOpenChange }: EqSuporteDialogProps) =>
               {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" strokeWidth={2.5} />}
               Excluir
             </Button>
+            <button
+              onClick={() => onOpenChange(false)}
+              className="ml-2 p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+              aria-label="Fechar"
+            >
+              <X className="h-5 w-5" />
+            </button>
           </div>
         </div>
 
