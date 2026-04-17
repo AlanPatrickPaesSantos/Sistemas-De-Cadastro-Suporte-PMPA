@@ -64,9 +64,8 @@ const Index = () => {
 
 
       <main className="container flex-1 px-6 pt-6 pb-12 relative overflow-hidden">
-        {/* Dynamic Abstract Vercel/Linear-style Background Blobs */}
-        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-[#004e9a]/10 dark:bg-[#004e9a]/20 blur-[120px] rounded-full pointer-events-none z-0 mix-blend-multiply dark:mix-blend-lighten" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-emerald-400/10 dark:bg-emerald-500/20 blur-[100px] rounded-full pointer-events-none z-0 mix-blend-multiply dark:mix-blend-lighten" />
+        {/* Subtle Modern Dot Grid Background */}
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-50" />
         
         {/* Subtle Watermark Overlay */}
         <div className="absolute bottom-10 right-10 opacity-[0.02] dark:opacity-[0.03] pointer-events-none z-0">
