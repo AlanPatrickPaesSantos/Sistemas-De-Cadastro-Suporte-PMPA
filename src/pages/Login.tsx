@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { useAuth } from '../contexts/AuthContext';
-import { Loader2, Lock, User, X } from 'lucide-react';
+import { Loader2, Lock, User } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
 import { API_BASE } from '../lib/api-config';
 
@@ -38,7 +38,6 @@ const Login = () => {
         throw new Error(data.error || 'Credenciais inválidas');
       }
 
-      // Sucesso no login, salva no Context e redireciona
       login(data.token, { username: data.username, papel: data.papel });
       
       const destination = location.state?.from?.pathname || '/';
@@ -63,72 +62,86 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
-      {/* Janela Principal estilo Desktop Clássico */}
-      <div className="w-[500px] bg-[#0054ab] border border-black shadow-2xl relative flex flex-col items-center pb-12 pt-8">
-        
-        {/* Ícone de fechar (X) no topo direito - Cosmético simulando o sistema antigo */}
-        <div className="absolute top-4 right-4 cursor-pointer hover:opacity-70 transition-opacity">
-          <X className="w-6 h-6 text-black" strokeWidth={1.5} />
-        </div>
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-b from-[#004e9a] to-[#002f5c] p-4 relative overflow-hidden">
+      
+      {/* Background Decorativo Elegante */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden flex justify-center items-center opacity-[0.03]">
+        <img 
+          src="/logo-pmpa.png" 
+          alt="Watermark PMPA" 
+          className="w-[80vw] max-w-[800px] h-auto object-contain grayscale scale-150 rotate-[-15deg]"
+        />
+      </div>
 
-        {/* Brasão PMPA */}
-        <div className="w-[120px] h-[140px] mb-6 flex justify-center">
+      <div className="w-full max-w-[420px] relative z-10 flex flex-col items-center">
+        
+        {/* Brasão PMPA com Destaque Premium */}
+        <div className="w-32 h-36 mb-6 flex justify-center drop-shadow-2xl hover:scale-105 transition-transform duration-500">
           <img 
             src="/logo-pmpa.png" 
             alt="Brasão PMPA" 
-            className="w-full h-full object-contain filter drop-shadow-md"
+            className="w-full h-full object-contain filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]"
           />
         </div>
 
-        {/* Títulos Oficiais */}
-        <h1 className="text-white text-2xl font-normal tracking-wide mb-6">
-          Policia Do Estado Do Pará
-        </h1>
-        <h2 className="text-white text-lg font-normal mb-8">
-          Sistema De Cadastro Ditel
-        </h2>
+        {/* Títulos Corporativos Melhorados */}
+        <div className="text-center mb-8 space-y-1">
+          <h1 className="text-white text-2xl md:text-[28px] font-bold tracking-tight drop-shadow-lg">
+            Polícia do Estado do Pará
+          </h1>
+          <h2 className="text-blue-100 text-[15px] md:text-lg font-medium opacity-90 tracking-wide">
+            Sistema de Cadastro Ditel
+          </h2>
+        </div>
 
-        {/* Card de Formulário Branco */}
-        <Card className="w-[400px] bg-white rounded-md border border-gray-400 p-8 shadow-md">
-          <p className="text-black text-center text-[15px] mb-8 font-normal">
-            Informe suas credenciais para entrar na aplicação
+        {/* Card de Formulário Moderno e Nítido */}
+        <Card className="w-full bg-white/95 backdrop-blur-md rounded-2xl border border-white/20 p-8 shadow-[0_30px_60px_rgba(0,0,0,0.4)]">
+          <p className="text-slate-600 text-center text-sm md:text-[15px] mb-8 font-semibold tracking-tight">
+            Informe suas credenciais para acessar
           </p>
 
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="relative">
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div className="relative group">
               <Input 
                 autoFocus
-                placeholder="Login" 
+                placeholder="Login / Matrícula" 
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="h-10 border-black/80 rounded-md bg-white text-black text-base pr-10 focus-visible:ring-1 focus-visible:ring-black placeholder:text-black/80"
+                className="h-12 border-slate-300 rounded-xl bg-white text-slate-900 text-base pl-4 pr-11 focus-visible:ring-2 focus-visible:ring-[#004e9a] focus-visible:border-transparent transition-all placeholder:text-slate-400 font-medium"
               />
-              <User className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-black" strokeWidth={2.5} />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 p-1 bg-slate-100 rounded-md group-focus-within:bg-blue-50 transition-colors">
+                <User className="w-[18px] h-[18px] text-slate-500 group-focus-within:text-[#004e9a]" strokeWidth={2.5} />
+              </div>
             </div>
 
-            <div className="relative">
+            <div className="relative group">
               <Input 
                 type="password" 
-                placeholder="Senha" 
+                placeholder="Senha Corporativa" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="h-10 border-black/80 rounded-md bg-white text-black text-base pr-10 focus-visible:ring-1 focus-visible:ring-black placeholder:text-black/80"
+                className="h-12 border-slate-300 rounded-xl bg-white text-slate-900 text-base pl-4 pr-11 focus-visible:ring-2 focus-visible:ring-[#004e9a] focus-visible:border-transparent transition-all placeholder:text-slate-400 font-medium"
               />
-              <Lock className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-black/70" strokeWidth={2} />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 p-1 bg-slate-100 rounded-md group-focus-within:bg-blue-50 transition-colors">
+                <Lock className="w-[18px] h-[18px] text-slate-500 group-focus-within:text-[#004e9a]" strokeWidth={2.5} />
+              </div>
             </div>
 
-            <div className="flex justify-center pt-2">
+            <div className="pt-4">
               <Button 
                 type="submit" 
                 disabled={isLoading || !username || !password}
-                className="w-32 h-10 bg-[#0054ab] hover:bg-[#00428a] text-white font-normal text-base rounded-md tracking-wide"
+                className="w-full h-12 bg-[#004e9a] hover:bg-[#003d7a] text-white font-bold text-base rounded-xl tracking-wide shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
               >
-                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Entrar"}
+                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Fazer Login"}
               </Button>
             </div>
           </form>
         </Card>
+
+        <p className="mt-8 text-center text-xs text-blue-200/60 font-medium uppercase tracking-widest drop-shadow-sm">
+          Diretoria de Telemática © 2026
+        </p>
       </div>
     </div>
   );
