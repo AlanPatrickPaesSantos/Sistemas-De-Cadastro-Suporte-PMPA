@@ -76,15 +76,20 @@ export function CommandMenu() {
   };
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
+    <CommandDialog open={open} onOpenChange={setOpen} shouldFilter={false}>
       <CommandInput 
         placeholder="O que você está procurando? (Busque ID, RP, Unidade...)" 
         value={search}
         onValueChange={setSearch}
       />
       <CommandList className="max-h-[400px]">
+        {isLoading && (
+          <div className="p-4 text-center text-sm text-muted-foreground animate-pulse font-bold uppercase tracking-widest bg-slate-50 dark:bg-slate-900/50">
+            Buscando dados no servidor...
+          </div>
+        )}
         <CommandEmpty>
-          {isLoading ? "Buscando..." : "Nenhum resultado encontrado."}
+          {!isLoading && "Nenhum resultado encontrado."}
         </CommandEmpty>
 
         {results.length > 0 && (
@@ -92,7 +97,7 @@ export function CommandMenu() {
             {results.map((item) => (
               <CommandItem
                 key={item.Id_cod}
-                onSelect={() => runCommand(() => navigate(`/`))} // For now navigate to home where search results can be loaded or open a specific dialog
+                onSelect={() => runCommand(() => navigate(`/?q=${item.Id_cod}`))}
                 className="flex items-center gap-3 py-3"
               >
                 <Database className="h-4 w-4 text-[#004e9a]" />

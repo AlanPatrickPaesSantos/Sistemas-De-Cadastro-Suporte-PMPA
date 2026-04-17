@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +12,9 @@ import { toast } from "sonner";
 import { API_BASE } from "../lib/api-config";
 
 export const ConsultasSection = () => {
-  const [query, setQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialQuery = searchParams.get("q") || "";
+  const [query, setQuery] = useState(initialQuery);
   const [filterType, setFilterType] = useState("all");
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +24,15 @@ export const ConsultasSection = () => {
   const [isNavLoading, setIsNavLoading] = useState(false);
   const [printType, setPrintType] = useState<'laudo' | 'saida' | 'entrada'>('laudo');
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q) {
+      setQuery(q);
+      // Optional: scroll to section
+      document.getElementById('consultas-search-input')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -92,6 +104,7 @@ export const ConsultasSection = () => {
           <div className="relative flex-1 group/input flex items-center">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-slate-400 border-none transition-colors group-focus-within/input:text-[#004e9a]" />
             <Input
+              id="consultas-search-input"
               placeholder={filterType === 'all' ? "Buscar por ID, Série, RP, Unidade..." : "Digite o termo para buscar..."}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
