@@ -127,7 +127,7 @@ const ServicoInternoExterno = () => {
         )}
 
         {/* Form Container: Now wrapping content naturally */}
-        <div className="bg-card rounded-lg shadow-[var(--shadow-card)] border border-border p-4 md:p-6 mb-8">
+        <div className="bg-white/95 dark:bg-slate-900/95 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-200/60 dark:border-white/10 p-5 md:p-8 mb-8 transition-all hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
           <ServicoInternoExternoForm 
             key={selectedRecord ? `edit-${selectedRecord.os}` : `new-${resetKey}`}
             id="missao-form"

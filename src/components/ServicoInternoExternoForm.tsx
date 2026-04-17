@@ -147,20 +147,20 @@ export const ServicoInternoExternoForm = ({
         {/* Row 1: OS, Seção, Unidade */}
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-3 pt-1">
           <div className="md:col-span-2 space-y-1.5">
-            <Label htmlFor="os" className="text-sm font-bold uppercase text-pmpa-navy">OS (MISSÃO) *</Label>
+            <Label htmlFor="os" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">OS (MISSÃO) *</Label>
             <Input
               id="os"
               disabled
               {...register("os")}
               placeholder="Gerado Auto."
-              className={`h-10 bg-muted font-bold text-lg text-center ${errors.os ? "border-destructive" : ""}`}
+              className={`h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium bg-muted font-bold text-lg text-center ${errors.os ? "border-destructive" : ""}`}
             />
           </div>
 
           <div className="space-y-1.5 md:col-span-2">
-            <Label htmlFor="secao" className="text-sm font-bold uppercase text-pmpa-navy">Seção *</Label>
+            <Label htmlFor="secao" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Seção *</Label>
             <Select onValueChange={(value) => setValue("secao", value)} value={watch("secao")}>
-              <SelectTrigger className={`h-10 ${errors.secao ? "border-destructive" : ""}`}>
+              <SelectTrigger className={`h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium ${errors.secao ? "border-destructive" : ""}`}>
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
               <SelectContent>
@@ -171,7 +171,7 @@ export const ServicoInternoExternoForm = ({
           </div>
 
           <div className="space-y-1.5 md:col-span-2">
-            <Label className="text-sm font-bold uppercase text-pmpa-navy">Unidade *</Label>
+            <Label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Unidade *</Label>
             <UnidadeCombobox
               value={watch("unidade")}
               onChange={(value) => setValue("unidade", value, { shouldValidate: true })}
@@ -183,37 +183,37 @@ export const ServicoInternoExternoForm = ({
         {/* Row 2: Data, Horário, Técnicos */}
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-3">
           <div className="space-y-1.5 lg:col-span-1">
-            <Label htmlFor="data" className="text-sm font-bold uppercase text-pmpa-navy">Data *</Label>
-            <Input id="data" type="date" {...register("data")} className={`h-10 ${errors.data ? "border-destructive" : ""}`} />
+            <Label htmlFor="data" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Data *</Label>
+            <Input id="data" type="date" {...register("data")} className={`h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium ${errors.data ? "border-destructive" : ""}`} />
           </div>
 
           <div className="space-y-1.5 lg:col-span-1">
-            <Label htmlFor="horario" className="text-sm font-bold uppercase text-pmpa-navy">Horário</Label>
-            <Input id="horario" {...register("horario")} placeholder="HH:MM" className="h-10" />
+            <Label htmlFor="horario" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Horário</Label>
+            <Input id="horario" {...register("horario")} placeholder="HH:MM" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" />
           </div>
 
           <div className="space-y-1.5 md:col-span-2 lg:col-span-4">
-            <Label htmlFor="tecnicos" className="text-sm font-bold uppercase text-pmpa-navy">Técnicos</Label>
-            <Input id="tecnicos" {...register("tecnicos")} placeholder="Nome dos técnicos" className="h-10" />
+            <Label htmlFor="tecnicos" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Técnicos</Label>
+            <Input id="tecnicos" {...register("tecnicos")} placeholder="Nome dos técnicos" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" />
           </div>
         </div>
 
         {/* Row 3: Solicitante, PAE, Serviço, Reclamação */}
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-3">
           <div className="space-y-1.5 md:col-span-2">
-            <Label htmlFor="solicitante" className="text-sm font-bold uppercase text-pmpa-navy">Solicitante</Label>
-            <Input id="solicitante" {...register("solicitante")} placeholder="Solicitante" className="h-10" />
+            <Label htmlFor="solicitante" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Solicitante</Label>
+            <Input id="solicitante" {...register("solicitante")} placeholder="Solicitante" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" />
           </div>
 
           <div className="space-y-1.5 md:col-span-1">
-            <Label htmlFor="n_pae" className="text-sm font-bold uppercase text-pmpa-navy">Nº PAE</Label>
-            <Input id="n_pae" {...register("n_pae")} placeholder="PAE" className="h-10" />
+            <Label htmlFor="n_pae" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Nº PAE</Label>
+            <Input id="n_pae" {...register("n_pae")} placeholder="PAE" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" />
           </div>
 
           <div className="space-y-1.5 lg:col-span-1">
-            <Label htmlFor="categoria" className="text-sm font-bold uppercase text-pmpa-navy">Categoria *</Label>
+            <Label htmlFor="categoria" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Categoria *</Label>
             <Select onValueChange={(value) => setValue("categoria", value)} value={watch("categoria")}>
-              <SelectTrigger className={`h-10 ${errors.categoria ? "border-destructive" : ""}`}>
+              <SelectTrigger className={`h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium ${errors.categoria ? "border-destructive" : ""}`}>
                 <SelectValue placeholder="Tipo" />
               </SelectTrigger>
               <SelectContent>
@@ -225,9 +225,9 @@ export const ServicoInternoExternoForm = ({
           </div>
 
           <div className="space-y-1.5 lg:col-span-1">
-            <Label htmlFor="servico" className="text-sm font-bold uppercase text-pmpa-navy">Status *</Label>
+            <Label htmlFor="servico" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Status *</Label>
             <Select onValueChange={(value) => setValue("servico", value)} value={watch("servico")}>
-              <SelectTrigger className={`h-10 ${errors.servico ? "border-destructive" : ""}`}>
+              <SelectTrigger className={`h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium ${errors.servico ? "border-destructive" : ""}`}>
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -241,28 +241,28 @@ export const ServicoInternoExternoForm = ({
         {/* Row 4: Descrições Técnicas (Lado a Lado) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label htmlFor="def_recla" className="text-sm font-bold uppercase text-pmpa-navy">Defeito/Reclamação</Label>
+            <Label htmlFor="def_recla" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Defeito/Reclamação</Label>
             <Textarea 
               id="def_recla" 
               {...register("def_recla")} 
               placeholder="Descreva o defeito" 
-              className="min-h-[140px] text-base leading-relaxed p-4 border-pmpa-navy/20 focus:ring-pmpa-navy shadow-inner bg-card" 
+              className="min-h-[140px] text-sm leading-relaxed p-4 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium custom-scrollbar" 
             />
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="solucao" className="text-sm font-bold uppercase text-pmpa-navy">Solução Aplicada</Label>
+            <Label htmlFor="solucao" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Solução Aplicada</Label>
             <Textarea 
               id="solucao" 
               {...register("solucao")} 
               placeholder="Descreva a solução aplicada na missão..." 
-              className="min-h-[140px] text-base leading-relaxed p-4 border-pmpa-navy/20 focus:ring-pmpa-navy shadow-inner bg-card" 
+              className="min-h-[140px] text-sm leading-relaxed p-4 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium custom-scrollbar" 
             />
           </div>
         </div>
 
         <div className="space-y-1.5 pb-2 pt-2 border-t border-border/40">
-          <Label htmlFor="relatorio" className="text-sm font-bold uppercase text-pmpa-navy">Relatório de Missão (Legado)</Label>
+          <Label htmlFor="relatorio" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Relatório de Missão (Legado)</Label>
           <Textarea 
             id="relatorio" 
             {...register("relatorio")} 
