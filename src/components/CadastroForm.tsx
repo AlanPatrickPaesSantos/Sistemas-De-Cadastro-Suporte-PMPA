@@ -193,37 +193,37 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <FormField control={form.control} name="os" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-semibold text-muted-foreground">OS (Auto)</FormLabel>
+                      <FormLabel className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">OS (Auto)</FormLabel>
                       <FormControl><Input className="h-10 bg-muted/40 font-mono font-bold text-pmpa-navy" readOnly {...field} value={initialData ? field.value : nextOs} /></FormControl>
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="tecnico" render={({ field }) => (
-                    <FormItem className="md:col-span-1"><FormLabel className="text-sm font-semibold">Técnico Responsável</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
+                    <FormItem className="md:col-span-1"><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Técnico Responsável</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                   <FormField control={form.control} name="secaoDitel" render={({ field }) => (
                     <FormItem className="md:col-span-1">
-                      <FormLabel className="text-sm font-semibold">Seção</FormLabel>
+                      <FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Seção</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl><SelectTrigger className="h-10"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
+                        <FormControl><SelectTrigger className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
                         <SelectContent><SelectItem value="SUPORTE">Suporte</SelectItem><SelectItem value="TELECOM">Telecom</SelectItem></SelectContent>
                       </Select>
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="telefone" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">Telefone</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Telefone</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="tEquipSuporte" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">Equipamento (Suporte/TI)</FormLabel><EquipCombobox value={field.value} onChange={field.onChange} /></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Equipamento (Suporte/TI)</FormLabel><EquipCombobox value={field.value} onChange={field.onChange} /></FormItem>
                   )} />
                   <FormField control={form.control} name="tEquipTelecom" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">Equipamento (Telecom/Rádio)</FormLabel><EquipCombobox value={field.value} onChange={field.onChange} /></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Equipamento (Telecom/Rádio)</FormLabel><EquipCombobox value={field.value} onChange={field.onChange} /></FormItem>
                   )} />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="bateria" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">Bateria</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Bateria</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                 </div>
               </div>
@@ -235,11 +235,11 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                   <FormField control={form.control} name="solicitante" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">Solicitante</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Solicitante</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                   <FormField control={form.control} name="dataEnt" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-bold text-pmpa-navy flex gap-1">
+                      <FormLabel className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest flex gap-1">
                         Data Entrada <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl><Input type="date" className="h-10 border-pmpa-navy/20 focus:ring-pmpa-navy" {...field} /></FormControl>
@@ -248,7 +248,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                   )} />
                   <FormField control={form.control} name="unidade" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-bold text-pmpa-navy flex gap-1">
+                      <FormLabel className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest flex gap-1">
                         Unidade <span className="text-red-500">*</span>
                       </FormLabel>
                       <UnidadeCombobox value={field.value} onChange={field.onChange} />
@@ -258,13 +258,13 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <FormField control={form.control} name="nPae" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">Nº PAE</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Nº PAE</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                   <FormField control={form.control} name="rp" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">RP</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">RP</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                   <FormField control={form.control} name="nSerie" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">Nº Série / Patrimônio</FormLabel><FormControl><Input className="h-10" {...field} /></FormControl></FormItem>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Nº Série / Patrimônio</FormLabel><FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl></FormItem>
                   )} />
                 </div>
                 <FormField control={form.control} name="fonteCabo" render={({ field }) => (
@@ -285,13 +285,13 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="defeitoRecl" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-bold uppercase text-pmpa-navy">Defeito Reclamado</FormLabel>
-                      <FormControl><Textarea {...field} className="min-h-[160px] text-base leading-relaxed p-4 border-pmpa-navy/20 focus:ring-pmpa-navy shadow-inner bg-card transition-all" /></FormControl>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Defeito Reclamado</FormLabel>
+                      <FormControl><Textarea {...field} className="min-h-[160px] text-sm leading-relaxed p-4 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium custom-scrollbar" /></FormControl>
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="analiseTecnica" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-bold uppercase text-pmpa-navy">Análise Técnica Preliminar</FormLabel>
-                      <FormControl><Textarea {...field} className="min-h-[160px] text-base leading-relaxed p-4 border-pmpa-navy/20 focus:ring-pmpa-navy shadow-inner bg-card transition-all" /></FormControl>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Análise Técnica Preliminar</FormLabel>
+                      <FormControl><Textarea {...field} className="min-h-[160px] text-sm leading-relaxed p-4 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium custom-scrollbar" /></FormControl>
                     </FormItem>
                   )} />
                 </div>
@@ -304,9 +304,9 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <FormField control={form.control} name="servico" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">Status do Serviço</FormLabel>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Status do Serviço</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl><SelectTrigger className="h-10"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
+                        <FormControl><SelectTrigger className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
                         <SelectContent>
                           <SelectItem value="PRONTO">PRONTO</SelectItem>
                           <SelectItem value="PENDENTE">PENDENTE</SelectItem>
@@ -316,9 +316,9 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="garantia" render={({ field }) => (
-                    <FormItem><FormLabel className="text-sm font-semibold">Garantia</FormLabel>
+                    <FormItem><FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Garantia</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl><SelectTrigger className="h-10"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
+                        <FormControl><SelectTrigger className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
                         <SelectContent><SelectItem value="sim">Sim</SelectItem><SelectItem value="nao">Não</SelectItem></SelectContent>
                       </Select>
                     </FormItem>
@@ -340,20 +340,20 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="saidaEquip" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-bold uppercase text-pmpa-navy">Quem Recebeu (Nome / RG)</FormLabel>
-                      <FormControl><Input className="h-10" placeholder="Nome do recebedor..." {...field} /></FormControl>
+                      <FormLabel className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Quem Recebeu (Nome / RG)</FormLabel>
+                      <FormControl><Input className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" placeholder="Nome do recebedor..." {...field} /></FormControl>
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="dataEnvio" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-semibold">Data de Envio (Manutenção Ext.)</FormLabel>
-                      <FormControl><Input type="date" className="h-10" {...field} /></FormControl>
+                      <FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Data de Envio (Manutenção Ext.)</FormLabel>
+                      <FormControl><Input type="date" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl>
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="dataRetorno" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-semibold">Data de Retorno (Manutenção Ext.)</FormLabel>
-                      <FormControl><Input type="date" className="h-10" {...field} /></FormControl>
+                      <FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Data de Retorno (Manutenção Ext.)</FormLabel>
+                      <FormControl><Input type="date" className="h-11 bg-slate-50 hover:bg-slate-100/50 border-slate-200/60 focus:bg-white focus:border-[#004e9a]/40 focus:ring-4 focus:ring-[#004e9a]/10 transition-all rounded-xl shadow-sm text-slate-800 font-medium" {...field} /></FormControl>
                     </FormItem>
                   )} />
                 </div>
@@ -361,7 +361,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 <div className="grid grid-cols-1 gap-4">
                   <FormField control={form.control} name="laudoTecnico" render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-semibold">Laudo Técnico Final</FormLabel>
+                      <FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Laudo Técnico Final</FormLabel>
                       <FormControl>
                         <Textarea className="h-32" {...field} />
                       </FormControl>
