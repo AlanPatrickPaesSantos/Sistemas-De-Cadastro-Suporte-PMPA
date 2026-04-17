@@ -124,7 +124,7 @@ const Index = () => {
                   <p className="text-4xl font-black text-slate-800 dark:text-white tracking-tighter mb-1">
                     {isLoading ? <Loader2 className="h-8 w-8 animate-spin text-red-500/50" /> : stats.maintenance}
                   </p>
-                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-tight">Painel de Manutenção</p>
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-tight">Equipamentos em Manutenção</p>
                 </div>
               </div>
             </div>
