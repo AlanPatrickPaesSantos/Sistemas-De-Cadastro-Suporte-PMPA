@@ -76,10 +76,6 @@ const Index = () => {
         <div className="relative z-10 w-full mb-10">
           <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800/50 mb-3">
-                <span className="w-2 h-2 rounded-full bg-[#004e9a] animate-pulse" />
-                <span className="text-[10px] font-bold text-[#004e9a] dark:text-blue-400 uppercase tracking-widest">Painel Inteligente PMPA</span>
-              </div>
               <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white tracking-tight drop-shadow-sm">Centro de Comando</h2>
             </div>
           </div>
