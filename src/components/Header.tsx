@@ -16,7 +16,7 @@ export const Header = () => {
   return (
     <header className="sticky top-0 z-50 w-full shadow-md bg-gradient-to-r from-[#004e9a] to-[#002f5c] border-b border-[#001f3f]">
 
-      <div className="w-full flex h-[70px] md:h-[90px] items-center justify-between px-4 md:px-8">
+      <div className="w-full flex h-[70px] md:h-[90px] items-center justify-between pr-4 md:pr-8 pl-1 md:pl-2">
         <div className="flex items-center gap-2 md:gap-3">
           <div className="flex items-center justify-center transition-all hover:scale-105" onClick={() => navigate("/")} role="button">
             <img src="/logo-pmpa.png" alt="Brasão PMPA" className="h-[50px] md:h-[80px] w-auto object-contain" />
