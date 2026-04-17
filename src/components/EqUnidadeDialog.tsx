@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +19,7 @@ export const EqUnidadeDialog = ({ open, onOpenChange }: EqUnidadeDialogProps) =>
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   
   const [id, setId] = useState<string | number>("");
   const [sigla, setSigla] = useState("");
@@ -136,9 +138,11 @@ export const EqUnidadeDialog = ({ open, onOpenChange }: EqUnidadeDialogProps) =>
       toast.error("Este é um novo registro, ainda não foi salvo.");
       return;
     }
-    
-    if (!window.confirm(`ATENÇÃO: Deseja realmente excluir a unidade "${sigla}"?`)) return;
+    setConfirmOpen(true);
+  };
 
+  const confirmDelete = async () => {
+    setConfirmOpen(false);
     setIsDeleting(true);
     const token = localStorage.getItem('token');
     const authHeaders: any = {};
@@ -210,6 +214,7 @@ export const EqUnidadeDialog = ({ open, onOpenChange }: EqUnidadeDialogProps) =>
   const isNewRecord = !unidades.some(u => u.ID_UNID_SEÇÃO === id);
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden border-slate-200/50 dark:border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.4)] backdrop-blur-3xl bg-white/95 dark:bg-slate-900/95 rounded-2xl">
         <div className="bg-gradient-to-r from-[#004e9a] to-[#002f5c] p-6 text-white flex items-center justify-between relative overflow-hidden shadow-inner">
@@ -372,5 +377,29 @@ export const EqUnidadeDialog = ({ open, onOpenChange }: EqUnidadeDialogProps) =>
         </div>
       </DialogContent>
     </Dialog>
+
+    <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+      <AlertDialogContent className="rounded-2xl border-red-200/50 shadow-2xl">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-xl font-black text-slate-800 uppercase tracking-tight">
+            ⚠️ Confirmar Exclusão
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-slate-600 text-sm leading-relaxed">
+            Você está prestes a excluir a unidade <strong className="text-slate-800">"{sigla}"</strong>.
+            <br />Esta ação <strong className="text-red-600">não pode ser desfeita</strong>.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="gap-2">
+          <AlertDialogCancel className="rounded-xl font-bold">Cancelar</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={confirmDelete}
+            className="bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold gap-2"
+          >
+            <Trash2 className="h-4 w-4" /> Excluir Permanentemente
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 };
