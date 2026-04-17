@@ -116,11 +116,17 @@ const Index = () => {
                   <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl group-hover:bg-red-100 transition-colors">
                     <Wrench className="w-5 h-5 text-red-500" />
                   </div>
+                  <div className="text-right">
+                    <span className="text-[10px] font-black text-red-500/80 uppercase tracking-widest bg-red-50 dark:bg-red-950 px-2 py-0.5 rounded border border-red-100 dark:border-red-900/30">Crítico</span>
+                  </div>
                 </div>
                 <div>
-                  <p className="text-4xl font-black text-slate-800 dark:text-white tracking-tighter mb-1">
-                    {isLoading ? <Loader2 className="h-8 w-8 animate-spin text-red-500/50" /> : stats.maintenance}
-                  </p>
+                  <div className="flex items-end gap-2 mb-1">
+                    <p className="text-4xl font-black text-slate-800 dark:text-white tracking-tighter">
+                      {isLoading ? <Loader2 className="h-8 w-8 animate-spin text-red-500/50" /> : stats.maintenance}
+                    </p>
+                    <span className="text-[10px] font-bold text-emerald-500 mb-2">+2 hoje</span>
+                  </div>
                   <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-tight">Equipamentos em Manutenção</p>
                 </div>
               </div>
@@ -146,9 +152,20 @@ const Index = () => {
                 <span className="text-[9px] font-bold text-[#004e9a] uppercase tracking-widest">Neste Mês</span>
               </div>
               <div className="relative z-10">
-                <p className="text-4xl font-black text-slate-800 dark:text-white tracking-tighter mb-1">
-                  {isLoading ? <Loader2 className="h-8 w-8 animate-spin text-[#004e9a]/50" /> : stats.missions}
-                </p>
+                <div className="flex items-baseline justify-between mb-2">
+                  <p className="text-4xl font-black text-slate-800 dark:text-white tracking-tighter">
+                    {isLoading ? <Loader2 className="h-8 w-8 animate-spin text-[#004e9a]/50" /> : stats.missions}
+                  </p>
+                  <span className="text-[10px] font-black text-[#004e9a] opacity-60">META 50</span>
+                </div>
+                
+                <div className="w-full h-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-3 overflow-hidden">
+                  <div 
+                    className="h-full bg-[#004e9a] transition-all duration-1000 ease-out" 
+                    style={{ width: `${Math.min((stats.missions / 50) * 100, 100)}%` }}
+                  />
+                </div>
+
                 <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-tight">Missões Reg.</p>
               </div>
             </div>

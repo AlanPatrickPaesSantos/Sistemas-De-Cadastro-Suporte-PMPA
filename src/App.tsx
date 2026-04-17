@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { CommandMenu } from "./components/CommandMenu";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <AuthProvider>
+            <CommandMenu />
             <Routes>
               {/* Rota Privada: O Login do sistema */}
               <Route path="/login" element={<Login />} />

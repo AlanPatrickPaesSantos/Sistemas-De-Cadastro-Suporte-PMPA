@@ -179,6 +179,11 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
             <TabsTrigger value="analise" className="data-[state=active]:bg-white data-[state=active]:dark:bg-slate-700 data-[state=active]:text-[#004e9a] data-[state=active]:dark:text-white data-[state=active]:shadow-sm rounded-lg px-5 md:px-8 py-2.5 font-bold uppercase tracking-wider text-[11px] md:text-sm transition-all duration-300 data-[state=inactive]:text-slate-500 data-[state=inactive]:hover:bg-slate-200/50 whitespace-nowrap">
               Análise & Serviço
             </TabsTrigger>
+            {isEditMode && (
+              <TabsTrigger value="historico" className="data-[state=active]:bg-white data-[state=active]:dark:bg-slate-700 data-[state=active]:text-[#004e9a] data-[state=active]:dark:text-white data-[state=active]:shadow-sm rounded-lg px-5 md:px-8 py-2.5 font-bold uppercase tracking-wider text-[11px] md:text-sm transition-all duration-300 data-[state=inactive]:text-slate-500 data-[state=inactive]:hover:bg-slate-200/50 whitespace-nowrap">
+                Histórico
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <div className="flex-1 overflow-y-auto px-1 md:px-4 pb-4 custom-scrollbar relative">
@@ -370,6 +375,57 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev,
                 </div>
               </div>
             </TabsContent>
+            
+            {isEditMode && initialData && (
+              <TabsContent value="historico" className="m-0 space-y-6 animate-in fade-in-50 duration-500">
+                <div className="p-8 bg-white/95 dark:bg-slate-900/95 border border-slate-200/60 dark:border-white/10 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] relative overflow-hidden transition-all">
+                  <div className="absolute top-0 left-0 w-1 bottom-0 bg-emerald-500/80" />
+                  <h3 className="text-[13px] font-black text-slate-800 dark:text-slate-200 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 pb-3 mb-8 flex items-center gap-2">
+                    Linha do Tempo de Vida
+                  </h3>
+
+                  <div className="relative space-y-8 left-4 border-l-2 border-slate-100 dark:border-slate-800 pl-8 pb-4">
+                    {/* Evento 1: Entrada */}
+                    <div className="relative">
+                      <div className="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-blue-500 border-4 border-white dark:border-slate-900 shadow-sm" />
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-blue-500 uppercase tracking-widest">Chegada no Ditel</span>
+                        <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                          {initialData.Data_Ent ? new Date(initialData.Data_Ent).toLocaleDateString('pt-BR') : 'Data não registrada'}
+                        </span>
+                        <p className="text-xs text-slate-500 mt-1">Equipamento foi cadastrado e deu entrada para triagem técnica.</p>
+                      </div>
+                    </div>
+
+                    {/* Evento 2: Análise Técnica */}
+                    <div className="relative">
+                      <div className="absolute -left-[41px] top-1 w-5 h-5 rounded-full bg-amber-500 border-4 border-white dark:border-slate-900 shadow-sm" />
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Análise Técnica</span>
+                        <span className="text-sm font-bold text-slate-800 dark:text-slate-200">Técnico: {initialData.Tecnico || initialData.tecnico || 'Não atribuído'}</span>
+                        <p className="text-xs text-slate-500 mt-1 italic line-clamp-2">
+                          "{initialData.Defeito_Recl || 'Nenhuma observação de defeito registrada.'}"
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Evento 3: Saída / Conclusão */}
+                    <div className="relative">
+                      <div className={`absolute -left-[41px] top-1 w-5 h-5 rounded-full border-4 border-white dark:border-slate-900 shadow-sm ${initialData.Data_Saida ? 'bg-emerald-500' : 'bg-slate-300'}`} />
+                      <div className="flex flex-col">
+                        <span className={`text-[10px] font-black uppercase tracking-widest ${initialData.Data_Saida ? 'text-emerald-500' : 'text-slate-400'}`}>Saída Definitiva</span>
+                        <span className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                          {initialData.Data_Saida ? new Date(initialData.Data_Saida).toLocaleDateString('pt-BR') : 'Aguardando entrega'}
+                        </span>
+                        <p className="text-xs text-slate-500 mt-1">
+                          {initialData.saidaEquip ? `Recebido por: ${initialData.saidaEquip}` : 'Equipamento ainda se encontra no departamento ou em manutenção.'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+            )}
           </div>
         </Tabs>
 

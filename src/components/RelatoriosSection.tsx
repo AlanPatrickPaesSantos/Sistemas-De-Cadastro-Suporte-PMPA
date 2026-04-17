@@ -581,7 +581,22 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
 
             {/* Lista de Resultados */}
             <div className="flex-1 min-h-[250px] overflow-y-auto border border-border/40 rounded-lg divide-y divide-border/40 custom-scrollbar print:hidden shadow-inner bg-card">
-              {results.length === 0 && !isLoading && (
+              {isLoading ? (
+                <div className="space-y-4 p-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="space-y-3 animate-pulse">
+                      <div className="grid grid-cols-4 gap-4">
+                        <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-1/2" />
+                        <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-3/4" />
+                        <div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-1/2" />
+                        <div className="h-6 bg-slate-100 dark:bg-slate-800 rounded-full w-20" />
+                      </div>
+                      <div className="h-3 bg-slate-50 dark:bg-slate-800/50 rounded w-full" />
+                      <div className="h-3 bg-slate-50 dark:bg-slate-800/50 rounded w-2/3" />
+                    </div>
+                  ))}
+                </div>
+              ) : results.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-20 text-muted-foreground gap-3">
                   <FileText className="h-12 w-12 opacity-10" />
                   <p className="font-bold text-xs uppercase tracking-widest text-center px-4">Nenhum dado carregado para este período.</p>
