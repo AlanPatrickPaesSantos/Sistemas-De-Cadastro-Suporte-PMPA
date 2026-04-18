@@ -222,7 +222,7 @@ export const ServicoInternoExternoForm = ({
 
           <div className="space-y-1.5 lg:col-span-3 h-full flex flex-col justify-end">
             <Label className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest mb-1 shadow-none">Categoria da Missão *</Label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-1 md:mt-0">
               <button
                 type="button"
                 onClick={() => setValue("categoria", "interno")}
@@ -285,12 +285,12 @@ export const ServicoInternoExternoForm = ({
           </div>
           
           {[
-            { id: "roteador", label: "Roteador", icon: <Router className="w-3 h-3" /> },
-            { id: "cat5", label: "Cabo CAT 5", icon: <Cable className="w-3 h-3" /> },
-            { id: "cat5e", label: "Cabo CAT 5e", icon: <Cable className="w-3 h-3" /> },
-            { id: "cat6", label: "Cabo CAT 6", icon: <Cable className="w-3 h-3" /> },
-            { id: "conectores", label: "Conectores", icon: <Zap className="w-3 h-3" /> },
-            { id: "canaletas", label: "Canaletas", icon: <Layers className="w-3 h-3" /> }
+            { id: "roteador", label: "Roteador", icon: <Router className="w-4 h-4" /> },
+            { id: "cat5", label: "Cabo CAT 5", icon: <Cable className="w-4 h-4" /> },
+            { id: "cat5e", label: "Cabo CAT 5e", icon: <Cable className="w-4 h-4" /> },
+            { id: "cat6", label: "Cabo CAT 6", icon: <Cable className="w-4 h-4" /> },
+            { id: "conectores", label: "Conectores", icon: <Zap className="w-4 h-4" /> },
+            { id: "canaletas", label: "Canaletas", icon: <Layers className="w-4 h-4" /> }
           ].map((item) => (
             <div key={item.id} className="flex items-center space-x-2 bg-slate-50/50 dark:bg-slate-800/30 p-2 rounded-lg border border-slate-100 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800 transition-colors">
               <Checkbox 

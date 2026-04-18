@@ -66,9 +66,9 @@ const Index = () => {
       <main className="w-full max-w-screen-xl mx-auto flex-1 px-4 md:px-6 pt-6 md:pt-8 pb-12">
 
         <div className="relative z-10 w-full mb-10">
-          <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4 px-1 md:px-0">
             <div>
-              <h2 className="text-2xl md:text-4xl font-black text-slate-800 dark:text-white tracking-tight drop-shadow-sm">Centro de Comando</h2>
+              <h2 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white tracking-tight drop-shadow-sm">Centro de Comando</h2>
             </div>
           </div>
 
