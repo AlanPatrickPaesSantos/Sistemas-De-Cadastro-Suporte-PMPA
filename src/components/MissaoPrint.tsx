@@ -57,11 +57,11 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
         .text-os { font-family: monospace; }
       `}</style>
 
-      <div className="mx-auto w-full max-w-[210mm] p-4">
+      <div className="mx-auto w-full max-w-[210mm] p-2">
         {/* Cabeçalho Oficial */}
-        <div className="flex justify-between items-start mb-4 border-b-2 border-black pb-4">
-          <div className="w-24">
-            <img src="/logo-pmpa.png" alt="Logo PMPA" style={{ height: '75px', width: 'auto', objectFit: 'contain' }} />
+        <div className="flex justify-between items-start mb-2 border-b-2 border-black pb-2">
+          <div className="w-20">
+            <img src="/logo-pmpa.png" alt="Logo PMPA" style={{ height: '60px', width: 'auto', objectFit: 'contain' }} />
           </div>
           <div className="text-center flex-1 font-bold uppercase text-[10px] space-y-0.5">
             <p>GOVERNO DO ESTADO DO PARÁ</p>
@@ -70,15 +70,15 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
             <p>DEPARTAMENTO GERAL DE ADMINISTRAÇÃO</p>
             <p className="text-[12px] mt-1 font-black">DIRETORIA DE TELEMÁTICA</p>
           </div>
-          <div className="w-24 flex justify-end">
-            <img src="/Logo Ditel.jpeg" alt="Logo Ditel" style={{ height: '75px', width: 'auto', objectFit: 'contain' }} />
+          <div className="w-20 flex justify-end">
+            <img src="/Logo Ditel.jpeg" alt="Logo Ditel" style={{ height: '60px', width: 'auto', objectFit: 'contain' }} />
           </div>
         </div>
 
-        <h1 className="text-center text-lg font-black uppercase mb-4 tracking-widest leading-none">Ordem de Serviço</h1>
+        <h1 className="text-center text-md font-black uppercase mb-2 tracking-widest leading-none">Ordem de Serviço</h1>
 
         {/* Info Grid - Replicating PDF Rows */}
-        <div className="space-y-3 mb-4">
+        <div className="space-y-2 mb-2">
           <div className="grid grid-cols-12 border border-black border-collapse">
             <div className="col-span-3 border-r border-black p-2">
               <span className="text-[9px] font-black uppercase block border-b border-black mb-1 pb-1">Ordem de Serviço:</span>
@@ -110,17 +110,17 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
         </div>
 
         {/* Descrição Section */}
-        <div className="mb-4">
-          <h2 className="text-center font-black uppercase border border-black py-1 mb-0 text-[10px] bg-gray-100/50">Descrição e Informação</h2>
-          <div className="border border-black border-t-0 p-3 min-h-[120px]">
-            <p className="text-[9px] font-black uppercase mb-1">Defeito Reclamado / Constatado:</p>
+        <div className="mb-2">
+          <h2 className="text-center font-black uppercase border border-black py-0.5 mb-0 text-[10px] bg-gray-100/50">Descrição e Informação</h2>
+          <div className="border border-black border-t-0 p-2 min-h-[80px]">
+            <p className="text-[9px] font-black uppercase mb-0.5">Defeito Reclamado / Constatado:</p>
             <p className="text-[12px] leading-snug whitespace-pre-wrap">{data.def_recla || 'CONFORME SOLICITADO.'}</p>
           </div>
         </div>
 
         {/* Atendimento Section */}
-        <div className="mb-4">
-          <h2 className="text-center font-black uppercase border border-black py-1 mb-0 text-[10px] bg-gray-100/50">Atendimento</h2>
+        <div className="mb-2">
+          <h2 className="text-center font-black uppercase border border-black py-0.5 mb-0 text-[10px] bg-gray-100/50">Atendimento</h2>
           <div className="grid grid-cols-2 border border-black border-t-0 divide-x divide-black">
             <div className="p-2">
               <span className="text-[9px] font-black uppercase block mb-1">Técnico:</span>
@@ -134,9 +134,9 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
         </div>
 
         {/* Solução Section */}
-        <div className="mb-6">
-          <h2 className="text-center font-black uppercase border border-black py-1 mb-0 text-[10px] bg-gray-100/50">Solução Aplicada</h2>
-          <div className="border border-black border-t-0 p-3 min-h-[160px]">
+        <div className="mb-3">
+          <h2 className="text-center font-black uppercase border border-black py-0.5 mb-0 text-[10px] bg-gray-100/50">Solução Aplicada</h2>
+          <div className="border border-black border-t-0 p-2 min-h-[120px]">
             <div className="text-[12px] leading-snug whitespace-pre-wrap">
               {data.solucao ? (
                 data.solucao
@@ -149,7 +149,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
 
         {/* Observações - If any */}
         {data.observacao && (
-          <div className="mb-4 border border-black p-2 border-dashed">
+          <div className="mb-2 border border-black p-1.5 border-dashed">
             <span className="text-[9px] font-black uppercase">OBSERVAÇÕES: </span>
             <span className="text-[10px] uppercase font-medium">{data.observacao}</span>
           </div>
@@ -157,8 +157,8 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
 
         {/* Materiais Utilizados */}
         {data.materiais && data.materiais.length > 0 && (
-          <div className="mb-6 border border-black p-3 bg-gray-50/10">
-            <h3 className="text-[9px] font-black uppercase border-b border-black mb-2 pb-1">Materiais Utilizados / Aplicados:</h3>
+          <div className="mb-3 border border-black p-2 bg-gray-50/10">
+            <h3 className="text-[9px] font-black uppercase border-b border-black mb-1 pb-0.5">Materiais Utilizados / Aplicados:</h3>
             <div className="grid grid-cols-3 gap-y-1">
               {data.materiais.map((m, idx) => (
                 <div key={idx} className="flex items-center gap-1">
@@ -171,7 +171,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
         )}
 
         {/* Assinaturas */}
-        <div className="grid grid-cols-2 gap-20 mt-12 py-4 text-center uppercase">
+        <div className="grid grid-cols-2 gap-20 mt-6 py-2 text-center uppercase">
           <div className="space-y-1">
             <div className="border-t-2 border-black mx-4"></div>
             <p className="text-[9px] font-black">Técnico/Responsável</p>
