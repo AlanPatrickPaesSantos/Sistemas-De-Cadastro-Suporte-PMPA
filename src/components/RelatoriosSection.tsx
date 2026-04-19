@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"; // Final stabilization v33.3
 // Final stabilization v33.3
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Calendar, Settings, ChevronRight, Loader2, Search, X, Activity, Printer, Wrench } from "lucide-react";
+import { FileText, Calendar, Settings, ChevronRight, Loader2, Search, X, Activity, Printer, Wrench, Sparkles, Bot, BrainCircuit } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -22,6 +22,8 @@ interface RelatoriosSectionProps {
 export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: RelatoriosSectionProps) => {
   const [activeReport, setActiveReport] = useState<string | null>(null);
   const [results, setResults] = useState<any[]>([]);
+  const [aiResponse, setAiResponse] = useState<string>("");
+  const [isAiLoading, setIsAiLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "", bateria: false, garantia: false });
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
@@ -139,6 +141,38 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       console.error("Erro ao gerar relatório:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleAIAnalysis = async () => {
+    if (results.length === 0) {
+      toast.error("Busque dados primeiro para a IA analisar!");
+      return;
+    }
+    
+    setIsAiLoading(true);
+    try {
+      const response = await fetch(`${API_BASE}/ai/analyze`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem('ditel_token')}`
+        },
+        body: JSON.stringify({ 
+          data: results.slice(0, 40), // Limite de 40 registros
+          type: "missoes_resumo" 
+        }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setAiResponse(data.analysis);
+      } else {
+        toast.error(data.message || "Erro ao conectar com o Gemini");
+      }
+    } catch (err) {
+      toast.error("Erro técnico na conexão com a IA");
+    } finally {
+      setIsAiLoading(false);
     }
   };
 
@@ -399,6 +433,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
             {[
               { icon: Activity, id: "Rel_Missao_Consolidado", title: "Consolidado Missões", desc: "Relatório de serviços Int/Ext" },
               { icon: Wrench, id: "Rel_Equipamentos", title: "Consolidado Equipamentos", desc: "Relatório de Manutenção e Reparos" },
+              { icon: Sparkles, id: "Rel_IA_Assistant", title: "Ditel AI Assistant", desc: "Análise Inteligente (Gemini)" },
             ].map((item) => (
               <Button
                 key={item.id}
@@ -433,10 +468,17 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       }}>
         <DialogContent className="max-w-5xl w-[95vw] sm:w-full max-h-[92vh] overflow-hidden flex flex-col p-4 md:p-6 border-border/50 shadow-2xl">
           <DialogHeader className="p-1 md:p-4 border-b border-border/50 bg-muted/20 rounded-t-lg">
-            <DialogTitle className="text-lg md:text-2xl font-black text-pmpa-navy uppercase">
-              {activeReport === "Rel_Missao_Consolidado" ? "Relatório de Missões" : "Relatório de Equipamentos"}
+            <DialogTitle className="text-lg md:text-2xl font-black text-pmpa-navy uppercase flex items-center gap-3">
+              {activeReport === "Rel_IA_Assistant" && <BrainCircuit className="h-6 w-6 text-blue-500 animate-pulse" />}
+              {activeReport === "Rel_Missao_Consolidado" ? "Relatório de Missões" : 
+               activeReport === "Rel_IA_Assistant" ? "Inteligência de Gestão Ditel" : 
+               "Relatório de Equipamentos"}
             </DialogTitle>
-            <DialogDescription className="text-[10px] md:text-sm">Visualize e imprima relatórios consolidados do sistema DITEL.</DialogDescription>
+            <DialogDescription className="text-[10px] md:text-sm">
+              {activeReport === "Rel_IA_Assistant" 
+                ? "Resumos estatísticos e diagnósticos gerados por Inteligência Artificial (Google Gemini)." 
+                : "Visualize e imprima relatórios consolidados do sistema DITEL."}
+            </DialogDescription>
           </DialogHeader>
 
           <div className="flex-1 overflow-hidden flex flex-col gap-2 md:gap-4 p-1 md:p-0">
@@ -487,10 +529,20 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                 </div>
               </div>
 
-              <Button onClick={handleGenerateReport} className="bg-pmpa-navy hover:bg-pmpa-navy/90 gap-2 h-10 px-6">
-                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                GERAR
-              </Button>
+                <Button onClick={() => fetchReportData(filters.startDate, filters.endDate, activeReport!)} disabled={isLoading} className="h-10 md:h-12 bg-pmpa-navy hover:bg-pmpa-navy/90 text-[10px] md:text-xs font-bold uppercase tracking-widest px-4 md:px-8 rounded-xl shadow-md transition-all">
+                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Gerar Dados"}
+                </Button>
+
+                {activeReport === "Rel_IA_Assistant" && (
+                  <Button 
+                    onClick={handleAIAnalysis} 
+                    disabled={isAiLoading || results.length === 0} 
+                    className="h-10 md:h-12 bg-blue-600 hover:bg-blue-500 text-[10px] md:text-xs font-bold uppercase tracking-widest px-4 md:px-8 rounded-xl shadow-md transition-all gap-2"
+                  >
+                    {isAiLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <BrainCircuit className="h-4 w-4" />}
+                    Analisar com IA
+                  </Button>
+                )}
 
               {results.length > 0 && activeReport === "Rel_Missao_Consolidado" && (
                 <Button onClick={handlePrint} variant="outline" className="border-pmpa-navy text-pmpa-navy hover:bg-pmpa-navy/5 gap-2 h-10">
@@ -499,6 +551,20 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                 </Button>
               )}
             </div>
+
+            {activeReport === "Rel_IA_Assistant" && aiResponse && (
+              <div className="bg-blue-50/50 dark:bg-blue-900/10 border border-blue-200/50 dark:border-blue-800/30 p-4 md:p-6 rounded-2xl animate-in fade-in slide-in-from-top-2 my-4">
+                <div className="flex items-center gap-3 mb-4 border-b border-blue-200/30 pb-3">
+                  <div className="p-2 bg-blue-500 rounded-lg shadow-md shadow-blue-500/20">
+                    <Bot className="h-5 w-5 text-white" />
+                  </div>
+                  <h3 className="font-black text-pmpa-navy dark:text-blue-400 uppercase text-xs md:text-sm tracking-widest">Diagnóstico Técnico Ditel AI</h3>
+                </div>
+                <div className="text-sm md:text-base text-slate-700 dark:text-slate-300 leading-relaxed font-medium whitespace-pre-line overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
+                  {aiResponse}
+                </div>
+              </div>
+            )}
 
             {/* Resumo Estatístico Missões */}
             {activeReport === "Rel_Missao_Consolidado" && results.length > 0 && (

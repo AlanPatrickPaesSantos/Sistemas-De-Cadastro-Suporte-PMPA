@@ -1,4 +1,5 @@
 const express = require('express');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
@@ -681,6 +682,53 @@ app.put('/api/missoes/:id', async (req, res) => {
     res.json({ success: true, missao: updated });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// ====== ROTA DE INTELIGÊNCIA ARTIFICIAL (GEMINI 1.5 FLASH) ======
+app.post('/api/ai/analyze', verificarToken, async (req, res) => {
+  try {
+    const { data, type } = req.body;
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+    if (!GEMINI_API_KEY) {
+      return res.status(500).json({ 
+        error: 'IA_DESATIVADA', 
+        message: 'A chave de API do Gemini não foi configurada no ambiente Render.' 
+      });
+    }
+
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    let prompt = "";
+    if (type === 'missoes_resumo') {
+      prompt = `Você é o "Ditel AI Specialist", um analista sênior da Diretoria de Telemática da PMPA.
+      Sua tarefa é analisar os seguintes registros de missões técnicas:
+      ${JSON.stringify(data)}
+      
+      POR FAVOR, FORNEÇA:
+      1. Um RESUMO EXECUTIVO de 2 parágrafos sobre o estado geral da manutenção.
+      2. TOP 3 PROBLEMAS detectados (ex: muitas falhas em baterias, excesso de missões externas, etc).
+      3. UMA RECOMENDAÇÃO ESTRATÉGICA para melhorar a eficiência da telemática.
+      
+      Importante: Use um tom profissional, técnico e direto. Formate a resposta em Markdown elegante.
+      Não invente dados, baseie-se apenas no JSON enviado.`;
+    } else {
+      prompt = `Analise tecnicamente estes dados do sistema Ditel e forneça insights: ${JSON.stringify(data)}`;
+    }
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+
+    res.json({ success: true, analysis: text });
+  } catch (err) {
+    console.error('❌ Erro na integração com Gemini:', err);
+    res.status(500).json({ 
+      error: 'ERRO_IA', 
+      message: 'Ocorreu uma falha na comunicação com a inteligência artificial do Google.' 
+    });
   }
 });
 

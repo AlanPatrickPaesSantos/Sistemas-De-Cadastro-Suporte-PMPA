@@ -4,7 +4,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Save, Trash2, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, Headphones, Plus, Loader2, X } from "lucide-react";
+import { Save, Trash2, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, Headphones, Plus, Loader2, X, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { API_BASE } from "../lib/api-config";
 
@@ -285,10 +285,16 @@ export const EqSuporteDialog = ({ open, onOpenChange }: EqSuporteDialogProps) =>
                 />
               </div>
 
-              <div className="md:col-span-4 space-y-2">
-                <Label htmlFor="equipamento" className="text-[10px] md:text-[11px] font-black uppercase text-[#004e9a] dark:text-blue-400 opacity-80 tracking-wider">
-                  Equipamento / Descrição
-                </Label>
+                <div className="flex justify-between items-center mb-2">
+                  <Label htmlFor="equipamento" className="text-[10px] md:text-[11px] font-black uppercase text-[#004e9a] dark:text-blue-400 opacity-80 tracking-wider">
+                    Equipamento / Descrição
+                  </Label>
+                  {/* Inteligência Artificial - Scanner de Foto (Placeholder) */}
+                  <Button variant="ghost" size="sm" className="h-6 gap-1.5 px-2 text-[9px] font-black uppercase bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 rounded-lg animate-pulse border border-blue-500/20">
+                    <Sparkles className="h-3 w-3" />
+                    IA Scan
+                  </Button>
+                </div>
                 <Input
                   id="equipamento"
                   autoFocus
