@@ -2,10 +2,20 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const dotenv = require('dotenv');
+
+// Carregamento resiliente do .env (Apenas se o arquivo existir localmente)
 const envPath = path.resolve(__dirname, '.env');
-dotenv.config({ path: envPath });
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+  console.log('📝 .env carregado localmente');
+} else {
+  console.log('🌐 Usando variáveis de ambiente do sistema/Render');
+}
+
 const https = require('https');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -15,9 +25,18 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
+if (!process.env.MONGODB_URI) {
+  console.error('❌ ERRO CRÍTICO: MONGODB_URI não definida nas variáveis de ambiente!');
+}
+
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log(`✅ Conectado ao MongoDB [${process.env.NODE_ENV === 'production' ? 'CLOUD' : 'LOCAL'}]`))
-  .catch(err => console.error('❌ Erro ao conectar ao MongoDB:', err));
+  .catch(err => {
+    console.error('❌ Erro na conexão com o MongoDB:', err.message);
+    if (err.message.includes('undefined')) {
+      console.error('   DICA: Verifique se a MONGODB_URI está configurada no painel do Render.');
+    }
+  });
 
 const Servico = require('./models/Servico');
 const Unidade = require('./models/Unidade');
@@ -25,7 +44,6 @@ const EqSuporte = require('./models/EqSuporte');
 const Missao = require('./models/Missao');
 const Usuario = require('./models/Usuario');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const verificarToken = require('./middleware/authMiddleware');
 
 // Status
