@@ -228,8 +228,10 @@ const Index = () => {
               PROGRAMA DE CADASTRO DE EQUIPAMENTOS E SERVIÇOS DA PMPA
             </p>
           </div>
-          <p className="text-[10px] md:text-[11px] text-muted-foreground leading-relaxed">
+          <p className="text-[10px] md:text-[11px] text-muted-foreground leading-relaxed flex items-center gap-2">
             Ditel - Diretoria de Informática e Telecomunicações.
+            <span className="opacity-30">|</span>
+            <span className="font-black uppercase tracking-[0.3em] text-[9px] opacity-40 hover:opacity-100 transition-opacity cursor-default">System Design by Alan Santos</span>
           </p>
         </div>
         {/* Linha fina azul marinho no fundo para dar um acabamento PMPA igual ao header */}

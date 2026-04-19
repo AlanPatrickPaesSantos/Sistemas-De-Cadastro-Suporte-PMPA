@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { useAuth } from '../contexts/AuthContext';
-import { Loader2, Lock, User } from 'lucide-react';
+import { Loader2, Lock, User, Terminal } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
 import { API_BASE } from '../lib/api-config';
 
@@ -142,6 +142,16 @@ const Login = () => {
         <p className="mt-8 text-center text-xs text-blue-200/60 font-medium uppercase tracking-widest drop-shadow-sm">
           Diretoria de Telemática © 2026
         </p>
+      </div>
+
+      {/* Marca do Autor: Alan Santos */}
+      <div className="fixed bottom-4 right-4 z-50 pointer-events-none opacity-0 animate-in fade-in slide-in-from-bottom-2 duration-1000 delay-500 fill-mode-forwards">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl">
+          <Terminal className="w-3 h-3 text-blue-300/80" />
+          <span className="text-[10px] font-bold text-blue-100/40 uppercase tracking-[0.2em]">
+            Handcrafted by <span className="text-blue-100/70">Alan Santos</span>
+          </span>
+        </div>
       </div>
     </div>
   );
