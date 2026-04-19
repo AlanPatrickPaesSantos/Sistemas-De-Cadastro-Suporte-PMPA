@@ -2,8 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const dotenv = require('dotenv');
+const envPath = path.resolve(__dirname, '.env');
+dotenv.config({ path: envPath });
 const https = require('https');
-require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -66,111 +68,83 @@ app.use('/api/missoes', verificarToken);
 app.use('/api/unidades', verificarToken);
 app.use('/api/eqsuporte', verificarToken);
 
+// Helper para construir queries de serviços de suporte de forma unificada
+const buildServiceQuery = (params) => {
+  const { q, startDate, endDate, status, bateria, garantia, bateria_vazia, filterType } = params;
+  let query = {};
+
+  if (q) {
+    const isNum = !isNaN(q);
+    if (filterType === 'os' && isNum) {
+      query.Id_cod = parseInt(q);
+    } else if (filterType === 'serie') {
+      query.Nº_Serie = { $regex: q, $options: 'i' };
+    } else if (filterType === 'rp') {
+      query.RP = { $regex: q, $options: 'i' };
+    } else if (filterType === 'unidade') {
+      query.Unidade = { $regex: q, $options: 'i' };
+    } else {
+      query.$or = [
+        ...(isNum ? [{ Id_cod: parseInt(q) }] : []),
+        { Nº_Serie: { $regex: q, $options: 'i' } },
+        { RP: { $regex: q, $options: 'i' } },
+        { Solicitante: { $regex: q, $options: 'i' } },
+        { Unidade: { $regex: q, $options: 'i' } },
+        { Serviço: { $regex: q, $options: 'i' } }
+      ];
+    }
+  }
+
+  if (startDate || endDate) {
+    query.Data_Ent = {};
+    if (startDate) query.Data_Ent.$gte = new Date(startDate + 'T00:00:00.000Z');
+    if (endDate) query.Data_Ent.$lte = new Date(endDate + 'T23:59:59.999Z');
+  }
+
+  if (status) {
+    query.Serviço = { $regex: new RegExp(`^\\s*${status}\\s*$`, 'i') };
+  }
+
+  if (bateria === "true") {
+    query.Bateria = { $ne: "", $exists: true };
+  }
+
+  if (garantia === "true") {
+    query.Garantia = { $regex: /^\s*sim\s*$/i };
+  }
+
+  if (bateria_vazia === "true") {
+    query.$or = [
+      { Bateria: "" },
+      { Bateria: { $exists: false } }
+    ];
+  }
+
+  return query;
+};
+
 
 // Busca e filtros de serviços (listagem com limite)
 app.get('/api/servicos', async (req, res) => {
   try {
-    const { q, startDate, endDate, status, bateria, garantia, bateria_vazia, filterType } = req.query;
-    let query = {};
-
-    if (q) {
-      const isNum = !isNaN(q);
-      
-      if (filterType === 'os' && isNum) {
-        query = { Id_cod: parseInt(q) };
-      } else if (filterType === 'serie') {
-        query = { Nº_Serie: { $regex: q, $options: 'i' } };
-      } else if (filterType === 'rp') {
-        query = { RP: { $regex: q, $options: 'i' } };
-      } else if (filterType === 'unidade') {
-        query = { Unidade: { $regex: q, $options: 'i' } };
-      } else {
-        query = {
-          $or: [
-            ...(isNum ? [{ Id_cod: parseInt(q) }] : []),
-            { Nº_Serie: { $regex: q, $options: 'i' } },
-            { RP: { $regex: q, $options: 'i' } },
-            { Solicitante: { $regex: q, $options: 'i' } },
-            { Unidade: { $regex: q, $options: 'i' } },
-            { Serviço: { $regex: q, $options: 'i' } }
-          ]
-        };
-      }
-    }
-
-    if (startDate || endDate) {
-      query.Data_Ent = {};
-      if (startDate) query.Data_Ent.$gte = new Date(startDate + 'T00:00:00.000Z');
-      if (endDate) query.Data_Ent.$lte = new Date(endDate + 'T23:59:59.999Z');
-    }
-
-    if (status) {
-      // Busca insensível a maiúsculas/minúsculas para manter consistência com a rota de contagem
-      query.Serviço = { $regex: new RegExp(`^\\s*${status}\\s*$`, 'i') };
-    }
-
-    if (bateria === "true") {
-      // Filtrar apenas registros onde o campo Bateria não está vazio
-      query.Bateria = { $ne: "", $exists: true };
-    }
-
-    if (garantia === "true") {
-      // Filtrar apenas equipamentos em garantia (valor "sim") com regex insensível
-      query.Garantia = { $regex: /^\s*sim\s*$/i };
-    }
-
-    if (bateria_vazia === "true") {
-      // Filtrar onde o campo Bateria está vazio ou não existe
-      query.$or = [
-        { Bateria: "" },
-        { Bateria: { $exists: false } }
-      ];
-    }
-
+    const query = buildServiceQuery(req.query);
     const servicos = await Servico.find(query).limit(50).sort({ Id_cod: -1 });
     res.json(servicos);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Erro ao buscar serviços:', err);
+    res.status(500).json({ error: 'Erro interno ao buscar serviços.' });
   }
 });
 
 // Contagem EXATA de serviços para relatórios (sem limite)
 app.get('/api/servicos/count', async (req, res) => {
   try {
-    const { startDate, endDate, status, bateria, garantia, bateria_vazia } = req.query;
-    let query = {};
-
-    if (startDate || endDate) {
-      query.Data_Ent = {};
-      if (startDate) query.Data_Ent.$gte = new Date(startDate + 'T00:00:00.000Z');
-      if (endDate) query.Data_Ent.$lte = new Date(endDate + 'T23:59:59.999Z');
-    }
-
-    if (status) {
-      // Busca insensível a maiúsculas/minúsculas (ex: PRONTO, Pronto, pronto)
-      query.Serviço = { $regex: new RegExp(`^\\s*${status}\\s*$`, 'i') };
-    }
-
-    if (bateria === "true") {
-      query.Bateria = { $ne: "", $exists: true };
-    }
-
-    if (garantia === "true") {
-      query.Garantia = { $regex: /^\s*sim\s*$/i };
-    }
-
-    if (bateria_vazia === "true") {
-      query.$or = [
-        { Bateria: "" },
-        { Bateria: { $exists: false } }
-      ];
-    }
-
+    const query = buildServiceQuery(req.query);
     const total = await Servico.countDocuments(query);
     res.json({ count: total });
   } catch (err) {
     console.error('Erro na contagem de serviços:', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Erro interno na contagem de serviços.' });
   }
 });
 

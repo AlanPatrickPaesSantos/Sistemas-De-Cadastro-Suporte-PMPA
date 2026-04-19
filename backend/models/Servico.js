@@ -5,7 +5,6 @@ const ServicoSchema = new mongoose.Schema({
   Data_Ent: { type: Date, index: true },
   Tecnico: String,
   Seção_Ditel: String,
-  T_EquipTelecom: String,
   T_EquipSuporte: String,
   Solicitante: { type: String, index: true },
   Unidade: { type: String, index: true },
