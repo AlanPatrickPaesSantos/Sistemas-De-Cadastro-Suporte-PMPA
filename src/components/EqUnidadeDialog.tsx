@@ -266,7 +266,7 @@ export const EqUnidadeDialog = ({ open, onOpenChange }: EqUnidadeDialogProps) =>
             </Button>
             <button
               onClick={() => onOpenChange(false)}
-              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors md:hidden"
               aria-label="Fechar"
             >
               <X className="h-5 w-5" />
