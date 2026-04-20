@@ -684,50 +684,6 @@ app.put('/api/missoes/:id', async (req, res) => {
   }
 });
 
-// ====== ROTA DE INTELIGÊNCIA ARTIFICIAL (GEMINI 1.5 FLASH) ======
-app.post('/api/ai/analyze', verificarToken, async (req, res) => {
-  try {
-    const { data, type } = req.body;
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
-    if (!GEMINI_API_KEY) {
-      return res.status(500).json({ 
-        error: 'IA_DESATIVADA', 
-        message: 'A chave de API do Gemini não foi configurada no ambiente Render.' 
-      });
-    }
-
-    // MODO LEVE (FETCH NATIVO): Removemos a dependência pesada para garantir o build no Render.
-    // FUTURO PMPA: Aqui poderemos trocar a URL para um servidor local (Ollama/Llama 3).
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-    
-    const response = await fetch(geminiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }]
-      })
-    });
-
-    const resultData = await response.json();
-
-    if (resultData.error) {
-      console.error('API Error:', resultData.error);
-      return res.status(500).json({ error: 'ERRO_API_GOOGLE', message: resultData.error.message });
-    }
-
-    const text = resultData.candidates?.[0]?.content?.parts?.[0]?.text || "A IA não conseguiu gerar uma resposta no momento.";
-
-    res.json({ success: true, analysis: text });
-  } catch (err) {
-    console.error('❌ Erro na integração via Fetch:', err);
-    res.status(500).json({ 
-      error: 'ERRO_IA', 
-      message: 'Ocorreu uma falha na comunicação direta com a inteligência artificial.' 
-    });
-  }
-});
-
 // ====== SERVIR FRONTEND ESTÁTICO (PRODUÇÃO) ======
 if (process.env.NODE_ENV === 'production' || process.env.RENDER) {
   const distPath = path.join(__dirname, '..', 'dist');
