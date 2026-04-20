@@ -691,9 +691,10 @@ app.post('/api/ai/parse-mission', verificarToken, async (req, res) => {
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
     if (!GEMINI_API_KEY) {
-      return res.status(500).json({ 
+      return res.status(200).json({ 
+        success: false,
         error: 'IA_DESATIVADA', 
-        message: 'A chave de API do Gemini não foi configurada no ambiente Render.' 
+        message: 'A inteligência artificial ainda não foi ativada nas configurações do servidor.' 
       });
     }
 
@@ -729,33 +730,51 @@ Retorne APENAS o JSON puro, sem explicações, sem blocos de código Markdown.`;
       googleRes.on('data', (chunk) => { responseBody += chunk; });
       googleRes.on('end', () => {
         try {
+          if (googleRes.statusCode !== 200) {
+            throw new Error(`Google API returned status ${googleRes.statusCode}`);
+          }
+          
           const result = JSON.parse(responseBody);
-          if (result.error) throw new Error(result.error.message);
+          if (!result.candidates || result.candidates.length === 0) {
+            throw new Error('Nenhuma resposta válida da IA (provavelmente bloqueada por filtros).');
+          }
           
-          let aiText = result.candidates[0].content.parts[0].text;
-          // Limpeza de possíveis blocos de código gerados pela IA
+          let aiText = result.candidates[0]?.content?.parts?.[0]?.text;
+          if (!aiText) throw new Error('Campo de conteúdo da IA está vazio.');
+          
+          // Limpeza robusta do JSON
           aiText = aiText.replace(/```json/g, '').replace(/```/g, '').trim();
-          
           const parsedData = JSON.parse(aiText);
+          
           res.json({ success: true, data: parsedData });
         } catch (e) {
-          console.error('Parse Error:', e, responseBody);
-          res.status(500).json({ error: 'FALHA_PROCESSAMENTO', message: 'Não foi possível processar o relato.' });
+          console.error('[AI_PARSE_ERROR]', e.message, responseBody.substring(0, 500));
+          if (!res.headersSent) {
+            res.json({ 
+              success: false, 
+              error: 'FALHA_PROCESSAMENTO', 
+              message: 'A IA não conseguiu organizar os dados. Verifique a chave e tente novamente.' 
+            });
+          }
         }
       });
     });
 
     googleReq.on('error', (e) => {
       console.error('Google Request Error:', e);
-      res.status(500).json({ error: 'ERRO_CONEXAO_IA', message: e.message });
+      if (!res.headersSent) {
+        res.json({ success: false, error: 'ERRO_CONEXAO_IA', message: 'Falha ao conectar com o serviço de IA.' });
+      }
     });
 
     googleReq.write(payload);
     googleReq.end();
 
   } catch (err) {
-    console.error('AI Parse Crash:', err);
-    res.status(500).json({ error: 'ERRO_INTERNO' });
+    console.error('AI Parse Crash Protector:', err);
+    if (!res.headersSent) {
+      res.json({ success: false, error: 'ERRO_INTERNO', message: 'Ocorreu um erro inesperado no processador de voz.' });
+    }
   }
 });
 
