@@ -697,39 +697,33 @@ app.post('/api/ai/analyze', verificarToken, async (req, res) => {
       });
     }
 
-    // Carregamento dinâmico para suportar bibliotecas ESM em ambiente CommonJS
-    const { GoogleGenerativeAI } = await import("@google/generative-ai");
+    // MODO LEVE (FETCH NATIVO): Removemos a dependência pesada para garantir o build no Render.
+    // FUTURO PMPA: Aqui poderemos trocar a URL para um servidor local (Ollama/Llama 3).
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     
-    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const response = await fetch(geminiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }]
+      })
+    });
 
-    let prompt = "";
-    if (type === 'missoes_resumo') {
-      prompt = `Você é o "Ditel AI Specialist", um analista sênior da Diretoria de Telemática da PMPA.
-      Sua tarefa é analisar os seguintes registros de missões técnicas:
-      ${JSON.stringify(data)}
-      
-      POR FAVOR, FORNEÇA:
-      1. Um RESUMO EXECUTIVO de 2 parágrafos sobre o estado geral da manutenção.
-      2. TOP 3 PROBLEMAS detectados (ex: muitas falhas em baterias, excesso de missões externas, etc).
-      3. UMA RECOMENDAÇÃO ESTRATÉGICA para melhorar a eficiência da telemática.
-      
-      Importante: Use um tom profissional, técnico e direto. Formate a resposta em Markdown elegante.
-      Não invente dados, baseie-se apenas no JSON enviado.`;
-    } else {
-      prompt = `Analise tecnicamente estes dados do sistema Ditel e forneça insights: ${JSON.stringify(data)}`;
+    const resultData = await response.json();
+
+    if (resultData.error) {
+      console.error('API Error:', resultData.error);
+      return res.status(500).json({ error: 'ERRO_API_GOOGLE', message: resultData.error.message });
     }
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const text = resultData.candidates?.[0]?.content?.parts?.[0]?.text || "A IA não conseguiu gerar uma resposta no momento.";
 
     res.json({ success: true, analysis: text });
   } catch (err) {
-    console.error('❌ Erro na integração com Gemini:', err);
+    console.error('❌ Erro na integração via Fetch:', err);
     res.status(500).json({ 
       error: 'ERRO_IA', 
-      message: 'Ocorreu uma falha na comunicação com a inteligência artificial do Google.' 
+      message: 'Ocorreu uma falha na comunicação direta com a inteligência artificial.' 
     });
   }
 });
