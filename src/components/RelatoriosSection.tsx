@@ -208,7 +208,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
         const fullData = await res.json();
         // A API de serviços retorna um envelope { record, hasPrev, hasNext },
         // enquanto a de missões retorna o objeto direto.
-        setSelectedRecord(isMissions ? fullData : fullData.record);
+        setSelectedRecord(fullData.record || fullData);
       } else {
         setSelectedRecord(item);
       }
