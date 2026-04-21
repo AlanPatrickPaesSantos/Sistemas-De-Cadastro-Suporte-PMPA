@@ -613,17 +613,21 @@ app.get('/api/stats/consolidated', async (req, res) => {
 
     const serviceQuery = buildServiceQuery(req.query);
 
-    // 2. Executa todas as contagens e rankings em paralelo no Banco de Dados (v40.5 Integridade Total)
+    // 2. Executa todas as contagens e rankings em paralelo no Banco de Dados (v40.9 Restauração Total)
     const [counts, topUnidades, topServicos, topDefeitos] = await Promise.all([
-      // Contagens Simples
+      // Contagens Simples (Pai de todos os Widgets)
       Promise.all([
-        Missao.countDocuments(baseMissaoQuery),
-        Missao.countDocuments({ ...baseMissaoQuery, $or: [{ servico: /^\s*interno\s*$/i }, { categoria: /^\s*interno\s*$/i }] }),
-        Missao.countDocuments({ ...baseMissaoQuery, $or: [{ servico: /^\s*externo\s*$/i }, { categoria: /^\s*externo\s*$/i }] }),
-        Missao.countDocuments({ ...baseMissaoQuery, $or: [{ servico: /^\s*remoto\s*$/i }, { categoria: /^\s*remoto\s*$/i }] }),
-        Missao.countDocuments({ ...baseMissaoQuery, servico: /^\s*pendente\s*$/i }),
-        Servico.countDocuments(serviceQuery),
-        Servico.countDocuments({ ...serviceQuery, Serviço: /^\s*PRONTO\s*$/i }),
+        Missao.countDocuments(baseMissaoQuery),                                     // [0]
+        Missao.countDocuments({ ...baseMissaoQuery, $or: [{ servico: /^\s*interno\s*$/i }, { categoria: /^\s*interno\s*$/i }] }), // [1]
+        Missao.countDocuments({ ...baseMissaoQuery, $or: [{ servico: /^\s*externo\s*$/i }, { categoria: /^\s*externo\s*$/i }] }), // [2]
+        Missao.countDocuments({ ...baseMissaoQuery, $or: [{ servico: /^\s*remoto\s*$/i }, { categoria: /^\s*remoto\s*$/i }] }),   // [3]
+        Missao.countDocuments({ ...baseMissaoQuery, servico: /^\s*pendente\s*$/i }), // [4]
+        Servico.countDocuments(serviceQuery),                                       // [5]
+        Servico.countDocuments({ ...serviceQuery, Serviço: /^\s*PRONTO\s*$/i }),    // [6]
+        Servico.countDocuments({ ...serviceQuery, Serviço: /^\s*PENDENTE\s*$/i }),  // [7]
+        Servico.countDocuments({ ...serviceQuery, Serviço: /^\s*LAUDO\s*$/i }),     // [8]
+        Servico.countDocuments({ ...serviceQuery, Bateria: { $ne: "", $exists: true } }), // [9]
+        Servico.countDocuments({ ...serviceQuery, Garantia: /^\s*sim\s*$/i })        // [10]
       ]),
 
       // Ranking Unidades (Auditado + Normalizado v40.6)
@@ -698,7 +702,11 @@ app.get('/api/stats/consolidated', async (req, res) => {
       },
       servicos: {
         total: counts[5],
-        pronto: counts[6]
+        pronto: counts[6],
+        pendente: counts[7],
+        laudo: counts[8],
+        bateria: counts[9],
+        garantia: counts[10]
       }
     });
   } catch (err) {
