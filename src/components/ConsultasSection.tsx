@@ -87,7 +87,7 @@ export const ConsultasSection = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl p-4 md:p-6 border border-slate-200/50 dark:border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.06)] mb-8 transition-all hover:shadow-[0_15px_50px_rgba(0,78,154,0.1)] group">
+      <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl p-4 md:p-6 border border-slate-200/50 dark:border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.06)] mb-8 transition-all group">
         <div className="flex flex-col md:flex-row gap-3 relative">
           <div className="relative flex-1 group/input flex items-center">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-slate-400 border-none transition-colors group-focus-within/input:text-[#004e9a]" />
@@ -138,7 +138,7 @@ export const ConsultasSection = () => {
           results.map((record) => (
             <Card
               key={record.Id_cod}
-              className="group p-5 bg-white border border-slate-200/60 rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.03)] hover:shadow-[0_15px_35px_rgba(0,78,154,0.12)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer overflow-hidden relative"
+              className="group p-5 bg-white border border-slate-200/60 rounded-2xl shadow-[0_4px_15px_rgba(0,0,0,0.03)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer overflow-hidden relative"
               onClick={() => loadRecord(record)}
             >
               <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-[#004e9a] to-[#002f5c] opacity-80 group-hover:opacity-100 transition-opacity" />

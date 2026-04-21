@@ -540,7 +540,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
 
   return (
     <>
-      <Card className="relative overflow-hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl border border-slate-200/50 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_15px_40px_rgba(0,78,154,0.1)] transition-all duration-500 group">
+      <Card className="relative overflow-hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl border border-slate-200/50 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.04)] transition-all duration-500 group">
         <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#004e9a] to-[#002f5c] transform origin-left transition-transform duration-500" />
         <div className="absolute -right-12 -top-12 w-32 h-32 bg-blue-100/50 dark:bg-blue-900/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
