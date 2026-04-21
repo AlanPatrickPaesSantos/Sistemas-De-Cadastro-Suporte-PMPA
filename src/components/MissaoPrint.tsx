@@ -46,140 +46,174 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
   if (!mountNode || !data) return null;
 
   return createPortal(
-    <div id="printable-mission" className="hidden print:block bg-white text-black min-h-screen font-sans">
+    <div id="printable-mission" className="hidden print:block bg-white text-black min-h-screen font-sans leading-tight">
       <style>{`
         @media print {
-          @page { size: A4 portrait; margin: 10mm; }
+          @page { size: A4 portrait; margin: 12mm; }
           body { background: white; -webkit-print-color-adjust: exact; }
           body > *:not(#print-portal-container) { display: none !important; }
-          #print-portal-container { position: absolute; left: 0; top: 0; width: 100vw; }
+          #print-portal-container { position: absolute; left: 0; top: 0; width: 100%; }
         }
-        .text-os { font-family: monospace; }
+        .premium-border { border: 1px solid #e2e8f0; }
+        .section-header { background: #f8fafc; border-bottom: 2px solid #004e9a; padding: 4px 12px; }
+        .label-box { background: #f1f5f9; padding: 4px 8px; border-right: 1px solid #e2e8f0; }
+        .content-box { padding: 4px 12px; }
       `}</style>
 
-      <div className="mx-auto w-full max-w-[210mm] p-2">
-        {/* Cabeçalho Oficial */}
-        <div className="flex justify-between items-start mb-2 border-b-2 border-black pb-2">
-          <div className="w-20">
-            <img src="/logo-pmpa.png" alt="Logo PMPA" style={{ height: '60px', width: 'auto', objectFit: 'contain' }} />
+      <div className="mx-auto w-full max-w-[210mm]">
+        {/* CABEÇALHO INSTITUCIONAL */}
+        <div className="flex justify-between items-center mb-6 pt-2">
+          <img src="/logo-pmpa.png" alt="PMPA" className="h-20 w-auto object-contain" />
+          <div className="text-center font-bold uppercase text-[10px] space-y-0.5 flex-1">
+            <p className="text-slate-500">Governo do Estado do Pará</p>
+            <p className="text-slate-600">Secretaria de Segurança Pública e Defesa Social</p>
+            <p className="text-slate-800">Polícia Militar do Pará</p>
+            <p className="text-slate-800">Departamento Geral de Administração</p>
+            <p className="text-[14px] mt-2 font-black text-[#004e9a] tracking-tighter">Diretoria de Telemática</p>
           </div>
-          <div className="text-center flex-1 font-bold uppercase text-[10px] space-y-0.5">
-            <p>GOVERNO DO ESTADO DO PARÁ</p>
-            <p>SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA E DEFESA SOCIAL</p>
-            <p>POLÍCIA MILITAR DO PARÁ</p>
-            <p>DEPARTAMENTO GERAL DE ADMINISTRAÇÃO</p>
-            <p className="text-[12px] mt-1 font-black">DIRETORIA DE TELEMÁTICA</p>
-          </div>
-          <div className="w-20 flex justify-end">
-            <img src="/Logo Ditel.jpeg" alt="Logo Ditel" style={{ height: '60px', width: 'auto', objectFit: 'contain' }} />
-          </div>
+          <img src="/Logo Ditel.jpeg" alt="DITEL" className="h-20 w-auto object-contain" />
         </div>
 
-        <h1 className="text-center text-md font-black uppercase mb-2 tracking-widest leading-none">Ordem de Serviço</h1>
-
-        {/* Info Grid - Replicating PDF Rows */}
-        <div className="space-y-2 mb-2">
-          <div className="grid grid-cols-12 border border-black border-collapse">
-            <div className="col-span-3 border-r border-black p-2">
-              <span className="text-[9px] font-black uppercase block border-b border-black mb-1 pb-1">Ordem de Serviço:</span>
-              <span className="text-lg font-black text-os">{data.os}</span>
-            </div>
-            <div className="col-span-9 p-2">
-              <span className="text-[9px] font-black uppercase block border-b border-black mb-1 pb-1">Unidade/Seção:</span>
-              <span className="text-sm font-bold uppercase">{data.unidade || 'N/A'}</span>
-            </div>
-          </div>
-
-          <div className="border border-black p-2 bg-gray-50/20">
-             <div className="flex justify-between items-center px-4 py-0.5">
-                <span className="text-[10px] font-black uppercase">DATA: <span className="font-bold ml-2">{formatDateBR(data.data) || '___/___/______'}</span></span>
-                <span className="text-[10px] font-black uppercase">HORÁRIO: <span className="font-bold ml-2">{data.horario || '__:__' || '___:___'}</span></span>
-             </div>
-          </div>
-
-          <div className="grid grid-cols-2 border border-black divide-x divide-black">
-            <div className="p-2">
-              <span className="text-[9px] font-black uppercase block border-b border-black mb-1 pb-1">Solicitante:</span>
-              <span className="text-xs font-bold uppercase">{data.solicitante || '____________________'}</span>
-            </div>
-            <div className="p-2">
-              <span className="text-[9px] font-black uppercase block border-b border-black mb-1 pb-1">Seção DITEL:</span>
-              <span className="text-xs font-bold uppercase uppercase">{data.secao || 'SUPORTE'}</span>
-            </div>
-          </div>
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-black uppercase tracking-[0.2em] border-y-2 border-slate-900 py-2">
+            Ordem de Missão Técnica
+          </h1>
         </div>
 
-        {/* Descrição Section */}
-        <div className="mb-2">
-          <h2 className="text-center font-black uppercase border border-black py-0.5 mb-0 text-[10px] bg-gray-100/50">Descrição e Informação</h2>
-          <div className="border border-black border-t-0 p-2 min-h-[80px]">
-            <p className="text-[9px] font-black uppercase mb-0.5">Defeito Reclamado / Constatado:</p>
-            <p className="text-[12px] leading-snug whitespace-pre-wrap">{data.def_recla || 'CONFORME SOLICITADO.'}</p>
+        {/* SEÇÃO 1: IDENTIFICAÇÃO */}
+        <div className="premium-border mb-6">
+          <div className="section-header">
+            <h2 className="text-[10px] font-black uppercase tracking-widest text-[#004e9a]">1. Identificação do Chamado</h2>
           </div>
-        </div>
-
-        {/* Atendimento Section */}
-        <div className="mb-2">
-          <h2 className="text-center font-black uppercase border border-black py-0.5 mb-0 text-[10px] bg-gray-100/50">Atendimento</h2>
-          <div className="grid grid-cols-2 border border-black border-t-0 divide-x divide-black">
-            <div className="p-2">
-              <span className="text-[9px] font-black uppercase block mb-1">Técnico:</span>
-              <span className="text-xs font-bold uppercase">{data.tecnicos || '____________________'}</span>
+          <div className="grid grid-cols-12 border-b border-slate-200">
+            <div className="col-span-3 label-box">
+              <span className="text-[8px] font-black uppercase text-slate-500">Nº da O.S.</span>
             </div>
-            <div className="p-2">
-              <span className="text-[9px] font-black uppercase block mb-1">Status da Missão:</span>
-              <span className="text-xs font-black uppercase">CONCLUÍDO / PRONTO</span>
+            <div className="col-span-3 content-box border-r border-slate-200">
+              <span className="text-lg font-black tracking-tighter">#{data.os}</span>
+            </div>
+            <div className="col-span-3 label-box">
+              <span className="text-[8px] font-black uppercase text-slate-500">Data / Horário</span>
+            </div>
+            <div className="col-span-3 content-box">
+              <span className="text-xs font-bold">{formatDateBR(data.data)} — {data.horario || "--:--"}</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-12">
+            <div className="col-span-3 label-box">
+              <span className="text-[8px] font-black uppercase text-slate-500">Unidade Solicitante</span>
+            </div>
+            <div className="col-span-9 content-box font-bold text-sm uppercase">
+              {data.unidade || "Não Informada"}
+            </div>
+          </div>
+          <div className="grid grid-cols-12 border-t border-slate-200">
+            <div className="col-span-3 label-box">
+              <span className="text-[8px] font-black uppercase text-slate-500">Solicitante / Receptor</span>
+            </div>
+            <div className="col-span-9 content-box font-bold text-sm uppercase italic">
+              {data.solicitante || "DADOS NÃO INFORMADOS"}
             </div>
           </div>
         </div>
 
-        {/* Solução Section */}
-        <div className="mb-3">
-          <h2 className="text-center font-black uppercase border border-black py-0.5 mb-0 text-[10px] bg-gray-100/50">Solução Aplicada</h2>
-          <div className="border border-black border-t-0 p-2 min-h-[120px]">
-            <div className="text-[12px] leading-snug whitespace-pre-wrap">
-              {data.solucao ? (
-                data.solucao
-              ) : (
-                "VISTORIA TÉCNICA E PROCEDIMENTOS DE MANUTENÇÃO FINALIZADOS COM SUCESSO."
-              )}
+        {/* SEÇÃO 2: EQUIPE TÉCNICA */}
+        <div className="premium-border mb-6">
+          <div className="section-header">
+            <h2 className="text-[10px] font-black uppercase tracking-widest text-[#004e9a]">2. Atendimento Técnico</h2>
+          </div>
+          <div className="grid grid-cols-12">
+            <div className="col-span-3 label-box">
+              <span className="text-[8px] font-black uppercase text-slate-500">Técnicos Designados</span>
+            </div>
+            <div className="col-span-5 content-box border-r border-slate-200 font-bold uppercase text-xs">
+              {data.tecnicos || "Equipe de Plantão Ditel"}
+            </div>
+            <div className="col-span-2 label-box">
+              <span className="text-[8px] font-black uppercase text-slate-500">Seção</span>
+            </div>
+            <div className="col-span-2 content-box font-black text-xs text-[#004e9a]">
+              {data.secao || "SUPORTE"}
             </div>
           </div>
         </div>
 
-        {/* Observações - If any */}
-        {data.observacao && (
-          <div className="mb-2 border border-black p-1.5 border-dashed">
-            <span className="text-[9px] font-black uppercase">OBSERVAÇÕES: </span>
-            <span className="text-[10px] uppercase font-medium">{data.observacao}</span>
+        {/* SEÇÃO 3: DESCRIÇÃO E ANÁLISE */}
+        <div className="premium-border mb-6">
+          <div className="section-header">
+            <h2 className="text-[10px] font-black uppercase tracking-widest text-[#004e9a]">3. Descrição do Problema e Análise</h2>
           </div>
-        )}
+          <div className="p-4 min-h-[120px]">
+            <p className="text-[8px] font-black uppercase text-slate-400 mb-2">Defeito Reclamado / Constatação Inicial</p>
+            <div className="text-sm leading-relaxed text-slate-800 whitespace-pre-wrap">
+              {data.def_recla || "Ação de manutenção preventiva/corretiva conforme ordem de missão superior."}
+            </div>
+          </div>
+        </div>
 
-        {/* Materiais Utilizados */}
+        {/* SEÇÃO 4: SOLUÇÃO APLICADA */}
+        <div className="premium-border mb-6 border-slate-400">
+          <div className="section-header !bg-slate-100">
+            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-900">4. Solução Técnica Efetuada</h2>
+          </div>
+          <div className="p-4 min-h-[160px] bg-slate-50/30">
+            <div className="text-[13px] leading-relaxed font-medium text-slate-900 whitespace-pre-wrap italic">
+              {data.solucao || "Procedimentos de manutenção técnica realizados com sucesso, restabelecendo a operacionalidade plena dos serviços/equipamentos."}
+            </div>
+          </div>
+        </div>
+
+        {/* SEÇÃO 5: MATERIAIS */}
         {data.materiais && data.materiais.length > 0 && (
-          <div className="mb-3 border border-black p-2 bg-gray-50/10">
-            <h3 className="text-[9px] font-black uppercase border-b border-black mb-1 pb-0.5">Materiais Utilizados / Aplicados:</h3>
-            <div className="grid grid-cols-3 gap-y-1">
+          <div className="premium-border mb-6">
+            <div className="section-header">
+              <h2 className="text-[10px] font-black uppercase tracking-widest text-[#004e9a]">5. Materiais e Componentes Utilizados</h2>
+            </div>
+            <div className="p-4 grid grid-cols-2 gap-4">
               {data.materiais.map((m, idx) => (
-                <div key={idx} className="flex items-center gap-1">
-                  <span className="text-[10px] font-bold">☑</span>
-                  <span className="text-[10px] font-bold uppercase">{m}</span>
+                <div key={idx} className="flex items-center gap-3 border-b border-slate-100 pb-1">
+                  <div className="h-3 w-3 border border-slate-400 flex items-center justify-center text-[10px] font-bold">✓</div>
+                  <span className="text-[11px] font-bold uppercase text-slate-700">{m}</span>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* Assinaturas */}
-        <div className="grid grid-cols-2 gap-20 mt-6 py-2 text-center uppercase">
-          <div className="space-y-1">
-            <div className="border-t-2 border-black mx-4"></div>
-            <p className="text-[9px] font-black">Técnico/Responsável</p>
+        {/* OBSERVACÕES ADICIONAIS */}
+        {data.observacao && (
+          <div className="mb-8 p-4 border border-blue-100 bg-blue-50/20 rounded-lg">
+            <span className="text-[9px] font-black uppercase text-[#004e9a] block mb-1">Notas e Observações:</span>
+            <p className="text-xs italic text-slate-600 font-medium leading-tight">"{data.observacao}"</p>
           </div>
-          <div className="space-y-1">
-            <div className="border-t-2 border-black mx-4"></div>
-            <p className="text-[9px] font-black">Solicitante / Receptor</p>
+        )}
+
+        {/* TERMO DE ENCERRAMENTO */}
+        <div className="mt-12 mb-16">
+          <div className="grid grid-cols-2 gap-24 px-8 text-center">
+            <div className="space-y-4">
+              <div className="border-t border-slate-900 pt-2">
+                <p className="text-[10px] font-black uppercase">Responsável Técnico</p>
+                <p className="text-[8px] text-slate-500 uppercase tracking-widest font-bold">Diretoria de Telemática - PMPA</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="border-t border-slate-900 pt-2">
+                <p className="text-[10px] font-black uppercase">Assinatura do Receptor / Solicitante</p>
+                <p className="text-[8px] text-slate-500 uppercase tracking-widest font-bold">Unidade Receptora - PMPA</p>
+              </div>
+            </div>
           </div>
+        </div>
+
+        {/* RODAPÉ */}
+        <div className="border-t-2 border-slate-100 pt-4 text-center mt-auto">
+          <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.3em]">
+            Ditel - Diretoria de Telemática | {new Date().getFullYear()}
+          </p>
+          <p className="text-[8px] text-slate-300 font-medium mt-1">
+            Este documento é de uso institucional. Sistema de Gestão Ditel (v40)
+          </p>
         </div>
       </div>
     </div>,
