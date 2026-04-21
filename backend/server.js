@@ -92,7 +92,7 @@ app.use('/api/eqsuporte', verificarToken);
 
 // Helper para construir queries de serviços de suporte de forma unificada
 const buildServiceQuery = (params) => {
-  const { q, startDate, endDate, status, bateria, garantia, bateria_vazia, filterType } = params;
+  const { q, startDate, endDate, status, bateria, garantia, bateria_vazia, filterType, unidade } = params;
   let query = {};
 
   if (q) {
@@ -104,14 +104,14 @@ const buildServiceQuery = (params) => {
     } else if (filterType === 'rp') {
       query.RP = { $regex: q, $options: 'i' };
     } else if (filterType === 'unidade') {
-      query.Unidade = { $regex: q, $options: 'i' };
+      query.Unidade = { $regex: new RegExp(`\\b${q}\\b`, 'i') };
     } else {
       query.$or = [
         ...(isNum ? [{ Id_cod: parseInt(q) }] : []),
         { Nº_Serie: { $regex: q, $options: 'i' } },
         { RP: { $regex: q, $options: 'i' } },
         { Solicitante: { $regex: q, $options: 'i' } },
-        { Unidade: { $regex: q, $options: 'i' } },
+        { Unidade: { $regex: new RegExp(`\\b${q}\\b`, 'i') } },
         { Serviço: { $regex: q, $options: 'i' } }
       ];
     }
@@ -140,6 +140,10 @@ const buildServiceQuery = (params) => {
       { Bateria: "" },
       { Bateria: { $exists: false } }
     ];
+  }
+
+  if (unidade) {
+    query.Unidade = { $regex: new RegExp(`^\\s*${unidade}\\s*$`, 'i') };
   }
 
   return query;
