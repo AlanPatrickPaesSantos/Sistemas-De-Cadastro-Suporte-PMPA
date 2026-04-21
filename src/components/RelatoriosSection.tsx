@@ -267,112 +267,299 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Relatório Ditel PMPA</title>
+        <title>Relatório de Atividades - DITEL</title>
         <meta charset="UTF-8" />
         <style>
-          @page { margin: 0mm; size: A4; }
-          body { font-family: Arial, sans-serif; padding: 0.8cm 1.2cm; color: black; line-height: 1.2; background: white; font-size: 9pt; }
-          .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid black; padding-bottom: 6px; margin-bottom: 8px; }
-          .logo { height: 85px; width: auto; object-fit: contain; image-rendering: -webkit-optimize-contrast; }
-          .header-text { text-align: center; flex: 1; font-weight: bold; text-transform: uppercase; font-size: 8.5pt; line-height: 1.4; }
-          .header-text .ditel { font-size: 11pt; }
-          .doc-title { text-align: center; font-weight: 900; text-transform: uppercase; font-size: 11pt; margin: 8px 0; }
-          .meta { display: flex; justify-content: space-between; font-size: 8pt; font-weight: bold; border-bottom: 1px dotted black; padding-bottom: 4px; margin-bottom: 8px; }
-          section { margin-bottom: 10px; }
-          .section-title { font-size: 9pt; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; padding-bottom: 2px; letter-spacing: 0.5px; }
-          table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
-          th, td { border: 1px solid black; padding: 4px 8px; font-size: 8.5pt; text-align: center; }
-          th { background-color: #e8e8e8; font-weight: 900; text-transform: uppercase; font-size: 8pt; }
-          td.label { text-align: left; font-weight: bold; width: 65%; }
-          td.value { font-size: 11pt; font-weight: 900; }
-          .total-row td { background-color: #d8d8d8; font-weight: 900; }
-          .footer { margin-top: 20px; text-align: center; }
-          .signature-line { width: 220px; border-top: 1px solid black; margin: 30px auto 4px; }
-          .footer-text { font-weight: bold; text-transform: uppercase; font-size: 9pt; }
-          .obs { font-size: 7pt; color: #444; margin-top: 6px; font-style: italic; }
+          @page { margin: 15mm; size: A4; }
+          body { 
+            font-family: "Segoe UI", Roboto, Arial, sans-serif; 
+            padding: 0; 
+            color: #1a1a1a; 
+            line-height: 1.4; 
+            background: white; 
+            font-size: 10pt;
+          }
+          
+          /* Cabeçalho Oficial */
+          .security-header {
+            text-align: right;
+            font-size: 7pt;
+            font-weight: bold;
+            color: #666;
+            text-transform: uppercase;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+          }
+          
+          .header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            border-bottom: 3px double #004e9a; 
+            padding-bottom: 15px; 
+            margin-bottom: 20px; 
+          }
+          .logo { height: 75px; width: auto; object-fit: contain; }
+          .header-text { 
+            text-align: center; 
+            flex: 1; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            font-size: 8.5pt; 
+            line-height: 1.4; 
+          }
+          .header-text .ditel { font-size: 13pt; color: #004e9a; margin-top: 5px; }
+
+          .doc-title-box {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+          }
+          .doc-title { 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            font-size: 12pt; 
+            margin: 0;
+            letter-spacing: 1px;
+            color: #111;
+          }
+
+          .meta-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+            font-size: 9pt;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+          }
+          .meta-item b { color: #555; text-transform: uppercase; font-size: 8pt; }
+
+          /* Layout de Seções */
+          section { margin-bottom: 30px; page-break-inside: avoid; }
+          .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-left: 5px solid #004e9a;
+            padding-left: 10px;
+            background: #f1f5f9;
+            padding-top: 8px;
+            padding-bottom: 8px;
+          }
+          .section-title { 
+            font-size: 10pt; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            margin: 0;
+          }
+
+          /* Tabelas Estilizadas */
+          table { width: 100%; border-collapse: collapse; background: white; }
+          th, td { border: 1px solid #ccc; padding: 8px 12px; font-size: 9.5pt; text-align: left; }
+          th { 
+            background-color: #004e9a; 
+            color: white; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            font-size: 8.5pt; 
+            text-align: center;
+          }
+          td.label { font-weight: 600; width: 60%; color: #333; }
+          td.value { font-weight: 900; text-align: center; font-size: 11pt; border-left: 2px solid #ccc; }
+          
+          .progression-bar {
+            height: 4px;
+            background: #eee;
+            width: 100%;
+            margin-top: 5px;
+            border-radius: 2px;
+            overflow: hidden;
+          }
+          .progression-fill {
+            height: 100%;
+            background: #004e9a;
+          }
+
+          /* Resumo Geral Estilo Card */
+          .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+          }
+          .summary-card {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            background: #fff;
+          }
+          .card-val { font-size: 16pt; font-weight: 900; color: #004e9a; display: block; }
+          .card-lbl { font-size: 8pt; font-weight: bold; text-transform: uppercase; color: #666; }
+
+          /* Rodapé de Assinatura */
+          .signatures {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            text-align: center;
+          }
+          .signature-box { border-top: 1px solid black; padding-top: 10px; }
+          .sig-title { font-weight: bold; font-size: 9pt; text-transform: uppercase; }
+          .sig-rank { font-size: 8pt; color: #444; }
+
+          .footer-note {
+            margin-top: 40px;
+            font-size: 7.5pt;
+            color: #888;
+            text-align: center;
+            border-top: 1px dotted #ccc;
+            padding-top: 10px;
+          }
+          
+          @media print {
+            .no-print { display: none; }
+            body { -webkit-print-color-adjust: exact; }
+          }
         </style>
       </head>
       <body>
+        <div class="security-header">USO INTERNO - DOCUMENTO DE TRABALHO - DITEL/PMPA</div>
 
         <div class="header">
           <img src="${logoBase}/logo-pmpa.png" class="logo" onerror="this.style.display='none'" />
           <div class="header-text">
             <div>GOVERNO DO ESTADO DO PARÁ</div>
-            <div>SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA E DEFESA SOCIAL</div>
+            <div>SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA</div>
             <div>POLÍCIA MILITAR DO PARÁ</div>
             <div>DEPARTAMENTO GERAL DE ADMINISTRAÇÃO</div>
             <div class="ditel">DIRETORIA DE TELEMÁTICA</div>
           </div>
-          <img src="${logoBase}/Logo Ditel.jpeg" class="logo" onerror="this.style.display='none'" style="transform: translateX(5px);" />
+          <img src="${logoBase}/Logo Ditel.jpeg" class="logo" onerror="this.style.display='none'" />
         </div>
 
-        <div class="doc-title">RELATÓRIO CONSOLIDADO DE ATIVIDADES - DITEL</div>
-
-        <div class="meta">
-          <span>EMITIDO EM: ${new Date().toLocaleDateString("pt-BR")}</span>
-          <span>PERÍODO DE REFERÊNCIA: ${filters.startDate || "INÍCIO"} A ${filters.endDate || "FIM"}</span>
+        <div class="doc-title-box">
+          <p class="doc-title">Relatório Consolidado de Atividades</p>
         </div>
 
-        <!-- SEÇÃO 1: MISSÕES INTERNAS E EXTERNAS -->
+        <div class="meta-info">
+          <div class="meta-item">
+            <b>Emitido em:</b><br/> ${new Date().toLocaleDateString("pt-BR")} às ${new Date().toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' })}
+          </div>
+          <div class="meta-item">
+            <b>Período:</b><br/> ${filters.startDate ? new Date(filters.startDate).toLocaleDateString("pt-BR") : "Início"} — ${filters.endDate ? new Date(filters.endDate).toLocaleDateString("pt-BR") : "Fim"}
+          </div>
+        </div>
+
+        <!-- SEÇÃO 1 -->
         <section>
-          <div class="section-title">1. Serviços de Suporte – Missões (Int/Ext/Remoto)</div>
+          <div class="section-header">
+            <div class="section-title">1. Desempenho Operacional - Missões</div>
+          </div>
           <table>
             <thead>
               <tr>
-                <th style="text-align:left">TIPO DE SERVIÇO</th>
-                <th>QUANTIDADE</th>
+                <th style="text-align:left">Indicador de Atividade</th>
+                <th>Quant.</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td class="label">Serviços Internos</td><td class="value">${stats.interno}</td></tr>
-              <tr><td class="label">Serviços Externos</td><td class="value">${stats.externo}</td></tr>
-              <tr><td class="label">Serviços Remotos</td><td class="value">${stats.remoto}</td></tr>
-              <tr><td class="label">Pendentes</td><td class="value">${stats.pendente}</td></tr>
-              <tr class="total-row"><td class="label">TOTAL DE MISSÕES NO PERÍODO</td><td class="value">${stats.total}</td></tr>
+              <tr>
+                <td class="label">
+                  Missões Internas<br/>
+                  <div class="progression-bar"><div class="progression-fill" style="width: ${stats.total > 0 ? (stats.interno / stats.total * 100) : 0}%"></div></div>
+                </td>
+                <td class="value">${stats.interno}</td>
+              </tr>
+              <tr>
+                <td class="label">
+                  Missões Externas<br/>
+                  <div class="progression-bar"><div class="progression-fill" style="width: ${stats.total > 0 ? (stats.externo / stats.total * 100) : 0}%"></div></div>
+                </td>
+                <td class="value">${stats.externo}</td>
+              </tr>
+              <tr>
+                <td class="label">
+                  Missões Remotas<br/>
+                  <div class="progression-bar"><div class="progression-fill" style="width: ${stats.total > 0 ? (stats.remoto / stats.total * 100) : 0}%"></div></div>
+                </td>
+                <td class="value">${stats.remoto}</td>
+              </tr>
+              <tr>
+                <td class="label">Serviços Pendentes (Em andamento)</td>
+                <td class="value">${stats.pendente}</td>
+              </tr>
+              <tr style="background: #f8f9fa;">
+                <td class="label" style="font-size: 11pt; color: #004e9a;">TOTAL GERAL DE MISSÕES</td>
+                <td class="value" style="font-size: 14pt; color: #004e9a;">${stats.total}</td>
+              </tr>
             </tbody>
           </table>
         </section>
 
-        <!-- SEÇÃO 2: MANUTENÇÕES -->
+        <!-- SEÇÃO 2 -->
         <section>
-          <div class="section-title">2. Serviços de Manutenção de Equipamentos</div>
+          <div class="section-header">
+            <div class="section-title">2. Manutenção de Equipamentos</div>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-card">
+              <span class="card-val">${manutencaoStats.total}</span>
+              <span class="card-lbl">Total de O.S.</span>
+            </div>
+            <div class="summary-card">
+              <span class="card-val" style="color: #059669;">${manutencaoStats.prontas}</span>
+              <span class="card-lbl">Concluídas</span>
+            </div>
+            <div class="summary-card">
+              <span class="card-val" style="color: #6366f1;">${manutencaoStats.total > 0 ? Math.round((manutencaoStats.prontas / manutencaoStats.total) * 100) : 0}%</span>
+              <span class="card-lbl">Eficiência</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3 -->
+        <section style="margin-top: 40px;">
+          <div class="section-header">
+            <div class="section-title">3. Resumo de Atendimentos</div>
+          </div>
+          <p style="margin-bottom: 15px; font-style: italic; color: #444;">Consolidado de todas as atividades realizadas pela Diretoria de Telemática no período selecionado.</p>
           <table>
             <thead>
               <tr>
-                <th style="text-align:left">INDICADOR</th>
-                <th>QUANTIDADE</th>
+                <th style="text-align:left">Categoria de Suporte</th>
+                <th>Volume Total</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td class="label">Total de O.S. Registradas no Período</td><td class="value">${manutencaoStats.total}</td></tr>
-              <tr class="total-row"><td class="label">O.S. Concluídas (Status: PRONTO)</td><td class="value">${manutencaoStats.prontas}</td></tr>
+              <tr><td class="label">Suporte de Campo e Remoto (Missões)</td><td class="value">${(stats.interno || 0) + (stats.externo || 0) + (stats.remoto || 0)}</td></tr>
+              <tr><td class="label">Reparos Técnicos Oficiais (Manutenções)</td><td class="value">${manutencaoStats.prontas || 0}</td></tr>
+              <tr style="background: #004e9a; color: white;">
+                <td class="label" style="font-size: 11pt; border: none;">TOTAL DE ATENDIMENTOS REALIZADOS</td>
+                <td class="value" style="font-size: 14pt; border: none; color: white;">${(stats.interno || 0) + (stats.externo || 0) + (stats.remoto || 0) + (manutencaoStats.prontas || 0)}</td>
+              </tr>
             </tbody>
           </table>
         </section>
 
-        <!-- SEÇÃO 3: RESUMO GERAL -->
-        <section>
-          <div class="section-title">3. Resumo Geral de Atendimentos</div>
-          <table>
-            <thead>
-              <tr>
-                <th style="text-align:left">CATEGORIA</th>
-                <th>TOTAL</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="label">Total de Missões (Int + Ext + Remoto)</td><td class="value">${(stats.interno || 0) + (stats.externo || 0) + (stats.remoto || 0)}</td></tr>
-              <tr><td class="label">Total de Manutenções Concluídas</td><td class="value">${manutencaoStats.prontas || 0}</td></tr>
-              <tr class="total-row"><td class="label">TOTAL GERAL DE ATENDIMENTOS</td><td class="value">${(stats.interno || 0) + (stats.externo || 0) + (stats.remoto || 0) + (manutencaoStats.prontas || 0)}</td></tr>
-            </tbody>
-          </table>
-          <p class="obs">* Relatório gerado automaticamente pelo sistema DITEL/PMPA. Dados referentes ao período informado acima.</p>
-        </section>
+        <div class="signatures">
+          <div class="signature-box">
+            <div class="sig-title">Oficial Responsável</div>
+            <div class="sig-rank">DITEL - PMPA</div>
+          </div>
+          <div class="signature-box">
+            <div class="sig-title">Comandante da DITEL</div>
+            <div class="sig-rank">Diretoria de Telemática</div>
+          </div>
+        </div>
 
-        <div class="footer">
-          <div class="signature-line"></div>
-          <p class="footer-text">Responsável pela Emissão</p>
-          <p style="font-size: 8pt; text-transform: uppercase; margin-top: 4px;">Diretoria de Telemática – PMPA</p>
+        <div class="footer-note">
+          Relatório gerado pelo Sistema de Gestão DITEL às ${new Date().toLocaleString("pt-BR")}.<br/>
+          Copyright © 2026 Diretoria de Telemática - Polícia Militar do Pará.
         </div>
 
         <script>
@@ -382,13 +569,9 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
             impresso = true;
             window.print();
           }
-          
-          window.onload = function() { setTimeout(chamarImpressao, 500); };
-          setTimeout(chamarImpressao, 2000); // Fallback: força a impressão se imagens travarem
-          
-          window.onafterprint = function() {
-            window.close(); // Fecha a aba automaticamente e libera o sistema principal
-          };
+          window.onload = function() { setTimeout(chamarImpressao, 800); };
+          setTimeout(chamarImpressao, 3000);
+          window.onafterprint = function() { window.close(); };
         </script>
       </body>
       </html>
