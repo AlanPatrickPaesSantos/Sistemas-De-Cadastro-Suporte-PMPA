@@ -58,18 +58,29 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
         .section-header { border-bottom: 1px solid #004e9a; padding: 4px 12px; display: flex; align-items: center; }
         .label-box { padding: 4px 8px; border-right: 1px solid #cbd5e1; display: flex; align-items: center; }
         .content-box { padding: 4px 12px; display: flex; align-items: center; }
+        .watermark {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          opacity: 0.13;
+          z-index: -100;
+          width: 450px;
+          pointer-events: none;
+        }
       `}</style>
 
       <div className="mx-auto w-full max-w-[210mm]">
         {/* CABEÇALHO INSTITUCIONAL */}
-        <div className="flex justify-between items-center mb-6 pt-2">
+        <img src="/logo-pmpa.png" alt="Watermark" className="watermark" />
+        <div className="flex justify-between items-center mb-4 pt-2 border-b-2 border-black pb-4">
           <img src="/logo-pmpa.png" alt="PMPA" className="h-20 w-auto object-contain" />
           <div className="text-center font-bold uppercase text-[10px] space-y-0.5 flex-1">
-            <p className="text-slate-500">Governo do Estado do Pará</p>
-            <p className="text-slate-600">Secretaria de Segurança Pública e Defesa Social</p>
-            <p className="text-slate-800">Polícia Militar do Pará</p>
-            <p className="text-slate-800">Departamento Geral de Administração</p>
-            <p className="text-[14px] mt-2 font-black text-black tracking-tighter">Diretoria de Telemática</p>
+            <p className="text-slate-800">Governo do Estado do Pará</p>
+            <p className="text-slate-800">Secretaria de Segurança Pública e Defesa Social</p>
+            <p className="text-slate-800 font-black">Polícia Militar do Pará</p>
+            <p className="text-slate-800 font-black">Departamento Geral de Administração</p>
+            <p className="text-[14px] mt-1 font-black text-black tracking-tighter">Diretoria de Telemática</p>
           </div>
           <img src="/Logo Ditel.jpeg" alt="DITEL" className="h-20 w-auto object-contain" />
         </div>
@@ -87,13 +98,13 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
           </div>
           <div className="grid grid-cols-12 border-b border-slate-300">
             <div className="col-span-3 label-box">
-              <span className="text-[12px] font-black uppercase text-slate-500">Nº da O.S.</span>
+              <span className="text-[12px] font-black uppercase text-slate-800">Nº da O.S.</span>
             </div>
             <div className="col-span-3 content-box border-r border-slate-300">
               <span className="text-[14px] font-black tracking-tighter">#{data.os}</span>
             </div>
             <div className="col-span-3 label-box">
-              <span className="text-[12px] font-black uppercase text-slate-500">Data de Registro</span>
+              <span className="text-[12px] font-black uppercase text-slate-800">Data de Registro</span>
             </div>
             <div className="col-span-3 content-box">
               <span className="text-[12px] font-bold">{formatDateBR(data.data)}</span>
@@ -101,7 +112,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
           </div>
           <div className="grid grid-cols-12">
             <div className="col-span-3 label-box">
-              <span className="text-[12px] font-black uppercase text-slate-500">Unidade Solicitante</span>
+              <span className="text-[12px] font-black uppercase text-slate-800">Unidade Solicitante</span>
             </div>
             <div className="col-span-9 content-box font-bold text-[12px] uppercase text-slate-800">
               {data.unidade || "Não Informada"}
@@ -109,7 +120,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
           </div>
           <div className="grid grid-cols-12 border-t border-slate-300">
             <div className="col-span-3 label-box">
-              <span className="text-[12px] font-black uppercase text-slate-500">Solicitante / Receptor</span>
+              <span className="text-[12px] font-black uppercase text-slate-800">Solicitante / Receptor</span>
             </div>
             <div className="col-span-9 content-box font-bold text-[12px] uppercase italic text-slate-800">
               {data.solicitante || "DADOS NÃO INFORMADOS"}
@@ -124,13 +135,13 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
           </div>
           <div className="grid grid-cols-12 border-b border-slate-300">
             <div className="col-span-3 label-box">
-              <span className="text-[12px] font-black uppercase text-slate-500">Técnicos Designados</span>
+              <span className="text-[12px] font-black uppercase text-slate-800">Técnicos Designados</span>
             </div>
             <div className="col-span-5 content-box border-r border-slate-300 font-bold uppercase text-[12px]">
               {data.tecnicos || "Equipe de Plantão Ditel"}
             </div>
             <div className="col-span-2 label-box">
-              <span className="text-[12px] font-black uppercase text-slate-500">Seção</span>
+              <span className="text-[12px] font-black uppercase text-slate-800">Seção</span>
             </div>
             <div className="col-span-2 content-box font-black text-[12px] text-black">
               {data.secao || "SUPORTE"}
@@ -144,8 +155,8 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
             <h2 className="text-[12px] font-black uppercase tracking-widest text-black">3. Descrição do Problema e Análise</h2>
           </div>
           <div className="p-4 min-h-[120px]">
-            <p className="text-[12px] font-black uppercase text-slate-400 mb-2">Defeito Reclamado / Constatação Inicial</p>
-            <div className="text-[12px] leading-relaxed text-slate-800 whitespace-pre-wrap">
+            <p className="text-[12px] font-black uppercase text-slate-700 mb-2">Defeito Reclamado / Constatação Inicial</p>
+            <div className="text-[12px] leading-relaxed text-black whitespace-pre-wrap">
               {data.def_recla || "Ação de manutenção preventiva/corretiva conforme ordem de missão superior."}
             </div>
           </div>
@@ -184,7 +195,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
         {data.observacao && (
           <div className="mb-8 p-4 border border-blue-100 rounded-lg">
             <span className="text-[9px] font-black uppercase text-black block mb-1">Notas e Observações:</span>
-            <p className="text-xs italic text-slate-600 font-medium leading-tight">"{data.observacao}"</p>
+            <p className="text-xs italic text-slate-800 font-medium leading-tight">"{data.observacao}"</p>
           </div>
         )}
 
@@ -194,13 +205,13 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
             <div className="space-y-4">
               <div className="border-t border-slate-900 pt-2">
                 <p className="text-[10px] font-black uppercase">Responsável Técnico</p>
-                <p className="text-[8px] text-slate-500 uppercase tracking-widest font-bold">Diretoria de Telemática - PMPA</p>
+                <p className="text-[8px] text-slate-800 uppercase tracking-widest font-bold">Diretoria de Telemática - PMPA</p>
               </div>
             </div>
             <div className="space-y-4">
               <div className="border-t border-slate-900 pt-2">
                 <p className="text-[10px] font-black uppercase">Assinatura do Receptor / Solicitante</p>
-                <p className="text-[8px] text-slate-500 uppercase tracking-widest font-bold">Unidade Receptora - PMPA</p>
+                <p className="text-[8px] text-slate-800 uppercase tracking-widest font-bold">Unidade Receptora - PMPA</p>
               </div>
             </div>
           </div>
@@ -208,10 +219,10 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
 
         {/* RODAPÉ */}
         <div className="border-t-2 border-slate-100 pt-4 text-center mt-auto">
-          <p className="text-[10px] font-black uppercase text-slate-400 tracking-[0.3em]">
+          <p className="text-[10px] font-black uppercase text-slate-700 tracking-[0.3em]">
             Ditel - Diretoria de Telemática | {new Date().getFullYear()}
           </p>
-          <p className="text-[8px] text-slate-300 font-medium mt-1">
+          <p className="text-[8px] text-slate-600 font-medium mt-1">
             Este documento é de uso institucional. Sistema de Gestão Ditel (v40)
           </p>
         </div>
