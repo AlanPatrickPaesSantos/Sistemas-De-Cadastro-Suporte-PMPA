@@ -442,7 +442,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
               <tr><td class="label">Missões de Caráter Externo (Batalhões/Unidades)</td><td class="value">${stats.externo}</td></tr>
               <tr><td class="label">Atendimentos de Caráter Remoto (Telefônico/Rede)</td><td class="value">${stats.remoto}</td></tr>
               <tr><td class="label">Equipamentos/Serviços Aguardando Conclusão</td><td class="value">${stats.pendente}</td></tr>
-              <tr style="background: #f1f5f9;">
+              <tr>
                 <td class="label" style="font-size: 10pt; color: #0f172a;">Carga Horária / Produção Total do Período</td>
                 <td class="value" style="font-size: 13pt; color: #004e9a;">${stats.total}</td>
               </tr>
