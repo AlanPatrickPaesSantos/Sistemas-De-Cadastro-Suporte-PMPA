@@ -99,10 +99,10 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       const currentGarantia = filters.garantia;
       const garantiaParam = currentGarantia ? "&garantia=true" : "";
 
-      // 1. Busca Contagens Exatas
-      const countUrl = `${API_BASE}/${endpoint}/count?startDate=${start}&endDate=${end}${statusParam}${searchQuery}${bateriaParam}`;
-      const countResp = await fetch(countUrl);
-      const exactStats = await countResp.json();
+      // 1. Busca Contagens Consolidadas (Missões e Equipamentos) em um ÚNICO pacote (v40.2 Turbo)
+      const statsUrl = `${API_BASE}/stats/consolidated?startDate=${start}&endDate=${end}${searchQuery}${bateriaParam}${garantiaParam}`;
+      const statsResp = await fetch(statsUrl);
+      const allStats = await statsResp.json();
 
       // 2. Busca Registros para a Lista
       const listUrl = `${API_BASE}/${endpoint}?startDate=${start}&endDate=${end}${statusParam}${searchQuery}${bateriaParam}${garantiaParam}`;
@@ -111,48 +111,20 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
 
       setResults(Array.isArray(data) ? data : []);
 
-      if (isMissions) {
-        setStats({
-          total: exactStats?.total || 0,
-          interno: exactStats?.interno || 0,
-          externo: exactStats?.externo || 0,
-          remoto: exactStats?.remoto || 0,
-          pendente: exactStats?.pendente || 0,
-          pronto: 0,
-          laudo: 0,
-          bateria: 0,
-          garantia: 0
-        });
-      } else {
-        // Para Equipamentos, buscamos Total, Pendente e Pronto separadamente se necessário
-        // Mas por padrão a busca principal já traz o que está no statusParam
-        // Para uma visão consolidada, faremos buscas paralelas
-        const [pentoResp, prontoResp, laudoResp, bateriaResp, garantiaResp, totalResp] = await Promise.all([
-          fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&status=PENDENTE${searchQuery}`),
-          fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&status=PRONTO${searchQuery}`),
-          fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&status=LAUDO${searchQuery}`),
-          fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&bateria=true${searchQuery}`),
-          fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}&garantia=true${searchQuery}`),
-          fetch(`${API_BASE}/servicos/count?startDate=${start}&endDate=${end}${searchQuery}`)
-        ]);
-
-        const pentoData = await pentoResp.json();
-        const prontoData = await prontoResp.json();
-        const laudoData = await laudoResp.json();
-        const bateriaData = await bateriaResp.json();
-        const garantiaData = await garantiaResp.json();
-        const totalData = await totalResp.json();
-
-        setStats({
-          total: totalData.count || 0,
-          interno: 0, externo: 0, remoto: 0,
-          pendente: pentoData.count || 0,
-          pronto: prontoData.count || 0,
-          laudo: laudoData.count || 0,
-          bateria: bateriaData.count || 0,
-          garantia: garantiaData.count || 0
-        });
-      }
+      // 3. Atualiza o estado global de estatísticas com os dados do "pacote único"
+      setStats({
+        total: isMissions ? allStats.missoes.total : allStats.servicos.total,
+        interno: allStats.missoes.interno || 0,
+        externo: allStats.missoes.externo || 0,
+        remoto: allStats.missoes.remoto || 0,
+        pendente: isMissions ? allStats.missoes.pendente : allStats.servicos.pendente,
+        pronto: allStats.servicos.pronto || 0,
+        laudo: allStats.servicos.laudo || 0,
+        bateria: allStats.servicos.bateria || 0,
+        garantia: allStats.servicos.garantia || 0,
+        manutencaoTotal: allStats.servicos.total,
+        manutencaoProntas: allStats.servicos.pronto
+      });
     } catch (error) {
       console.error("Erro ao gerar relatório:", error);
     } finally {
@@ -259,6 +231,12 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     const topUnidades = getTopItems("unidade", 5);
     const topServicos = getTopItems("servico", 5);
     const topDefeitos = getTopItems("def_recla", 5);
+
+    // Coleta dados locais para o relatório de manutenção (v40.2)
+    const manutencaoStats = { 
+      total: stats.manutencaoTotal || stats.total, 
+      prontas: stats.manutencaoProntas || stats.pronto 
+    };
 
     const logoBase = window.location.origin;
 

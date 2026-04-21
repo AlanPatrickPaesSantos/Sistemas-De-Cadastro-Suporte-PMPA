@@ -591,34 +591,65 @@ app.get('/api/missoes', verificarToken, async (req, res) => {
   }
 });
 
-// Contagem EXATA de missões por tipo (para relatórios precisos)
-app.get('/api/missoes/count', async (req, res) => {
+// Rota Consolidada de Alta Performance para Relatórios
+app.get('/api/stats/consolidated', async (req, res) => {
   try {
-    const { startDate, endDate } = req.query;
+    const { startDate, endDate, q } = req.query;
+    
+    // 1. Prepara queries
     let dateQuery = {};
     if (startDate) dateQuery.$gte = new Date(startDate + 'T00:00:00.000Z');
     if (endDate) dateQuery.$lte = new Date(endDate + 'T23:59:59.999Z');
-    const baseQuery = (startDate || endDate) ? { data: dateQuery } : {};
+    
+    const baseMissaoQuery = (startDate || endDate) ? { data: dateQuery } : {};
+    if (q) {
+      const isNum = !isNaN(q);
+      baseMissaoQuery.$or = [
+        ...(isNum ? [{ os: parseInt(q) }] : []),
+        { solicitante: { $regex: q, $options: 'i' } },
+        { unidade: { $regex: q, $options: 'i' } }
+      ];
+    }
 
-    // Função auxiliar para contar tipos de missões (checa tanto 'servico' legado quanto 'categoria' nova)
-    const countTipo = (regex) => Missao.countDocuments({
-      ...baseQuery,
-      $or: [
-        { servico: { $regex: regex } },
-        { categoria: { $regex: regex } }
-      ]
-    });
+    const serviceQuery = buildServiceQuery(req.query);
 
-    const [total, interno, externo, remoto, pendente] = await Promise.all([
-      Missao.countDocuments(baseQuery),
-      countTipo(/^\s*interno\s*$/i),
-      countTipo(/^\s*externo\s*$/i),
-      countTipo(/^\s*remoto\s*$/i),
-      Missao.countDocuments({ ...baseQuery, servico: { $regex: /^\s*pendente\s*$/i } }),
+    // 2. Executa todas as contagens em paralelo no Banco de Dados
+    const counts = await Promise.all([
+      // Missões
+      Missao.countDocuments(baseMissaoQuery),
+      Missao.countDocuments({ ...baseMissaoQuery, $or: [{ servico: /^\s*interno\s*$/i }, { categoria: /^\s*interno\s*$/i }] }),
+      Missao.countDocuments({ ...baseMissaoQuery, $or: [{ servico: /^\s*externo\s*$/i }, { categoria: /^\s*externo\s*$/i }] }),
+      Missao.countDocuments({ ...baseMissaoQuery, $or: [{ servico: /^\s*remoto\s*$/i }, { categoria: /^\s*remoto\s*$/i }] }),
+      Missao.countDocuments({ ...baseMissaoQuery, servico: /^\s*pendente\s*$/i }),
+      
+      // Equipamentos (Ordens de Serviço)
+      Servico.countDocuments(serviceQuery),
+      Servico.countDocuments({ ...serviceQuery, Serviço: /^\s*PRONTO\s*$/i }),
+      Servico.countDocuments({ ...serviceQuery, Serviço: /^\s*PENDENTE\s*$/i }),
+      Servico.countDocuments({ ...serviceQuery, Serviço: /^\s*LAUDO\s*$/i }),
+      Servico.countDocuments({ ...serviceQuery, Bateria: { $ne: "", $exists: true } }),
+      Servico.countDocuments({ ...serviceQuery, Garantia: /^\s*sim\s*$/i })
     ]);
 
-    res.json({ total, interno, externo, remoto, pendente });
+    res.json({
+      missoes: {
+        total: counts[0],
+        interno: counts[1],
+        externo: counts[2],
+        remoto: counts[3],
+        pendente: counts[4]
+      },
+      servicos: {
+        total: counts[5],
+        pronto: counts[6],
+        pendente: counts[7],
+        laudo: counts[8],
+        bateria: counts[9],
+        garantia: counts[10]
+      }
+    });
   } catch (err) {
+    console.error('Erro na rota consolidada:', err);
     res.status(500).json({ error: err.message });
   }
 });
