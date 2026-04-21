@@ -54,9 +54,9 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
           body > *:not(#print-portal-container) { display: none !important; }
           #print-portal-container { position: absolute; left: 0; top: 0; width: 100%; }
         }
-        .premium-border { border: 1px solid #e2e8f0; }
-        .section-header { background: #f8fafc; border-bottom: 2px solid #004e9a; padding: 4px 12px; }
-        .label-box { background: #f1f5f9; padding: 4px 8px; border-right: 1px solid #e2e8f0; }
+        .premium-border { border: 1px solid #cbd5e1; }
+        .section-header { background: #f8fafc; border-bottom: 1px solid #004e9a; padding: 4px 12px; }
+        .label-box { background: #f1f5f9; padding: 4px 8px; border-right: 1px solid #cbd5e1; }
         .content-box { padding: 4px 12px; }
       `}</style>
 
@@ -83,35 +83,35 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
         {/* SEÇÃO 1: IDENTIFICAÇÃO */}
         <div className="premium-border mb-6">
           <div className="section-header">
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-[#004e9a]">1. Identificação do Chamado</h2>
+            <h2 className="text-[11px] font-black uppercase tracking-widest text-[#004e9a]">1. Identificação do Chamado</h2>
           </div>
-          <div className="grid grid-cols-12 border-b border-slate-200">
+          <div className="grid grid-cols-12 border-b border-slate-300">
             <div className="col-span-3 label-box">
-              <span className="text-[8px] font-black uppercase text-slate-500">Nº da O.S.</span>
+              <span className="text-[10px] font-black uppercase text-slate-500">Nº da O.S.</span>
             </div>
-            <div className="col-span-3 content-box border-r border-slate-200">
-              <span className="text-lg font-black tracking-tighter">#{data.os}</span>
+            <div className="col-span-3 content-box border-r border-slate-300">
+              <span className="text-[14px] font-black tracking-tighter">#{data.os}</span>
             </div>
             <div className="col-span-3 label-box">
-              <span className="text-[8px] font-black uppercase text-slate-500">Data / Horário</span>
+              <span className="text-[10px] font-black uppercase text-slate-500">Data / Horário</span>
             </div>
             <div className="col-span-3 content-box">
-              <span className="text-xs font-bold">{formatDateBR(data.data)} — {data.horario || "--:--"}</span>
+              <span className="text-[12px] font-bold">{formatDateBR(data.data)} — {data.horario || "--:--"}</span>
             </div>
           </div>
           <div className="grid grid-cols-12">
             <div className="col-span-3 label-box">
-              <span className="text-[8px] font-black uppercase text-slate-500">Unidade Solicitante</span>
+              <span className="text-[10px] font-black uppercase text-slate-500">Unidade Solicitante</span>
             </div>
-            <div className="col-span-9 content-box font-bold text-sm uppercase">
+            <div className="col-span-9 content-box font-bold text-[12px] uppercase">
               {data.unidade || "Não Informada"}
             </div>
           </div>
-          <div className="grid grid-cols-12 border-t border-slate-200">
+          <div className="grid grid-cols-12 border-t border-slate-300">
             <div className="col-span-3 label-box">
-              <span className="text-[8px] font-black uppercase text-slate-500">Solicitante / Receptor</span>
+              <span className="text-[10px] font-black uppercase text-slate-500">Solicitante / Receptor</span>
             </div>
-            <div className="col-span-9 content-box font-bold text-sm uppercase italic">
+            <div className="col-span-9 content-box font-bold text-[12px] uppercase italic">
               {data.solicitante || "DADOS NÃO INFORMADOS"}
             </div>
           </div>
@@ -120,19 +120,19 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
         {/* SEÇÃO 2: EQUIPE TÉCNICA */}
         <div className="premium-border mb-6">
           <div className="section-header">
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-[#004e9a]">2. Atendimento Técnico</h2>
+            <h2 className="text-[11px] font-black uppercase tracking-widest text-[#004e9a]">2. Atendimento Técnico</h2>
           </div>
           <div className="grid grid-cols-12">
             <div className="col-span-3 label-box">
-              <span className="text-[8px] font-black uppercase text-slate-500">Técnicos Designados</span>
+              <span className="text-[10px] font-black uppercase text-slate-500">Técnicos Designados</span>
             </div>
-            <div className="col-span-5 content-box border-r border-slate-200 font-bold uppercase text-xs">
+            <div className="col-span-5 content-box border-r border-slate-300 font-bold uppercase text-[12px]">
               {data.tecnicos || "Equipe de Plantão Ditel"}
             </div>
             <div className="col-span-2 label-box">
-              <span className="text-[8px] font-black uppercase text-slate-500">Seção</span>
+              <span className="text-[10px] font-black uppercase text-slate-500">Seção</span>
             </div>
-            <div className="col-span-2 content-box font-black text-xs text-[#004e9a]">
+            <div className="col-span-2 content-box font-black text-[12px] text-[#004e9a]">
               {data.secao || "SUPORTE"}
             </div>
           </div>
@@ -141,23 +141,23 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
         {/* SEÇÃO 3: DESCRIÇÃO E ANÁLISE */}
         <div className="premium-border mb-6">
           <div className="section-header">
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-[#004e9a]">3. Descrição do Problema e Análise</h2>
+            <h2 className="text-[11px] font-black uppercase tracking-widest text-[#004e9a]">3. Descrição do Problema e Análise</h2>
           </div>
           <div className="p-4 min-h-[120px]">
-            <p className="text-[8px] font-black uppercase text-slate-400 mb-2">Defeito Reclamado / Constatação Inicial</p>
-            <div className="text-sm leading-relaxed text-slate-800 whitespace-pre-wrap">
+            <p className="text-[10px] font-black uppercase text-slate-400 mb-2">Defeito Reclamado / Constatação Inicial</p>
+            <div className="text-[12px] leading-relaxed text-slate-800 whitespace-pre-wrap">
               {data.def_recla || "Ação de manutenção preventiva/corretiva conforme ordem de missão superior."}
             </div>
           </div>
         </div>
 
         {/* SEÇÃO 4: SOLUÇÃO APLICADA */}
-        <div className="premium-border mb-6 border-slate-400">
-          <div className="section-header !bg-slate-100">
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-slate-900">4. Solução Técnica Efetuada</h2>
+        <div className="premium-border mb-6">
+          <div className="section-header">
+            <h2 className="text-[11px] font-black uppercase tracking-widest text-[#004e9a]">4. Solução Técnica Efetuada</h2>
           </div>
           <div className="p-4 min-h-[160px] bg-slate-50/30">
-            <div className="text-[13px] leading-relaxed font-medium text-slate-900 whitespace-pre-wrap italic">
+            <div className="text-[12px] leading-relaxed font-bold text-slate-900 whitespace-pre-wrap italic">
               {data.solucao || "Procedimentos de manutenção técnica realizados com sucesso, restabelecendo a operacionalidade plena dos serviços/equipamentos."}
             </div>
           </div>
@@ -173,7 +173,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
               {data.materiais.map((m, idx) => (
                 <div key={idx} className="flex items-center gap-3 border-b border-slate-100 pb-1">
                   <div className="h-3 w-3 border border-slate-400 flex items-center justify-center text-[10px] font-bold">✓</div>
-                  <span className="text-[11px] font-bold uppercase text-slate-700">{m}</span>
+                  <span className="text-[12px] font-bold uppercase text-slate-700">{m}</span>
                 </div>
               ))}
             </div>
