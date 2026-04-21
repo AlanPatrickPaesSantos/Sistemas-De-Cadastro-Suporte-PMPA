@@ -626,26 +626,48 @@ app.get('/api/stats/consolidated', async (req, res) => {
         Servico.countDocuments({ ...serviceQuery, Serviço: /^\s*PRONTO\s*$/i }),
       ]),
 
-      // Ranking Unidades (Auditado sobre TODOS os registros do período)
+      // Ranking Unidades (Auditado + Normalizado v40.6)
       Missao.aggregate([
         { $match: baseMissaoQuery },
-        { $group: { _id: "$unidade", count: { $sum: 1 } } },
+        { $addFields: { unidade_norm: { $toUpper: { $trim: { input: "$unidade" } } } } },
+        { $match: { unidade_norm: { $ne: "" } } },
+        { $group: { _id: "$unidade_norm", count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 5 }
       ]),
 
-      // Ranking Serviços/Demandas
+      // Ranking Serviços/Demandas (Unificado v40.6)
       Missao.aggregate([
         { $match: baseMissaoQuery },
-        { $group: { _id: "$servico", count: { $sum: 1 } } },
+        { $addFields: { 
+          servico_norm: { 
+            $let: {
+              vars: { s: { $toUpper: { $trim: { input: "$servico" } } } },
+              in: {
+                $cond: [
+                  { $or: [
+                    { $eq: ["$$s", "COMPARTILHAMENTO DE"] },
+                    { $eq: ["$$s", "COMPARTILHAMENTO"] }
+                  ]},
+                  "PASTA COMPARTILHADA",
+                  "$$s"
+                ]
+              }
+            }
+          } 
+        }},
+        { $match: { servico_norm: { $ne: "" } } },
+        { $group: { _id: "$servico_norm", count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 5 }
       ]),
 
-      // Ranking Defeitos/Reclamações
+      // Ranking Defeitos/Reclamações (Normalizado)
       Missao.aggregate([
         { $match: baseMissaoQuery },
-        { $group: { _id: "$def_recla", count: { $sum: 1 } } },
+        { $addFields: { defeito_norm: { $toUpper: { $trim: { input: "$def_recla" } } } } },
+        { $match: { defeito_norm: { $ne: "" } } },
+        { $group: { _id: "$defeito_norm", count: { $sum: 1 } } },
         { $sort: { count: -1 } },
         { $limit: 5 }
       ])
