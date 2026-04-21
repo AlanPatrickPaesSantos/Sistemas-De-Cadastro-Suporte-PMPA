@@ -246,7 +246,7 @@ export const EqUnidadeDialog = ({ open, onOpenChange }: EqUnidadeDialogProps) =>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 md:mr-8">
               <Button
                 onClick={handleNovo}
                 className="h-11 px-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold uppercase text-[10px] tracking-widest rounded-xl backdrop-blur-md transition-all active:scale-95"
@@ -274,10 +274,6 @@ export const EqUnidadeDialog = ({ open, onOpenChange }: EqUnidadeDialogProps) =>
               </Label>
               <div className="h-14 px-4 flex items-center justify-center bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
                 <span className="text-xl font-black text-[#004e9a] dark:text-blue-400">#{id}</span>
-                <div className="ml-auto flex items-center gap-1.5">
-                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                   <span className="text-[8px] font-black text-emerald-600 uppercase">Ativo</span>
-                </div>
               </div>
             </div>
 

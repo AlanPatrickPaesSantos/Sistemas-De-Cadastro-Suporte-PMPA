@@ -74,7 +74,7 @@ export const EqTelecomDialog = ({ open, onOpenChange }: EqTelecomDialogProps) =>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 md:mr-8">
               <Button
                 onClick={handleSave}
                 className="h-11 px-6 bg-blue-500 hover:bg-blue-400 text-white font-black uppercase text-[10px] tracking-widest rounded-xl shadow-[0_4px_15px_rgba(59,130,246,0.4)] transition-all active:scale-95"
@@ -95,10 +95,6 @@ export const EqTelecomDialog = ({ open, onOpenChange }: EqTelecomDialogProps) =>
               </Label>
               <div className="h-14 px-4 flex items-center justify-center bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
                 <span className="text-xl font-black text-[#004e9a] dark:text-blue-400">#{id}</span>
-                <div className="ml-auto flex items-center gap-1.5">
-                   <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                   <span className="text-[8px] font-black text-emerald-600 uppercase">Ativo</span>
-                </div>
               </div>
             </div>
 
