@@ -551,7 +551,7 @@ app.put('/api/servicos/:id', async (req, res) => {
 // Busca e filtros de Missões (Relatórios) - listagem
 app.get('/api/missoes', verificarToken, async (req, res) => {
   try {
-    const { q, startDate, endDate, servico } = req.query;
+    const { q, startDate, endDate, servico, unidade } = req.query;
     let query = {};
 
     if (q) {
@@ -563,6 +563,10 @@ app.get('/api/missoes', verificarToken, async (req, res) => {
         { tecnicos: { $regex: q, $options: 'i' } },
         { def_recla: { $regex: q, $options: 'i' } }
       ];
+    }
+
+    if (unidade) {
+      query.unidade = { $regex: new RegExp(`^\\s*${unidade}\\s*$`, 'i') };
     }
 
     if (startDate || endDate) {
@@ -593,7 +597,7 @@ app.get('/api/missoes', verificarToken, async (req, res) => {
 // Rota Consolidada de Alta Performance para Relatórios
 app.get('/api/stats/consolidated', async (req, res) => {
   try {
-    const { startDate, endDate, q } = req.query;
+    const { startDate, endDate, q, unidade } = req.query;
     
     // 1. Prepara queries
     let dateQuery = {};
@@ -608,6 +612,10 @@ app.get('/api/stats/consolidated', async (req, res) => {
         { solicitante: { $regex: q, $options: 'i' } },
         { unidade: { $regex: new RegExp(`\\b${q}\\b`, 'i') } }
       ];
+    }
+
+    if (unidade) {
+      baseMissaoQuery.unidade = { $regex: new RegExp(`^\\s*${unidade}\\s*$`, 'i') };
     }
 
     const serviceQuery = buildServiceQuery(req.query);

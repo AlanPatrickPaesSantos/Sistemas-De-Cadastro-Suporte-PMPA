@@ -10,6 +10,7 @@ import { CadastroForm } from "./CadastroForm";
 import { ServicoInternoExternoForm } from "./ServicoInternoExternoForm";
 import { API_BASE } from "../lib/api-config";
 import { LaudoPrint } from "./LaudoPrint";
+import { UnidadeCombobox } from "./UnidadeCombobox";
 import { toast } from "sonner";
 
 interface RelatoriosSectionProps {
@@ -39,7 +40,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
   const [activeReport, setActiveReport] = useState<string | null>(null);
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "", bateria: false, garantia: false });
+  const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "", unidade: "", bateria: false, garantia: false });
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [stats, setStats] = useState<{
     total: number;
@@ -66,7 +67,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       const query = externalTrigger.q || "";
       const statusValue = externalTrigger.status || "";
 
-      setFilters({ startDate: start, endDate: end, q: query, status: statusValue, bateria: false, garantia: false });
+      setFilters({ startDate: start, endDate: end, q: query, status: statusValue, unidade: "", bateria: false, garantia: false });
       setActiveReport(externalTrigger.id);
 
       // Pequeno delay para garantir que os estados foram aplicados antes da busca
@@ -91,8 +92,10 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       const currentStatus = statusText !== undefined ? statusText : filters.status;
       const statusParam = currentStatus ? `&status=${currentStatus}` : (isMissions || isEquipments ? "" : "&status=PENDENTE");
 
-      const currentQ = queryText !== undefined ? queryText : filters.q;
       const searchQuery = currentQ ? `&q=${encodeURIComponent(currentQ)}` : "";
+
+      const currentUnidade = filters.unidade;
+      const unidadeParam = currentUnidade ? `&unidade=${encodeURIComponent(currentUnidade)}` : "";
 
       const currentBateria = filters.bateria;
       const bateriaParam = currentBateria ? "&bateria=true" : "";
@@ -101,12 +104,12 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       const garantiaParam = currentGarantia ? "&garantia=true" : "";
 
       // 1. Busca Contagens Consolidadas (Missões e Equipamentos) em um ÚNICO pacote (v40.2 Turbo)
-      const statsUrl = `${API_BASE}/stats/consolidated?startDate=${start}&endDate=${end}${searchQuery}${bateriaParam}${garantiaParam}`;
+      const statsUrl = `${API_BASE}/stats/consolidated?startDate=${start}&endDate=${end}${searchQuery}${bateriaParam}${garantiaParam}${unidadeParam}`;
       const statsResp = await fetch(statsUrl);
       const allStats = await statsResp.json();
 
       // 2. Busca Registros para a Lista
-      const listUrl = `${API_BASE}/${endpoint}?startDate=${start}&endDate=${end}${statusParam}${searchQuery}${bateriaParam}${garantiaParam}`;
+      const listUrl = `${API_BASE}/${endpoint}?startDate=${start}&endDate=${end}${statusParam}${searchQuery}${bateriaParam}${garantiaParam}${unidadeParam}`;
       const listResp = await fetch(listUrl);
       const data = await listResp.json();
 
@@ -606,6 +609,13 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
               <div className="space-y-1.5 flex-1 min-w-[150px]">
                 <label className="text-xs font-bold text-foreground uppercase tracking-wider">Fim</label>
                 <Input type="date" value={filters.endDate} onChange={(e) => setFilters({ ...filters, endDate: e.target.value })} />
+              </div>
+              <div className="space-y-1.5 flex-1 min-w-[200px]">
+                <label className="text-xs font-bold text-foreground uppercase tracking-wider">Unidade</label>
+                <UnidadeCombobox 
+                  value={filters.unidade} 
+                  onChange={(val) => setFilters({ ...filters, unidade: val })} 
+                />
               </div>
               <div className="space-y-1.5 flex-1 min-w-[200px]">
                 <div className="flex justify-between items-center mb-1">
