@@ -612,7 +612,18 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                 <Input type="date" value={filters.endDate} onChange={(e) => setFilters({ ...filters, endDate: e.target.value })} />
               </div>
               <div className="space-y-1.5 flex-1 min-w-[200px]">
-                <label className="text-xs font-bold text-foreground uppercase tracking-wider">Unidade</label>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="text-xs font-bold text-foreground uppercase tracking-wider">Unidade</label>
+                  {filters.unidade && (
+                    <button 
+                      onClick={() => setFilters({ ...filters, unidade: "" })}
+                      className="text-[9px] font-black px-1.5 py-0.5 rounded uppercase bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors flex items-center gap-1"
+                    >
+                      <X className="h-2 w-2" />
+                      Limpar
+                    </button>
+                  )}
+                </div>
                 <UnidadeCombobox 
                   value={filters.unidade} 
                   onChange={(val) => setFilters({ ...filters, unidade: val })} 
