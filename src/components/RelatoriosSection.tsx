@@ -567,21 +567,6 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       </html>
     `;
 
-        <script>
-          let impresso = false;
-          function chamarImpressao() {
-            if (impresso) return;
-            impresso = true;
-            window.print();
-          }
-          window.onload = function() { setTimeout(chamarImpressao, 800); };
-          setTimeout(chamarImpressao, 3000);
-          window.onafterprint = function() { window.close(); };
-        </script>
-      </body>
-      </html>
-    `;
-
     printWindow.document.open(); // Limpa o documento anterior (a tela de carregamento)
     printWindow.document.write(html);
     printWindow.document.close();
