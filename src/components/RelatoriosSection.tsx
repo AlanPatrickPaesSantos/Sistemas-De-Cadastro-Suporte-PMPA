@@ -261,7 +261,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
-            border-bottom: 2.5pt solid black; 
+            border-bottom: 1.2pt solid black; 
             padding-bottom: 12px; 
             margin-bottom: 15px; 
             margin-top: 0;
