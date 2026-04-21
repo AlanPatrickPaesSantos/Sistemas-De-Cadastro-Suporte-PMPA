@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+dist
+.env
+.git
+.gitignore
+backend/node_modules
+backend/.env
+README.md
+DOCKER_DEPLOY.md
+DEPLOYMENT_GUIDE.md
+.vscode

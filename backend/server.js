@@ -69,9 +69,13 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ success: false, error: 'Acesso Negado: Senha inválida.' });
     }
 
-    // Gera emissão de chave para 24 horas usando variável de ambiente
-    const SECRET = process.env.JWT_SECRET || 'DitelPMPA-Seguranca-2026';
-    const token = jwt.sign({ id: user._id, username: user.username, papel: user.papel }, SECRET, { expiresIn: '24h' });
+    // Segurança de Token: Prioriza variável de ambiente para produção on-premise (Ditel/PMPA)
+    const SECRET = process.env.JWT_SECRET;
+    if (!SECRET && process.env.NODE_ENV === 'production') {
+      console.warn('⚠️ AVISO DE SEGURANÇA: JWT_SECRET não definida. Usando chave padrão (NÃO RECOMENDADO EM PRODUÇÃO)!');
+    }
+    const finalSecret = SECRET || 'DitelPMPA-Seguranca-Fixa-2026';
+    const token = jwt.sign({ id: user._id, username: user.username, papel: user.papel }, finalSecret, { expiresIn: '24h' });
 
     res.json({ success: true, token, username: user.username, papel: user.papel });
   } catch (err) {
@@ -739,10 +743,9 @@ const server = app.listen(PORT, () => {
 });
 
 // ====== CRON: AUTO-PING RENDER ======
-// Mantém o servidor acordado no Render Free Tier (evita o sleep de 15 min de inatividade)
-// NOTA: Tenta buscar a URL do Render, mas usa a sua URL real como fallback
+// NOTA: Só ativa se estiver REALMENTE no Render (evita pings desnecessários no Docker/PMPA)
 const RENDER_URL = process.env.RENDER_EXTERNAL_URL || 'https://moderniza-ui-magico-1.onrender.com';
-if (process.env.NODE_ENV === 'production' || process.env.RENDER) {
+if (process.env.RENDER) {
   setInterval(() => {
     https.get(`${RENDER_URL}/api/status`, (res) => {
       console.log(`[Auto-Ping] OK: ${res.statusCode} para ${RENDER_URL}`);
@@ -750,7 +753,7 @@ if (process.env.NODE_ENV === 'production' || process.env.RENDER) {
       console.error('[Auto-Ping] ERRO:', err.message);
     });
   }, 14 * 60 * 1000); // 14 minutos
-  console.log(`⏰ Cron-job Ativado: Ping a cada 14 min em ${RENDER_URL}`);
+  console.log(`⏰ Cron-job Ativado (RENDER): Ping a cada 14 min em ${RENDER_URL}`);
 } else {
-  console.log('⏰ Cron-job Ignorado: Ambiente não é de Produção/Render.');
+  console.log('⏰ Cron-job Ignorado: Ambiente Local ou Docker (Não necessita de wake-up).');
 }

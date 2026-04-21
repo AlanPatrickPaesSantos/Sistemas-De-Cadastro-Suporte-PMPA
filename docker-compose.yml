@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # O Sistema de Cadastro DITEL
+  app:
+    build: .
+    container_name: ditel-app
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      # Caso usem o banco que sobe junto (abaixo):
+      - MONGODB_URI=mongodb://db:27017/ditel_db
+      - JWT_SECRET=DitelPMPA-Seguranca-Gerada-Manual
+      - NODE_ENV=production
+    depends_on:
+      - db
+
+  # Banco de Dados MongoDB
+  db:
+    image: mongo:latest
+    container_name: ditel-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ditel_data:/data/db
+
+volumes:
+  ditel_data:
