@@ -559,7 +559,7 @@ app.get('/api/missoes', verificarToken, async (req, res) => {
       query.$or = [
         ...(isNum ? [{ os: parseInt(q) }] : []),
         { solicitante: { $regex: q, $options: 'i' } },
-        { unidade: { $regex: q, $options: 'i' } },
+        { unidade: { $regex: new RegExp(`\\b${q}\\b`, 'i') } },
         { tecnicos: { $regex: q, $options: 'i' } },
         { def_recla: { $regex: q, $options: 'i' } }
       ];
@@ -606,7 +606,7 @@ app.get('/api/stats/consolidated', async (req, res) => {
       baseMissaoQuery.$or = [
         ...(isNum ? [{ os: parseInt(q) }] : []),
         { solicitante: { $regex: q, $options: 'i' } },
-        { unidade: { $regex: q, $options: 'i' } }
+        { unidade: { $regex: new RegExp(`\\b${q}\\b`, 'i') } }
       ];
     }
 
