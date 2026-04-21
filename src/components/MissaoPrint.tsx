@@ -73,7 +73,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
       <div className="mx-auto w-full max-w-[210mm]">
         {/* CABEÇALHO INSTITUCIONAL */}
         <img src="/logo-pmpa.png" alt="Watermark" className="watermark" />
-        <div className="flex justify-between items-center mb-4 pt-2 border-b-[2pt] border-black pb-4">
+        <div className="flex justify-between items-center mb-4 pt-2 border-b-[1.2pt] border-black pb-4">
           <img src="/logo-pmpa.png" alt="PMPA" className="h-20 w-auto object-contain" />
           <div className="text-center font-bold uppercase text-[10px] space-y-0.5 flex-1">
             <p className="text-slate-800">Governo do Estado do Pará</p>
