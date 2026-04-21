@@ -55,8 +55,8 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
           #print-portal-container { position: absolute; left: 0; top: 0; width: 100%; }
         }
         .premium-border { border: 1px solid #cbd5e1; }
-        .section-header { background: #f8fafc; border-bottom: 1px solid #004e9a; padding: 4px 12px; }
-        .label-box { background: #f1f5f9; padding: 4px 8px; border-right: 1px solid #cbd5e1; }
+        .section-header { border-bottom: 1px solid #004e9a; padding: 4px 12px; }
+        .label-box { padding: 4px 8px; border-right: 1px solid #cbd5e1; }
         .content-box { padding: 4px 12px; }
       `}</style>
 
@@ -75,7 +75,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
         </div>
 
         <div className="text-center mb-6">
-          <h1 className="text-lg font-black uppercase tracking-widest py-1 border-t border-slate-900">
+          <h1 className="text-lg font-black uppercase tracking-widest pt-4 pb-1 border-t border-slate-900">
             Ordem de Missão Técnica
           </h1>
         </div>
@@ -156,7 +156,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
           <div className="section-header">
             <h2 className="text-[12px] font-black uppercase tracking-widest text-black">4. Solução Técnica Efetuada</h2>
           </div>
-          <div className="p-4 min-h-[160px] bg-slate-50/30">
+          <div className="p-4 min-h-[160px]">
             <div className="text-[12px] leading-relaxed font-bold text-slate-900 whitespace-pre-wrap italic">
               {data.solucao || "Procedimentos de manutenção técnica realizados com sucesso, restabelecendo a operacionalidade plena dos serviços/equipamentos."}
             </div>
@@ -182,8 +182,8 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
 
         {/* OBSERVACÕES ADICIONAIS */}
         {data.observacao && (
-          <div className="mb-8 p-4 border border-blue-100 bg-blue-50/20 rounded-lg">
-            <span className="text-[9px] font-black uppercase text-[#004e9a] block mb-1">Notas e Observações:</span>
+          <div className="mb-8 p-4 border border-blue-100 rounded-lg">
+            <span className="text-[9px] font-black uppercase text-black block mb-1">Notas e Observações:</span>
             <p className="text-xs italic text-slate-600 font-medium leading-tight">"{data.observacao}"</p>
           </div>
         )}
