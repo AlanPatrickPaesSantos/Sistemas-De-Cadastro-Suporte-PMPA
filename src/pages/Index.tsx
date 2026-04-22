@@ -150,7 +150,7 @@ const Index = () => {
                 const yearEnd = `${now.getFullYear()}-12-31`;
                 setExternalReportTrigger({ id: "Rel_Equipamentos", dateRange: { start: yearStart, end: yearEnd } });
               }}
-              className="group relative bg-white dark:bg-slate-900 backdrop-blur-md border-b-2 border-transparent hover:border-red-500 p-5 md:p-6 cursor-pointer transition-all duration-300 flex items-center gap-5 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
+              className="group relative bg-white dark:bg-slate-900 backdrop-blur-md p-5 md:p-6 cursor-pointer transition-all duration-300 flex items-center gap-5 overflow-hidden rounded-xl shadow-sm hover:shadow-md"
             >
               <img 
                 src="/images/maintenance_bg.png" 
@@ -181,7 +181,7 @@ const Index = () => {
                 const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
                 setExternalReportTrigger({ id: "Rel_Missao_Consolidado", dateRange: { start: firstDay, end: lastDay } });
               }}
-              className="group relative bg-white dark:bg-slate-900 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-5 md:p-6 cursor-pointer transition-all duration-300 flex items-center gap-5 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
+              className="group relative bg-white dark:bg-slate-900 backdrop-blur-md p-5 md:p-6 cursor-pointer transition-all duration-300 flex items-center gap-5 overflow-hidden rounded-xl shadow-sm hover:shadow-md"
             >
               <img 
                 src="/images/missions_bg.png" 
@@ -209,7 +209,7 @@ const Index = () => {
           <div className="mt-8 grid lg:grid-cols-2 gap-4 md:gap-6 items-stretch w-full max-w-full">
             
             {/* Box de Busca */}
-            <div className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-t-xl p-4 md:p-6 shadow-sm border-b-2 border-transparent hover:border-[#004e9a] transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-xl p-4 md:p-6 shadow-sm transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
               <div className="flex items-center gap-3 mb-5 md:mb-6">
                 <div className="p-2 bg-[#004e9a]/10 rounded-lg">
                   <Search className="w-4 h-4 md:w-5 md:h-5 text-[#004e9a]" />
@@ -227,7 +227,7 @@ const Index = () => {
                 <Loader2 className="h-8 w-8 animate-spin text-pmpa-navy/20" />
               </div>
             }>
-              <div className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-t-xl p-4 md:p-6 shadow-sm border-b-2 border-transparent hover:border-[#004e9a] transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
+              <div className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-xl p-4 md:p-6 shadow-sm transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
                 <div className="flex items-center gap-3 mb-5 md:mb-6">
                   <div className="p-2 bg-[#004e9a]/10 rounded-lg">
                     <Activity className="w-4 h-4 md:w-5 md:h-5 text-[#004e9a]" />
