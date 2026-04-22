@@ -182,8 +182,8 @@ const Index = () => {
           </div>
 
           {/* Main Content Grid */}
-          <div className="mt-8 grid lg:grid-cols-2 gap-6">
-            <div className="space-y-6">
+          <div className="mt-8 grid lg:grid-cols-2 gap-6 items-stretch">
+            <div className="h-full flex flex-col">
               <ConsultasSection />
             </div>
             
@@ -192,14 +192,16 @@ const Index = () => {
                 <Loader2 className="h-8 w-8 animate-spin text-pmpa-navy/20" />
               </div>
             }>
-              <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 h-full">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 h-full flex flex-col">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-2 bg-[#004e9a]/10 rounded-lg">
                     <Activity className="w-5 h-5 text-[#004e9a]" />
                   </div>
                   <h3 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Painel de Relatórios</h3>
                 </div>
-                <RelatoriosSection externalTrigger={externalReportTrigger} onTriggerClean={() => setExternalReportTrigger(null)} />
+                <div className="flex-1">
+                  <RelatoriosSection externalTrigger={externalReportTrigger} onTriggerClean={() => setExternalReportTrigger(null)} />
+                </div>
               </div>
             </Suspense>
           </div>
