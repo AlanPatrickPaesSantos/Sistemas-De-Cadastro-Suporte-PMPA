@@ -154,7 +154,7 @@ const Index = () => {
 
           </div>
 
-          {/* REFINED STATS WIDGETS */}
+          {/* EXECUTIVE STATS WIDGETS */}
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             
             {/* Widget: Manutenção */}
@@ -165,20 +165,22 @@ const Index = () => {
                 const yearEnd = `${now.getFullYear()}-12-31`;
                 setExternalReportTrigger({ id: "Rel_Equipamentos", dateRange: { start: yearStart, end: yearEnd } });
               }}
-              className="group relative bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-3xl p-5 h-28 md:h-36 cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 active:scale-[0.98]"
+              className="group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b-2 border-transparent hover:border-red-500 p-5 md:p-6 cursor-pointer transition-all duration-300 flex items-center gap-5 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
-              <div className="flex items-center gap-5 h-full">
-                <div className="p-3.5 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-500 transition-colors duration-500">
-                  <Wrench className="w-5 h-5 md:w-6 md:h-6 text-red-500 group-hover:text-white transition-colors" />
+              <div className="p-3.5 bg-red-50 dark:bg-red-900/20 rounded-lg group-hover:bg-red-500 transition-colors duration-500">
+                <Wrench className="w-6 h-6 text-red-500 group-hover:text-white transition-colors" />
+              </div>
+              <div>
+                <span className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.15em] mb-0.5">Indicador YTD</span>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white tracking-tighter">
+                    {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-red-500/50" /> : stats.maintenance}
+                  </p>
+                  <span className="text-[10px] font-bold text-red-500">Manutenção Ativa</span>
                 </div>
-                <div>
-                  <div className="flex items-baseline gap-1">
-                    <p className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tighter">
-                      {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-red-500/50" /> : stats.maintenance}
-                    </p>
-                  </div>
-                  <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-0.5">Manutenção Ativa</p>
-                </div>
+              </div>
+              <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]" />
               </div>
             </div>
 
@@ -190,20 +192,22 @@ const Index = () => {
                 const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
                 setExternalReportTrigger({ id: "Rel_Missao_Consolidado", dateRange: { start: firstDay, end: lastDay } });
               }}
-              className="group relative bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-3xl p-5 h-28 md:h-36 cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 active:scale-[0.98]"
+              className="group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-5 md:p-6 cursor-pointer transition-all duration-300 flex items-center gap-5 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
-              <div className="flex items-center gap-5 h-full">
-                <div className="p-3.5 bg-blue-50 dark:bg-blue-900/20 rounded-2xl group-hover:bg-[#004e9a] transition-colors duration-500">
-                  <Activity className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] group-hover:text-white transition-colors" />
+              <div className="p-3.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg group-hover:bg-[#004e9a] transition-colors duration-500">
+                <Activity className="w-6 h-6 text-[#004e9a] group-hover:text-white transition-colors" />
+              </div>
+              <div>
+                <span className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.15em] mb-0.5">Mensal Consolidado</span>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white tracking-tighter">
+                    {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-blue-500/50" /> : stats.missions}
+                  </p>
+                  <span className="text-[10px] font-bold text-[#004e9a]">Missões Executadas</span>
                 </div>
-                <div>
-                  <div className="flex items-baseline gap-1">
-                    <p className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tighter">
-                      {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-blue-500/50" /> : stats.missions}
-                    </p>
-                  </div>
-                  <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-0.5">Missões (Mês)</p>
-                </div>
+              </div>
+              <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#004e9a] shadow-[0_0_8px_#004e9a]" />
               </div>
             </div>
           </div>
