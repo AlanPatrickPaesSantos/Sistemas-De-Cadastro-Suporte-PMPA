@@ -9,7 +9,7 @@ const EqSuporteDialog = lazy(() => import("@/components/EqSuporteDialog").then(m
 const EqTelecomDialog = lazy(() => import("@/components/EqTelecomDialog").then(m => ({ default: m.EqTelecomDialog })));
 const EqUnidadeDialog = lazy(() => import("@/components/EqUnidadeDialog").then(m => ({ default: m.EqUnidadeDialog })));
 
-import { Database, Headphones, Phone, Building, Server, Shield, Wrench, Activity, Loader2 } from "lucide-react";
+import { Database, Headphones, Phone, Building, Server, Shield, Wrench, Activity, Loader2, Search } from "lucide-react";
 import { API_BASE } from "@/lib/api-config";
 import { toast } from "sonner";
 
