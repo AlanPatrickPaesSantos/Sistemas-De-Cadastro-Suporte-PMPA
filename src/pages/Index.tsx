@@ -75,10 +75,7 @@ const Index = () => {
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Database className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
               </div>
-              <div>
-                <span className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.15em] mb-0.5">Operações</span>
-                <span className="block text-sm md:text-base font-bold text-slate-800 dark:text-white tracking-tight">Cadastro</span>
-              </div>
+              <span className="block text-sm md:text-base font-black text-slate-900 dark:text-white tracking-tight uppercase">Cadastro</span>
               <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#004e9a] shadow-[0_0_8px_#004e9a]" />
               </div>
@@ -92,10 +89,7 @@ const Index = () => {
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Server className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
               </div>
-              <div>
-                <span className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.15em] mb-0.5">Serviços</span>
-                <span className="block text-sm md:text-base font-bold text-slate-800 dark:text-white tracking-tight">Int_Ext</span>
-              </div>
+              <span className="block text-sm md:text-base font-black text-slate-900 dark:text-white tracking-tight uppercase">Serv_Int_Ext</span>
               <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#004e9a] shadow-[0_0_8px_#004e9a]" />
               </div>
@@ -109,10 +103,7 @@ const Index = () => {
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Phone className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
               </div>
-              <div>
-                <span className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.15em] mb-0.5">Comunicações</span>
-                <span className="block text-sm md:text-base font-bold text-slate-800 dark:text-white tracking-tight">Telecom</span>
-              </div>
+              <span className="block text-sm md:text-base font-black text-slate-900 dark:text-white tracking-tight uppercase">Telecom</span>
               <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#004e9a] shadow-[0_0_8px_#004e9a]" />
               </div>
@@ -126,10 +117,7 @@ const Index = () => {
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Building className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
               </div>
-              <div>
-                <span className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.15em] mb-0.5">Logística</span>
-                <span className="block text-sm md:text-base font-bold text-slate-800 dark:text-white tracking-tight">Unidade</span>
-              </div>
+              <span className="block text-sm md:text-base font-black text-slate-900 dark:text-white tracking-tight uppercase">Unidade</span>
               <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#004e9a] shadow-[0_0_8px_#004e9a]" />
               </div>
@@ -143,10 +131,7 @@ const Index = () => {
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Headphones className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
               </div>
-              <div>
-                <span className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.15em] mb-0.5">Assitência</span>
-                <span className="block text-sm md:text-base font-bold text-slate-800 dark:text-white tracking-tight">Suporte</span>
-              </div>
+              <span className="block text-sm md:text-base font-black text-slate-900 dark:text-white tracking-tight uppercase">Suporte</span>
               <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#004e9a] shadow-[0_0_8px_#004e9a]" />
               </div>
@@ -171,12 +156,11 @@ const Index = () => {
                 <Wrench className="w-6 h-6 text-red-500 group-hover:text-white transition-colors" />
               </div>
               <div>
-                <span className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.15em] mb-0.5">Indicador YTD</span>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white tracking-tighter">
+                  <p className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
                     {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-red-500/50" /> : stats.maintenance}
                   </p>
-                  <span className="text-[10px] font-bold text-red-500">Manutenção Ativa</span>
+                  <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">Manutenção Ativa</span>
                 </div>
               </div>
               <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -198,12 +182,11 @@ const Index = () => {
                 <Activity className="w-6 h-6 text-[#004e9a] group-hover:text-white transition-colors" />
               </div>
               <div>
-                <span className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.15em] mb-0.5">Mensal Consolidado</span>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white tracking-tighter">
+                  <p className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
                     {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-blue-500/50" /> : stats.missions}
                   </p>
-                  <span className="text-[10px] font-bold text-[#004e9a]">Missões Executadas</span>
+                  <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">Missões Executadas</span>
                 </div>
               </div>
               <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -211,17 +194,17 @@ const Index = () => {
               </div>
             </div>
           </div>
-
+ 
           {/* Main Content Grid */}
           <div className="mt-8 grid lg:grid-cols-2 gap-4 md:gap-6 items-stretch w-full max-w-full">
             
             {/* Box de Busca */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 md:p-6 shadow-sm border border-slate-100 dark:border-slate-800 h-full flex flex-col w-full max-w-full overflow-hidden">
+            <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-t-xl p-4 md:p-6 shadow-sm border-b-2 border-transparent hover:border-[#004e9a] transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
               <div className="flex items-center gap-3 mb-5 md:mb-6">
                 <div className="p-2 bg-[#004e9a]/10 rounded-lg">
                   <Search className="w-4 h-4 md:w-5 md:h-5 text-[#004e9a]" />
                 </div>
-                <h3 className="text-sm md:text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Busca Rápida</h3>
+                <h3 className="text-sm md:text-base font-black text-slate-900 dark:text-white uppercase tracking-tight">Busca Rápida</h3>
               </div>
               <div className="flex-1 w-full">
                 <ConsultasSection />
@@ -234,12 +217,12 @@ const Index = () => {
                 <Loader2 className="h-8 w-8 animate-spin text-pmpa-navy/20" />
               </div>
             }>
-              <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 md:p-6 shadow-sm border border-slate-100 dark:border-slate-800 h-full flex flex-col w-full max-w-full overflow-hidden">
+              <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-t-xl p-4 md:p-6 shadow-sm border-b-2 border-transparent hover:border-[#004e9a] transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
                 <div className="flex items-center gap-3 mb-5 md:mb-6">
                   <div className="p-2 bg-[#004e9a]/10 rounded-lg">
                     <Activity className="w-4 h-4 md:w-5 md:h-5 text-[#004e9a]" />
                   </div>
-                  <h3 className="text-sm md:text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Painel de Relatórios</h3>
+                  <h3 className="text-sm md:text-base font-black text-slate-900 dark:text-white uppercase tracking-tight">Painel de Relatórios</h3>
                 </div>
                 <div className="flex-1 w-full">
                   <RelatoriosSection externalTrigger={externalReportTrigger} onTriggerClean={() => setExternalReportTrigger(null)} />
