@@ -202,7 +202,6 @@ const Index = () => {
             </Suspense>
           </div>
         </div>
-        </div>
       </main>
 
       {/* Footer */}
