@@ -213,32 +213,32 @@ export const EqSuporteDialog = ({ open, onOpenChange }: EqSuporteDialogProps) =>
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="p-0 overflow-hidden border-none shadow-2xl bg-white dark:bg-slate-950 sm:max-w-[700px] w-[95vw] rounded-3xl max-h-[95vh] flex flex-col [&>button]:hidden">
+        <DialogContent className="p-0 overflow-hidden border-none shadow-2xl bg-white dark:bg-slate-950 sm:max-w-[500px] w-[92vw] rounded-3xl max-h-[95vh] flex flex-col [&>button]:hidden">
           {/* CABEÇALHO PREMIUM */}
-          <div className="relative bg-[#004e9a] p-5 md:p-8 overflow-hidden shrink-0">
+          <div className="relative bg-[#004e9a] p-4 md:p-6 overflow-hidden shrink-0">
             {/* Botão Fechar de Alta Precisão */}
             <button 
               onClick={() => onOpenChange(false)}
-              className="absolute top-3 right-3 z-50 h-12 w-12 flex items-center justify-center bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-full text-white transition-all active:scale-90"
+              className="absolute top-2 right-2 z-50 h-10 w-10 flex items-center justify-center bg-white/10 hover:bg-white/20 active:bg-white/30 rounded-full text-white transition-all active:scale-90"
               aria-label="Fechar"
             >
-              <X className="h-6 w-6" strokeWidth={3} />
+              <X className="h-5 w-5" strokeWidth={3} />
             </button>
 
             {/* Efeitos de Fundo */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl -mr-20 -mt-20" />
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-600/20 rounded-full blur-2xl -ml-10 -mb-10" />
             
-            <div className="relative z-10 flex flex-col gap-5">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 md:h-14 md:w-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-xl">
-                  <Headphones className="h-6 w-6 md:h-7 md:h-7 text-white" strokeWidth={2.5} />
+            <div className="relative z-10 flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 md:h-12 md:w-12 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-xl">
+                  <Headphones className="h-5 w-5 md:h-6 md:h-6 text-white" strokeWidth={2.5} />
                 </div>
                 <div>
-                  <DialogTitle className="text-xl md:text-2xl font-black text-white uppercase tracking-tight leading-tight">
+                  <DialogTitle className="text-lg md:text-xl font-black text-white uppercase tracking-tight leading-tight">
                     Suporte
                   </DialogTitle>
-                  <p className="text-[9px] text-blue-100/80 font-black uppercase tracking-[0.2em] mt-0.5">
+                  <p className="text-[8px] text-blue-100/80 font-black uppercase tracking-[0.2em] mt-0.5">
                     Gestão Institucional PMPA
                   </p>
                 </div>
@@ -247,16 +247,16 @@ export const EqSuporteDialog = ({ open, onOpenChange }: EqSuporteDialogProps) =>
               <div className="flex items-center gap-2">
                 <Button
                   onClick={handleNovo}
-                  className="h-10 md:h-11 px-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold uppercase text-[9px] md:text-[10px] tracking-widest rounded-xl backdrop-blur-md transition-all"
+                  className="h-9 md:h-10 px-3 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold uppercase text-[8px] md:text-[9px] tracking-widest rounded-xl backdrop-blur-md transition-all"
                 >
-                  <Plus className="h-4 w-4 mr-1.5 md:mr-2" strokeWidth={3} /> Novo
+                  <Plus className="h-3 w-3 mr-1.5 md:mr-2" strokeWidth={3} /> Novo
                 </Button>
                 <Button
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="h-10 md:h-11 px-6 flex-1 md:flex-none bg-blue-500 hover:bg-blue-400 text-white font-black uppercase text-[9px] md:text-[10px] tracking-widest rounded-xl shadow-lg transition-all"
+                  className="h-9 md:h-10 px-5 flex-1 md:flex-none bg-blue-500 hover:bg-blue-400 text-white font-black uppercase text-[8px] md:text-[9px] tracking-widest rounded-xl shadow-lg transition-all"
                 >
-                  {isSaving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" strokeWidth={3} />}
+                  {isSaving ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <Save className="h-3 w-3 mr-2" strokeWidth={3} />}
                   Salvar
                 </Button>
               </div>
@@ -265,7 +265,7 @@ export const EqSuporteDialog = ({ open, onOpenChange }: EqSuporteDialogProps) =>
 
           <div className="flex-1 overflow-y-auto bg-white dark:bg-slate-950">
             {/* CORPO DO FORMULÁRIO */}
-            <div className="p-5 md:p-8 space-y-6 md:space-y-8 bg-white dark:bg-slate-950/50">
+            <div className="p-4 md:p-6 space-y-4 md:space-y-6 bg-white dark:bg-slate-950/50">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
               <div className="md:col-span-4 space-y-3">
                 <Label className="text-[11px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-[0.1em] ml-1">
