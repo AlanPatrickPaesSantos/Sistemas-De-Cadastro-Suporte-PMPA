@@ -70,7 +70,7 @@ const Index = () => {
             {/* Cadastro */}
             <div 
               onClick={() => navigate("/cadastro")} 
-              className="flex-1 min-w-[140px] group relative bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl"
+              className="flex-1 min-w-[140px] group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Database className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
@@ -87,7 +87,7 @@ const Index = () => {
             {/* Serv_Int_Ext */}
             <div 
               onClick={() => navigate("/servico-interno-externo")} 
-              className="flex-1 min-w-[140px] group relative bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl"
+              className="flex-1 min-w-[140px] group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Server className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
@@ -104,7 +104,7 @@ const Index = () => {
             {/* Telecom */}
             <div 
               onClick={() => setEqTelecomOpen(true)} 
-              className="flex-1 min-w-[140px] group relative bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl"
+              className="flex-1 min-w-[140px] group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Phone className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
@@ -121,7 +121,7 @@ const Index = () => {
             {/* Unidade */}
             <div 
               onClick={() => setEqUnidadeOpen(true)} 
-              className="flex-1 min-w-[140px] group relative bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl"
+              className="flex-1 min-w-[140px] group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Building className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
@@ -138,7 +138,7 @@ const Index = () => {
             {/* Suporte */}
             <div 
               onClick={() => setEqSuporteOpen(true)} 
-              className="flex-1 min-w-[140px] group relative bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl"
+              className="flex-1 min-w-[140px] group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Headphones className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
