@@ -61,7 +61,7 @@ const Index = () => {
 
         <div className="relative z-10 w-full mb-8 md:mb-10">
           <div className="mb-5 md:mb-6 px-1 md:px-0">
-            <h2 className="text-2xl md:text-4xl font-black text-slate-800 dark:text-white tracking-tight drop-shadow-sm">Centro de Comando</h2>
+            <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight drop-shadow-sm">Centro de Comando</h2>
           </div>
 
           {/* EXECUTIVE COMMAND TOOLBAR (High-End Design) */}
@@ -157,7 +157,7 @@ const Index = () => {
               </div>
               <div>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
+                  <p className="text-3xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
                     {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-red-500/50" /> : stats.maintenance}
                   </p>
                   <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">Manutenção Ativa</span>
@@ -183,7 +183,7 @@ const Index = () => {
               </div>
               <div>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter">
+                  <p className="text-3xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
                     {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-blue-500/50" /> : stats.missions}
                   </p>
                   <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">Missões Executadas</span>
