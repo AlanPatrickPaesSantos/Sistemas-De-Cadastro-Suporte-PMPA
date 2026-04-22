@@ -126,6 +126,63 @@ const Index = () => {
 
           </div>
 
+          {/* DASHBOARD STATS WIDGETS (Restored & Compact) */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            
+            {/* Widget: Manutenção */}
+            <div 
+              onClick={() => {
+                const now = new Date();
+                const yearStart = `${now.getFullYear()}-01-01`;
+                const yearEnd = `${now.getFullYear()}-12-31`;
+                setExternalReportTrigger({ id: "Rel_Equipamentos", dateRange: { start: yearStart, end: yearEnd } });
+              }}
+              className="group relative overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-5 cursor-pointer shadow-sm transition-all duration-300 hover:shadow-md hover:border-red-200"
+            >
+              <div className="flex items-center gap-5">
+                <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl">
+                  <Wrench className="w-6 h-6 text-red-500" />
+                </div>
+                <div>
+                  <p className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter leading-none">
+                    {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-red-500/50" /> : stats.maintenance}
+                  </p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">Em Manutenção</p>
+                </div>
+              </div>
+              <div className="absolute right-[-10px] bottom-[-10px] opacity-[0.03] group-hover:scale-110 transition-transform duration-500">
+                <Wrench className="w-20 h-20 text-red-600" />
+              </div>
+            </div>
+
+            {/* Widget: Missões */}
+            <div 
+              onClick={() => {
+                const now = new Date();
+                const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+                const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+                setExternalReportTrigger({ id: "Rel_Missao_Consolidado", dateRange: { start: firstDay, end: lastDay } });
+              }}
+              className="group relative overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl p-5 cursor-pointer shadow-sm transition-all duration-300 hover:shadow-md hover:border-blue-200"
+            >
+              <div className="flex items-center gap-5">
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl">
+                  <Activity className="w-6 h-6 text-[#004e9a]" />
+                </div>
+                <div>
+                  <p className="text-3xl font-black text-slate-800 dark:text-white tracking-tighter leading-none">
+                    {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-blue-500/50" /> : stats.missions}
+                  </p>
+                  <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">Missões Mensais</p>
+                </div>
+              </div>
+              <div className="absolute right-[-10px] bottom-[-10px] opacity-[0.03] group-hover:scale-110 transition-transform duration-500">
+                <Activity className="w-20 h-20 text-[#004e9a]" />
+              </div>
+            </div>
+
+          </div>
+
           {/* Main Content Grid */}
           <div className="mt-10 grid lg:grid-cols-2 gap-6">
             <ConsultasSection />
