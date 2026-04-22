@@ -66,134 +66,62 @@ const Index = () => {
             </div>
           </div>
 
-          {/* BENTO GRID ARCHITECTURE */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+          {/* DASHBOARD ACTION CARDS (Restored Classic Layout) */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             
-            {/* [BENTO 1] Destaque: Cadastro (Ocupa 2 Colunas) */}
+            {/* Cadastro */}
             <div 
               onClick={() => navigate("/cadastro")} 
-              className="lg:col-span-2 group relative bg-gradient-to-br from-[#004e9a] to-[#002f5c] rounded-[2rem] p-8 overflow-hidden cursor-pointer shadow-lg transition-all duration-500 hover:-translate-y-1"
+              className="group bg-white dark:bg-slate-900 rounded-[2rem] p-6 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-slate-100 dark:border-slate-800"
             >
-              <div className="absolute right-[-10%] bottom-[-20%] opacity-[0.06] pointer-events-none group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-700">
-                <Database className="w-64 h-64 text-white" />
+              <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-colors duration-300 shadow-inner">
+                <Database className="w-8 h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-400 to-cyan-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative z-10 h-full flex flex-col justify-between min-h-[160px]">
-                <div className="flex justify-between items-start mb-6">
-                  <div className="p-4 bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl">
-                    <Database className="w-7 h-7 text-white" />
-                  </div>
-                  <span className="text-[10px] font-bold text-white/80 bg-white/10 px-3 py-1 rounded-full uppercase tracking-widest border border-white/5">Principal</span>
-                </div>
-                <div>
-                  <h3 className="text-3xl font-black text-white mb-1 tracking-tight">Novo Cadastro</h3>
-                  <p className="text-sm font-medium text-blue-200">Dar entrada em equipamentos gerais no sistema.</p>
-                </div>
-              </div>
+              <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Cadastro</span>
             </div>
 
-            {/* [BENTO 2] Stats: Manutenção (Ocupa 1 Coluna) */}
+            {/* Suporte */}
             <div 
-              onClick={() => {
-                const now = new Date();
-                const yearStart = `${now.getFullYear()}-01-01`;
-                const yearEnd = `${now.getFullYear()}-12-31`;
-                setExternalReportTrigger({ id: "Rel_Equipamentos", dateRange: { start: yearStart, end: yearEnd } });
-              }}
-              className="group relative overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] p-7 cursor-pointer shadow-sm transition-all duration-500 hover:-translate-y-1 hover:border-red-200 dark:hover:border-red-900/50"
+              onClick={() => setEqSuporteOpen(true)} 
+              className="group bg-white dark:bg-slate-900 rounded-[2rem] p-6 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-slate-100 dark:border-slate-800"
             >
-              <div className="absolute right-[-24px] bottom-[-24px] opacity-[0.03] pointer-events-none group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700">
-                <Wrench className="w-32 h-32 text-red-600" />
+              <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-colors duration-300 shadow-inner">
+                <Headphones className="w-8 h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <div className="relative z-10 h-full flex flex-col justify-between">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-xl group-hover:bg-red-100 transition-colors">
-                    <Wrench className="w-5 h-5 text-red-500" />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-4xl font-black text-slate-800 dark:text-white tracking-tighter mb-1">
-                    {isLoading ? <Loader2 className="h-8 w-8 animate-spin text-red-500/50" /> : stats.maintenance}
-                  </p>
-                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-tight">Equipamentos em Manutenção</p>
-                </div>
-              </div>
+              <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Suporte</span>
             </div>
 
-            {/* [BENTO 3] Stats: Missões (Ocupa 1 Coluna) */}
+            {/* Telecom */}
             <div 
-              onClick={() => {
-                const now = new Date();
-                const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
-                const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
-                setExternalReportTrigger({ id: "Rel_Missao_Consolidado", dateRange: { start: firstDay, end: lastDay } });
-              }}
-              className="group relative overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] p-6 cursor-pointer shadow-sm transition-all duration-500 hover:-translate-y-1 hover:border-blue-200 dark:hover:border-blue-900/50 flex flex-col justify-between"
+              onClick={() => setEqTelecomOpen(true)} 
+              className="group bg-white dark:bg-slate-900 rounded-[2rem] p-6 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-slate-100 dark:border-slate-800"
             >
-              <div className="absolute right-[-14px] bottom-[-14px] opacity-[0.03] pointer-events-none group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700">
-                <Activity className="w-24 h-24 text-[#004e9a]" />
+              <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-colors duration-300 shadow-inner">
+                <Phone className="w-8 h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <div className="flex justify-between items-center mb-3 relative z-10">
-                <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg group-hover:bg-blue-100 transition-colors">
-                  <Activity className="w-4 h-4 text-[#004e9a]" />
-                </div>
-                <span className="text-[9px] font-bold text-[#004e9a] uppercase tracking-widest">Neste Mês</span>
-              </div>
-              <div className="relative z-10">
-                <p className="text-4xl font-black text-slate-800 dark:text-white tracking-tighter mb-1">
-                  {isLoading ? <Loader2 className="h-8 w-8 animate-spin text-[#004e9a]/50" /> : stats.missions}
-                </p>
-                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-tight">Missões Reg.</p>
-              </div>
+              <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Telecom</span>
             </div>
 
-            {/* [BENTO 4] Atalho: Serviço Interno/Externo (Ocupa 1 Coluna) */}
+            {/* Unidade */}
             <div 
-              onClick={() => navigate("/servico-interno-externo")}
-              className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] p-6 cursor-pointer hover:border-[#004e9a]/30 transition-all duration-300 hover:-translate-y-1 flex items-center gap-4"
+              onClick={() => setEqUnidadeOpen(true)} 
+              className="group bg-white dark:bg-slate-900 rounded-[2rem] p-6 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-slate-100 dark:border-slate-800"
             >
-              <div className="p-3.5 bg-slate-50 dark:bg-slate-800 rounded-2xl group-hover:bg-blue-50 transition-colors">
-                <Server className="w-6 h-6 text-slate-500 group-hover:text-[#004e9a]" />
+              <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-colors duration-300 shadow-inner">
+                <Building className="w-8 h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <div>
-                <h3 className="text-sm font-black text-slate-800 dark:text-white">Serviços</h3>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Int / Ext</p>
-              </div>
+              <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Unidade</span>
             </div>
 
-            {/* --- SEGUNDA LINHA DO BENTO GRID --- */}
-
-            {/* [BENTO 5] Gerenciar: Telecom (Ocupa 1 Coluna) */}
-            <div onClick={() => setEqTelecomOpen(true)} className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] p-6 cursor-pointer hover:border-[#004e9a]/30 transition-all duration-300 hover:-translate-y-1 flex items-center gap-4">
-              <div className="p-3.5 bg-slate-50 dark:bg-slate-800 rounded-2xl group-hover:bg-blue-50 transition-colors">
-                <Phone className="w-6 h-6 text-slate-500 group-hover:text-[#004e9a]" />
+            {/* Serv_Int_Ext */}
+            <div 
+              onClick={() => navigate("/servico-interno-externo")} 
+              className="group bg-white dark:bg-slate-900 rounded-[2rem] p-6 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-slate-100 dark:border-slate-800"
+            >
+              <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-colors duration-300 shadow-inner">
+                <Server className="w-8 h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <div>
-                <h3 className="text-sm font-black text-slate-800 dark:text-white">Telecom</h3>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Módulo</p>
-              </div>
-            </div>
-
-            {/* [BENTO 6] Gerenciar: Unidade (Ocupa 1 Coluna) */}
-            <div onClick={() => setEqUnidadeOpen(true)} className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] p-6 cursor-pointer hover:border-[#004e9a]/30 transition-all duration-300 hover:-translate-y-1 flex items-center gap-4">
-              <div className="p-3.5 bg-slate-50 dark:bg-slate-800 rounded-2xl group-hover:bg-blue-50 transition-colors">
-                <Building className="w-6 h-6 text-slate-500 group-hover:text-[#004e9a]" />
-              </div>
-              <div>
-                <h3 className="text-sm font-black text-slate-800 dark:text-white">Unidades</h3>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Módulo</p>
-              </div>
-            </div>
-
-            {/* [BENTO 7] Gerenciar: Suporte (Ocupa 1 Coluna) */}
-            <div onClick={() => setEqSuporteOpen(true)} className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[2rem] p-6 cursor-pointer hover:border-[#004e9a]/30 transition-all duration-300 hover:-translate-y-1 flex items-center gap-4">
-              <div className="p-3.5 bg-slate-50 dark:bg-slate-800 rounded-2xl group-hover:bg-blue-50 transition-colors">
-                <Headphones className="w-6 h-6 text-slate-500 group-hover:text-[#004e9a]" />
-              </div>
-              <div>
-                <h3 className="text-sm font-black text-slate-800 dark:text-white">Suporte</h3>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Módulo</p>
-              </div>
+              <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Serv_Int_Ext</span>
             </div>
 
           </div>
