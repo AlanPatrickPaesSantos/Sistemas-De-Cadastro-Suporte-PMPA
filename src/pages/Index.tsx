@@ -152,10 +152,15 @@ const Index = () => {
               }}
               className="group relative bg-white dark:bg-slate-900 backdrop-blur-md border-b-2 border-transparent hover:border-red-500 p-5 md:p-6 cursor-pointer transition-all duration-300 flex items-center gap-5 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
-              <div className="p-3.5 bg-red-50 dark:bg-red-900/20 rounded-lg group-hover:bg-red-500 transition-colors duration-500">
+              <img 
+                src="/images/maintenance_bg.png" 
+                alt="" 
+                className="absolute inset-0 w-full h-full object-cover opacity-[0.08] group-hover:opacity-[0.15] transition-opacity duration-700" 
+              />
+              <div className="relative z-10 p-3.5 bg-red-50 dark:bg-red-900/20 rounded-lg group-hover:bg-red-500 transition-colors duration-500">
                 <Wrench className="w-6 h-6 text-red-500 group-hover:text-white transition-colors" />
               </div>
-              <div>
+              <div className="relative z-10">
                 <div className="flex items-baseline gap-2">
                   <p className="text-3xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
                     {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-red-500/50" /> : stats.maintenance}
@@ -178,10 +183,15 @@ const Index = () => {
               }}
               className="group relative bg-white dark:bg-slate-900 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-5 md:p-6 cursor-pointer transition-all duration-300 flex items-center gap-5 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
-              <div className="p-3.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg group-hover:bg-[#004e9a] transition-colors duration-500">
+              <img 
+                src="/images/missions_bg.png" 
+                alt="" 
+                className="absolute inset-0 w-full h-full object-cover opacity-[0.08] group-hover:opacity-[0.15] transition-opacity duration-700" 
+              />
+              <div className="relative z-10 p-3.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg group-hover:bg-[#004e9a] transition-colors duration-500">
                 <Activity className="w-6 h-6 text-[#004e9a] group-hover:text-white transition-colors" />
               </div>
-              <div>
+              <div className="relative z-10">
                 <div className="flex items-baseline gap-2">
                   <p className="text-3xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
                     {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-blue-500/50" /> : stats.missions}
