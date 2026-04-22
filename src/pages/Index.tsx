@@ -70,7 +70,7 @@ const Index = () => {
             {/* Cadastro */}
             <div 
               onClick={() => navigate("/cadastro")} 
-              className="flex-1 min-w-[140px] group relative bg-white dark:bg-slate-900 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
+              className="flex-1 min-w-[140px] group relative bg-white dark:bg-slate-900 backdrop-blur-md p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Database className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
@@ -84,7 +84,7 @@ const Index = () => {
             {/* Serv_Int_Ext */}
             <div 
               onClick={() => navigate("/servico-interno-externo")} 
-              className="flex-1 min-w-[140px] group relative bg-white dark:bg-slate-900 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
+              className="flex-1 min-w-[140px] group relative bg-white dark:bg-slate-900 backdrop-blur-md p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Server className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
@@ -98,7 +98,7 @@ const Index = () => {
             {/* Telecom */}
             <div 
               onClick={() => setEqTelecomOpen(true)} 
-              className="flex-1 min-w-[140px] group relative bg-white dark:bg-slate-900 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
+              className="flex-1 min-w-[140px] group relative bg-white dark:bg-slate-900 backdrop-blur-md p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Phone className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
@@ -112,7 +112,7 @@ const Index = () => {
             {/* Unidade */}
             <div 
               onClick={() => setEqUnidadeOpen(true)} 
-              className="flex-1 min-w-[140px] group relative bg-white dark:bg-slate-900 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
+              className="flex-1 min-w-[140px] group relative bg-white dark:bg-slate-900 backdrop-blur-md p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Building className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
@@ -126,7 +126,7 @@ const Index = () => {
             {/* Suporte */}
             <div 
               onClick={() => setEqSuporteOpen(true)} 
-              className="flex-1 min-w-[140px] group relative bg-white dark:bg-slate-900 backdrop-blur-md border-b-2 border-transparent hover:border-[#004e9a] p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
+              className="flex-1 min-w-[140px] group relative bg-white dark:bg-slate-900 backdrop-blur-md p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
                 <Headphones className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] dark:text-blue-400" />
@@ -209,7 +209,7 @@ const Index = () => {
           <div className="mt-8 grid lg:grid-cols-2 gap-4 md:gap-6 items-stretch w-full max-w-full">
             
             {/* Box de Busca */}
-            <div className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-b-2xl rounded-t-none p-4 md:p-6 shadow-sm border-b-2 border-transparent hover:border-[#004e9a] transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-b-2xl rounded-t-none p-4 md:p-6 shadow-sm transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
               <div className="flex items-center gap-3 mb-5 md:mb-6">
                 <div className="p-2 bg-[#004e9a]/10 rounded-lg">
                   <Search className="w-4 h-4 md:w-5 md:h-5 text-[#004e9a]" />
@@ -227,7 +227,7 @@ const Index = () => {
                 <Loader2 className="h-8 w-8 animate-spin text-pmpa-navy/20" />
               </div>
             }>
-              <div className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-b-2xl rounded-t-none p-4 md:p-6 shadow-sm border-b-2 border-transparent hover:border-[#004e9a] transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
+              <div className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-b-2xl rounded-t-none p-4 md:p-6 shadow-sm transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
                 <div className="flex items-center gap-3 mb-5 md:mb-6">
                   <div className="p-2 bg-[#004e9a]/10 rounded-lg">
                     <Activity className="w-4 h-4 md:w-5 md:h-5 text-[#004e9a]" />
