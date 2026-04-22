@@ -64,88 +64,68 @@ const Index = () => {
             <h2 className="text-2xl md:text-4xl font-black text-slate-800 dark:text-white tracking-tight drop-shadow-sm">Centro de Comando</h2>
           </div>
 
-          {/* PREMIUM ACTION CARDS (Glassmorphism Design) */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+          {/* REFINED ACTION CARDS (Clean & Professional) */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
             
             {/* Cadastro */}
             <div 
               onClick={() => navigate("/cadastro")} 
-              className="group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[2rem] p-5 md:p-6 h-36 md:h-48 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_-10px_rgba(0,78,154,0.25)] hover:-translate-y-2 transition-all duration-500 border border-white/40 dark:border-slate-800/50 active:scale-95 overflow-hidden"
+              className="group relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-3xl p-5 md:p-6 h-32 md:h-44 flex flex-col items-center justify-center gap-3 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-500 border border-white dark:border-slate-800 active:scale-95 overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#004e9a]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="w-14 h-14 md:w-20 md:h-20 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 rounded-[1.5rem] flex items-center justify-center shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] group-hover:scale-110 transition-transform duration-500 relative z-10 border border-white/60 dark:border-slate-700/50">
-                <Database className="w-7 h-7 md:w-9 md:h-9 text-[#004e9a] dark:text-blue-400 group-hover:drop-shadow-[0_0_8px_rgba(0,78,154,0.5)] transition-all" />
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-all duration-500 shadow-inner">
+                <Database className="w-6 h-6 md:w-8 md:h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <div className="text-center relative z-10">
-                <span className="block text-[11px] md:text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-[0.2em] group-hover:text-[#004e9a] transition-colors">Cadastro</span>
-                <div className="h-0.5 w-0 bg-[#004e9a] mx-auto mt-1.5 group-hover:w-full transition-all duration-500 rounded-full" />
-              </div>
+              <span className="text-[10px] md:text-[11px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest group-hover:text-[#004e9a] transition-colors text-center leading-tight">Cadastro</span>
             </div>
 
             {/* Serv_Int_Ext */}
             <div 
               onClick={() => navigate("/servico-interno-externo")} 
-              className="group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[2rem] p-5 md:p-6 h-36 md:h-48 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_-10px_rgba(0,78,154,0.25)] hover:-translate-y-2 transition-all duration-500 border border-white/40 dark:border-slate-800/50 active:scale-95 overflow-hidden"
+              className="group relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-3xl p-5 md:p-6 h-32 md:h-44 flex flex-col items-center justify-center gap-3 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-500 border border-white dark:border-slate-800 active:scale-95 overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#004e9a]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="w-14 h-14 md:w-20 md:h-20 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 rounded-[1.5rem] flex items-center justify-center shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] group-hover:scale-110 transition-transform duration-500 relative z-10 border border-white/60 dark:border-slate-700/50">
-                <Server className="w-7 h-7 md:w-9 md:h-9 text-[#004e9a] dark:text-blue-400 group-hover:drop-shadow-[0_0_8px_rgba(0,78,154,0.5)] transition-all" />
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-all duration-500 shadow-inner">
+                <Server className="w-6 h-6 md:w-8 md:h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <div className="text-center relative z-10">
-                <span className="block text-[11px] md:text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-[0.2em] group-hover:text-[#004e9a] transition-colors">Serv_Int_Ext</span>
-                <div className="h-0.5 w-0 bg-[#004e9a] mx-auto mt-1.5 group-hover:w-full transition-all duration-500 rounded-full" />
-              </div>
+              <span className="text-[10px] md:text-[11px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest group-hover:text-[#004e9a] transition-colors text-center leading-tight">Serv_Int_Ext</span>
             </div>
 
             {/* Telecom */}
             <div 
               onClick={() => setEqTelecomOpen(true)} 
-              className="group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[2rem] p-5 md:p-6 h-36 md:h-48 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_-10px_rgba(0,78,154,0.25)] hover:-translate-y-2 transition-all duration-500 border border-white/40 dark:border-slate-800/50 active:scale-95 overflow-hidden"
+              className="group relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-3xl p-5 md:p-6 h-32 md:h-44 flex flex-col items-center justify-center gap-3 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-500 border border-white dark:border-slate-800 active:scale-95 overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#004e9a]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="w-14 h-14 md:w-20 md:h-20 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 rounded-[1.5rem] flex items-center justify-center shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] group-hover:scale-110 transition-transform duration-500 relative z-10 border border-white/60 dark:border-slate-700/50">
-                <Phone className="w-7 h-7 md:w-9 md:h-9 text-[#004e9a] dark:text-blue-400 group-hover:drop-shadow-[0_0_8px_rgba(0,78,154,0.5)] transition-all" />
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-all duration-500 shadow-inner">
+                <Phone className="w-6 h-6 md:w-8 md:h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <div className="text-center relative z-10">
-                <span className="block text-[11px] md:text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-[0.2em] group-hover:text-[#004e9a] transition-colors">Telecom</span>
-                <div className="h-0.5 w-0 bg-[#004e9a] mx-auto mt-1.5 group-hover:w-full transition-all duration-500 rounded-full" />
-              </div>
+              <span className="text-[10px] md:text-[11px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest group-hover:text-[#004e9a] transition-colors text-center leading-tight">Telecom</span>
             </div>
 
             {/* Unidade */}
             <div 
               onClick={() => setEqUnidadeOpen(true)} 
-              className="group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[2rem] p-5 md:p-6 h-36 md:h-48 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_-10px_rgba(0,78,154,0.25)] hover:-translate-y-2 transition-all duration-500 border border-white/40 dark:border-slate-800/50 active:scale-95 overflow-hidden"
+              className="group relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-3xl p-5 md:p-6 h-32 md:h-44 flex flex-col items-center justify-center gap-3 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-500 border border-white dark:border-slate-800 active:scale-95 overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#004e9a]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="w-14 h-14 md:w-20 md:h-20 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 rounded-[1.5rem] flex items-center justify-center shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] group-hover:scale-110 transition-transform duration-500 relative z-10 border border-white/60 dark:border-slate-700/50">
-                <Building className="w-7 h-7 md:w-9 md:h-9 text-[#004e9a] dark:text-blue-400 group-hover:drop-shadow-[0_0_8px_rgba(0,78,154,0.5)] transition-all" />
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-all duration-500 shadow-inner">
+                <Building className="w-6 h-6 md:w-8 md:h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <div className="text-center relative z-10">
-                <span className="block text-[11px] md:text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-[0.2em] group-hover:text-[#004e9a] transition-colors">Unidade</span>
-                <div className="h-0.5 w-0 bg-[#004e9a] mx-auto mt-1.5 group-hover:w-full transition-all duration-500 rounded-full" />
-              </div>
+              <span className="text-[10px] md:text-[11px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest group-hover:text-[#004e9a] transition-colors text-center leading-tight">Unidade</span>
             </div>
 
             {/* Suporte */}
             <div 
               onClick={() => setEqSuporteOpen(true)} 
-              className="group relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-[2rem] p-5 md:p-6 h-36 md:h-48 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_-10px_rgba(0,78,154,0.25)] hover:-translate-y-2 transition-all duration-500 border border-white/40 dark:border-slate-800/50 active:scale-95 overflow-hidden"
+              className="group relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded-3xl p-5 md:p-6 h-32 md:h-44 flex flex-col items-center justify-center gap-3 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-500 border border-white dark:border-slate-800 active:scale-95 overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#004e9a]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="w-14 h-14 md:w-20 md:h-20 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 rounded-[1.5rem] flex items-center justify-center shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] group-hover:scale-110 transition-transform duration-500 relative z-10 border border-white/60 dark:border-slate-700/50">
-                <Headphones className="w-7 h-7 md:w-9 md:h-9 text-[#004e9a] dark:text-blue-400 group-hover:drop-shadow-[0_0_8px_rgba(0,78,154,0.5)] transition-all" />
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-all duration-500 shadow-inner">
+                <Headphones className="w-6 h-6 md:w-8 md:h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <div className="text-center relative z-10">
-                <span className="block text-[11px] md:text-xs font-black text-slate-800 dark:text-slate-100 uppercase tracking-[0.2em] group-hover:text-[#004e9a] transition-colors">Suporte</span>
-                <div className="h-0.5 w-0 bg-[#004e9a] mx-auto mt-1.5 group-hover:w-full transition-all duration-500 rounded-full" />
-              </div>
+              <span className="text-[10px] md:text-[11px] font-black text-slate-700 dark:text-slate-200 uppercase tracking-widest group-hover:text-[#004e9a] transition-colors text-center leading-tight">Suporte</span>
             </div>
 
           </div>
 
-          {/* PREMIUM STATS WIDGETS */}
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* REFINED STATS WIDGETS */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             
             {/* Widget: Manutenção */}
             <div 
@@ -155,25 +135,20 @@ const Index = () => {
                 const yearEnd = `${now.getFullYear()}-12-31`;
                 setExternalReportTrigger({ id: "Rel_Equipamentos", dateRange: { start: yearStart, end: yearEnd } });
               }}
-              className="group relative bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/40 dark:border-slate-800/50 rounded-[2.5rem] p-6 md:p-8 cursor-pointer shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_-15px_rgba(239,68,68,0.15)] transition-all duration-700 hover:-translate-y-2 overflow-hidden"
+              className="group relative bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-3xl p-5 h-28 md:h-36 cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 active:scale-[0.98]"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-red-500/10 transition-colors" />
-              <div className="flex items-center gap-6 relative z-10">
-                <div className="p-5 bg-gradient-to-br from-red-50 to-white dark:from-red-900/20 dark:to-slate-900 rounded-3xl shadow-[0_5px_15px_rgba(239,68,68,0.1)] group-hover:bg-red-500 transition-all duration-500 group-hover:rotate-6">
-                  <Wrench className="w-8 h-8 text-red-500 group-hover:text-white transition-colors" />
+              <div className="flex items-center gap-5 h-full">
+                <div className="p-3.5 bg-red-50 dark:bg-red-900/20 rounded-2xl group-hover:bg-red-500 transition-colors duration-500">
+                  <Wrench className="w-5 h-5 md:w-6 md:h-6 text-red-500 group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Manutenção Ativa</h4>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl md:text-5xl font-black text-slate-800 dark:text-white tracking-tighter">
-                      {isLoading ? <Loader2 className="h-8 w-8 animate-spin text-red-500/50" /> : stats.maintenance}
-                    </span>
-                    <span className="text-xs font-bold text-red-500 bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded-lg">TOTAL</span>
+                  <div className="flex items-baseline gap-1">
+                    <p className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tighter">
+                      {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-red-500/50" /> : stats.maintenance}
+                    </p>
                   </div>
+                  <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-0.5">Manutenção Ativa</p>
                 </div>
-              </div>
-              <div className="mt-6 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                <div className="h-full bg-red-500 w-0 group-hover:w-[65%] transition-all duration-1000 delay-100 rounded-full" />
               </div>
             </div>
 
@@ -185,25 +160,20 @@ const Index = () => {
                 const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
                 setExternalReportTrigger({ id: "Rel_Missao_Consolidado", dateRange: { start: firstDay, end: lastDay } });
               }}
-              className="group relative bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/40 dark:border-slate-800/50 rounded-[2.5rem] p-6 md:p-8 cursor-pointer shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_-15px_rgba(0,78,154,0.15)] transition-all duration-700 hover:-translate-y-2 overflow-hidden"
+              className="group relative bg-white/90 dark:bg-slate-900/90 border border-white dark:border-slate-800 rounded-3xl p-5 h-28 md:h-36 cursor-pointer shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 active:scale-[0.98]"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#004e9a]/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-[#004e9a]/10 transition-colors" />
-              <div className="flex items-center gap-6 relative z-10">
-                <div className="p-5 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/20 dark:to-slate-900 rounded-3xl shadow-[0_5px_15px_rgba(0,78,154,0.1)] group-hover:bg-[#004e9a] transition-all duration-500 group-hover:-rotate-6">
-                  <Activity className="w-8 h-8 text-[#004e9a] group-hover:text-white transition-colors" />
+              <div className="flex items-center gap-5 h-full">
+                <div className="p-3.5 bg-blue-50 dark:bg-blue-900/20 rounded-2xl group-hover:bg-[#004e9a] transition-colors duration-500">
+                  <Activity className="w-5 h-5 md:w-6 md:h-6 text-[#004e9a] group-hover:text-white transition-colors" />
                 </div>
                 <div>
-                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Missões Executadas</h4>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl md:text-5xl font-black text-slate-800 dark:text-white tracking-tighter">
-                      {isLoading ? <Loader2 className="h-8 w-8 animate-spin text-blue-500/50" /> : stats.missions}
-                    </span>
-                    <span className="text-xs font-bold text-[#004e9a] bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded-lg">MÊS</span>
+                  <div className="flex items-baseline gap-1">
+                    <p className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tighter">
+                      {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-blue-500/50" /> : stats.missions}
+                    </p>
                   </div>
+                  <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-0.5">Missões (Mês)</p>
                 </div>
-              </div>
-              <div className="mt-6 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                <div className="h-full bg-[#004e9a] w-0 group-hover:w-[85%] transition-all duration-1000 delay-100 rounded-full" />
               </div>
             </div>
           </div>
