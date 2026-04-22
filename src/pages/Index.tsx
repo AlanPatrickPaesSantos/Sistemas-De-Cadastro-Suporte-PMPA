@@ -134,8 +134,6 @@ const Index = () => {
 
           </div>
 
-          </div>
-
           {/* COMPACT STATS WIDGETS (Bottom Row) */}
           <div className="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             
