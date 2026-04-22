@@ -87,9 +87,9 @@ export const EqTelecomDialog = ({ open, onOpenChange }: EqTelecomDialogProps) =>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto bg-white">
           {/* CORPO DO FORMULÁRIO */}
-          <div className="p-5 md:p-8 space-y-6 md:space-y-8 bg-slate-50/50 dark:bg-slate-950/50">
+          <div className="p-5 md:p-8 space-y-6 md:space-y-8 bg-white dark:bg-slate-950/50">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
             <div className="md:col-span-4 space-y-3">
               <Label className="text-[11px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-[0.1em] ml-1">
@@ -122,7 +122,7 @@ export const EqTelecomDialog = ({ open, onOpenChange }: EqTelecomDialogProps) =>
             <div className="flex flex-col gap-8">
               {/* Navegador */}
               <div className="flex items-center justify-center gap-2">
-                <div className="flex items-center p-1.5 bg-slate-100 dark:bg-slate-900 rounded-2xl border border-slate-200/50 dark:border-slate-800 shadow-inner">
+                <div className="flex items-center p-1.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/50 dark:border-slate-800 shadow-inner">
                   <Button size="icon" variant="ghost" onClick={goToFirst} disabled={currentRecord === 1} className="h-10 w-10 hover:bg-white dark:hover:bg-slate-800 rounded-xl transition-all active:scale-90">
                     <ChevronsLeft className="h-5 w-5 text-[#004e9a] dark:text-blue-400" />
                   </Button>

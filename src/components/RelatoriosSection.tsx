@@ -603,8 +603,8 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           setFilters({ startDate: "", endDate: "", q: "", status: "", bateria: false, garantia: false });
         }
       }}>
-        <DialogContent className="max-w-5xl w-[95vw] sm:w-full max-h-[92vh] overflow-hidden flex flex-col p-4 md:p-6 border-border/50 shadow-2xl">
-          <DialogHeader className="p-1 md:p-4 border-b border-border/50 bg-muted/20 rounded-t-lg">
+        <DialogContent className="max-w-5xl w-[95vw] sm:w-full max-h-[92vh] overflow-hidden flex flex-col p-4 md:p-6 border-border/50 shadow-2xl bg-white dark:bg-slate-900">
+          <DialogHeader className="p-1 md:p-4 border-b border-border/50 bg-white dark:bg-slate-900/50 rounded-t-lg">
             <DialogTitle className="text-lg md:text-2xl font-black text-pmpa-navy uppercase">
               {activeReport === "Rel_Missao_Consolidado" ? "Relatório de Missões" : "Relatório de Equipamentos"}
             </DialogTitle>
@@ -613,7 +613,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
 
           <div className="flex-1 overflow-hidden flex flex-col gap-2 md:gap-4 p-1 md:p-0">
             {/* Filtros */}
-            <div className="flex flex-wrap gap-2 md:gap-3 items-end bg-muted/20 p-2 md:p-4 rounded-xl border border-border/40 print:hidden shrink-0">
+            <div className="flex flex-wrap gap-2 md:gap-3 items-end bg-slate-50/50 dark:bg-slate-800/20 p-2 md:p-4 rounded-xl border border-border/40 print:hidden shrink-0">
               <div className="space-y-1.5 flex-1 min-w-[150px]">
                 <label className="text-xs font-bold text-foreground uppercase tracking-wider">Início</label>
                 <Input type="date" value={filters.startDate} onChange={(e) => setFilters({ ...filters, startDate: e.target.value })} />
@@ -691,7 +691,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
 
             {/* Resumo Estatístico Missões */}
             {activeReport === "Rel_Missao_Consolidado" && results.length > 0 && (
-              <div className="relative overflow-hidden print:hidden border-b border-border/20 mb-6 pb-2 z-20 bg-background/95 backdrop-blur-sm shrink-0">
+              <div className="relative overflow-hidden print:hidden border-b border-border/20 mb-6 pb-2 z-20 bg-white dark:bg-slate-900/95 backdrop-blur-sm shrink-0">
                 <div className="flex flex-nowrap md:grid md:grid-cols-5 gap-2 overflow-x-auto pb-4 px-1 md:pb-0 custom-scrollbar scroll-smooth snap-x snap-mandatory">
                   <div className="bg-muted/40 p-2 md:p-3 rounded-lg border border-border/50 min-w-[110px] md:min-w-0 flex-shrink-0 snap-start">
                     <p className="text-[8px] md:text-[10px] font-black uppercase text-muted-foreground tracking-tighter">Total</p>
@@ -718,7 +718,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
             )}
 
             {activeReport === "Rel_Equipamentos" && results.length > 0 && (
-              <div className="relative overflow-hidden print:hidden border-b border-border/20 mb-6 pb-2 z-20 bg-background/95 backdrop-blur-sm shrink-0">
+              <div className="relative overflow-hidden print:hidden border-b border-border/20 mb-6 pb-2 z-20 bg-white dark:bg-slate-900/95 backdrop-blur-sm shrink-0">
                 <div className="flex flex-nowrap md:grid md:grid-cols-6 gap-2 overflow-x-auto pb-4 px-1 md:pb-0 custom-scrollbar scroll-smooth snap-x snap-mandatory">
 
                   <div className="bg-muted/40 p-2 md:p-3 rounded-lg border border-border/50 min-w-[110px] md:min-w-0 flex-shrink-0 snap-start">
@@ -790,7 +790,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
             )}
 
             {/* Lista de Resultados */}
-            <div className="flex-1 min-h-[250px] overflow-y-auto border border-border/40 rounded-lg divide-y divide-border/40 custom-scrollbar print:hidden shadow-inner bg-card">
+            <div className="flex-1 min-h-[250px] overflow-y-auto border border-border/40 rounded-lg divide-y divide-border/40 custom-scrollbar print:hidden shadow-inner bg-white dark:bg-slate-900">
               {isLoading ? (
                 <div className="space-y-4 p-4">
                   {[1, 2, 3].map((i) => (
