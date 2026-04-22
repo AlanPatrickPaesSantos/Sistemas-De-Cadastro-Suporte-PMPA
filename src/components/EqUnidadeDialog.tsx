@@ -216,46 +216,47 @@ export const EqUnidadeDialog = ({ open, onOpenChange }: EqUnidadeDialogProps) =>
   return (
     <>
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-0 overflow-hidden border-none shadow-[0_0_50px_rgba(0,0,0,0.3)] bg-white dark:bg-slate-950 sm:max-w-[700px] w-[95vw] rounded-3xl">
+      <DialogContent className="p-0 overflow-hidden border-none shadow-2xl bg-white dark:bg-slate-950 sm:max-w-[700px] w-[95vw] rounded-3xl max-h-[95vh] flex flex-col">
         {/* CABEÇALHO PREMIUM */}
-        <div className="relative bg-[#004e9a] p-6 md:p-8 overflow-hidden">
+        <div className="relative bg-[#004e9a] p-5 md:p-8 overflow-hidden shrink-0">
+          {/* Botão Fechar Customizado */}
+          <button 
+            onClick={() => onOpenChange(false)}
+            className="absolute top-4 right-4 z-50 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all active:scale-90"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
           {/* Efeitos de Fundo */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl -mr-20 -mt-20" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-600/20 rounded-full blur-2xl -ml-10 -mb-10" />
-          <img 
-            src="/logo-pmpa.png" 
-            alt="PMPA" 
-            className="absolute right-[-20px] top-1/2 -translate-y-1/2 h-[150%] opacity-[0.07] pointer-events-none grayscale brightness-200 rotate-12" 
-          />
-
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="flex items-center gap-5">
-              <div className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-500">
-                <Building className="h-7 w-7 text-white" strokeWidth={2.5} />
+          
+          <div className="relative z-10 flex flex-col gap-5">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 md:h-14 md:w-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-xl">
+                <Building className="h-6 w-6 md:h-7 md:w-7 text-white" strokeWidth={2.5} />
               </div>
               <div>
-                <DialogTitle className="text-2xl font-black text-white uppercase tracking-tight leading-tight">
+                <DialogTitle className="text-xl md:text-2xl font-black text-white uppercase tracking-tight leading-tight">
                   Unidades
                 </DialogTitle>
-                <div className="flex items-center gap-2 mt-1">
-                  <p className="text-[10px] text-blue-100/80 font-black uppercase tracking-[0.2em]">
-                    Gestão Institucional PMPA
-                  </p>
-                </div>
+                <p className="text-[9px] text-blue-100/80 font-black uppercase tracking-[0.2em] mt-0.5">
+                  Gestão Institucional PMPA
+                </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 md:mr-8">
+            <div className="flex items-center gap-2">
               <Button
                 onClick={handleNovo}
-                className="h-11 px-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold uppercase text-[10px] tracking-widest rounded-xl backdrop-blur-md transition-all active:scale-95"
+                className="h-10 md:h-11 px-4 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold uppercase text-[9px] md:text-[10px] tracking-widest rounded-xl backdrop-blur-md transition-all"
               >
-                <Plus className="h-4 w-4 mr-2" strokeWidth={3} /> Novo
+                <Plus className="h-4 w-4 mr-1.5 md:mr-2" strokeWidth={3} /> Novo
               </Button>
               <Button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="h-11 px-6 bg-blue-500 hover:bg-blue-400 text-white font-black uppercase text-[10px] tracking-widest rounded-xl shadow-[0_4px_15px_rgba(59,130,246,0.4)] transition-all active:scale-95 disabled:opacity-50"
+                className="h-10 md:h-11 px-6 flex-1 md:flex-none bg-blue-500 hover:bg-blue-400 text-white font-black uppercase text-[9px] md:text-[10px] tracking-widest rounded-xl shadow-lg transition-all"
               >
                 {isSaving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" strokeWidth={3} />}
                 Salvar
@@ -264,8 +265,9 @@ export const EqUnidadeDialog = ({ open, onOpenChange }: EqUnidadeDialogProps) =>
           </div>
         </div>
 
-        {/* CORPO DO FORMULÁRIO */}
-        <div className="p-6 md:p-8 space-y-8 bg-slate-50/50 dark:bg-slate-950/50">
+        <div className="flex-1 overflow-y-auto">
+          {/* CORPO DO FORMULÁRIO */}
+          <div className="p-5 md:p-8 space-y-6 md:space-y-8 bg-slate-50/50 dark:bg-slate-950/50">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
             <div className="md:col-span-4 space-y-3">
               <Label className="text-[11px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-[0.1em] ml-1">
