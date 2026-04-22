@@ -91,13 +91,13 @@ export const ConsultasSection = () => {
     <div className="flex flex-col space-y-6">
       <div className="relative group/input">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 transition-colors group-focus-within/input:text-[#004e9a]" />
+          <Search className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-slate-400 transition-colors group-focus-within/input:text-[#004e9a]" />
           <Input
             id="consultas-search-input"
-            placeholder={filterType === 'all' ? "Buscar por ID, Série, RP, Solicitante..." : "Digite o termo para buscar..."}
+            placeholder={filterType === 'all' ? "Buscar por..." : "Filtrar..."}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="pl-12 pr-16 h-12 text-base border-none shadow-inner w-full rounded-xl bg-slate-50 dark:bg-slate-800 transition-all text-slate-800 dark:text-slate-100 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-[#004e9a]/10"
+            className="pl-10 md:pl-12 pr-12 md:pr-16 h-11 md:h-12 text-sm md:text-base border-none shadow-inner w-full rounded-xl bg-slate-50 dark:bg-slate-800 transition-all text-slate-800 dark:text-slate-100 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-[#004e9a]/10"
           />
           <Select value={filterType} onValueChange={setFilterType}>
             <SelectTrigger className="absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 p-0 flex items-center justify-center border-none bg-transparent hover:bg-slate-200 dark:hover:bg-slate-700/50 focus:ring-0 shadow-none transition-colors rounded-lg">

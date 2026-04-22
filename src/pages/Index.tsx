@@ -182,35 +182,35 @@ const Index = () => {
           </div>
 
           {/* Main Content Grid */}
-          <div className="mt-8 grid lg:grid-cols-2 gap-6 items-stretch">
+          <div className="mt-8 grid lg:grid-cols-2 gap-4 md:gap-6 items-stretch w-full max-w-full">
             
             {/* Box de Busca */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 h-full flex flex-col">
-              <div className="flex items-center gap-3 mb-6">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 md:p-6 shadow-sm border border-slate-100 dark:border-slate-800 h-full flex flex-col w-full max-w-full overflow-hidden">
+              <div className="flex items-center gap-3 mb-5 md:mb-6">
                 <div className="p-2 bg-[#004e9a]/10 rounded-lg">
-                  <Search className="w-5 h-5 text-[#004e9a]" />
+                  <Search className="w-4 h-4 md:w-5 md:h-5 text-[#004e9a]" />
                 </div>
-                <h3 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Busca Rápida</h3>
+                <h3 className="text-sm md:text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Busca Rápida</h3>
               </div>
-              <div className="flex-1">
+              <div className="flex-1 w-full">
                 <ConsultasSection />
               </div>
             </div>
             
             {/* Box de Relatórios */}
             <Suspense fallback={
-              <div className="flex items-center justify-center p-12 bg-card border border-border/60 rounded-2xl animate-pulse">
+              <div className="flex items-center justify-center p-8 md:p-12 bg-card border border-border/60 rounded-2xl animate-pulse">
                 <Loader2 className="h-8 w-8 animate-spin text-pmpa-navy/20" />
               </div>
             }>
-              <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 h-full flex flex-col">
-                <div className="flex items-center gap-3 mb-6">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 md:p-6 shadow-sm border border-slate-100 dark:border-slate-800 h-full flex flex-col w-full max-w-full overflow-hidden">
+                <div className="flex items-center gap-3 mb-5 md:mb-6">
                   <div className="p-2 bg-[#004e9a]/10 rounded-lg">
-                    <Activity className="w-5 h-5 text-[#004e9a]" />
+                    <Activity className="w-4 h-4 md:w-5 md:h-5 text-[#004e9a]" />
                   </div>
-                  <h3 className="text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Painel de Relatórios</h3>
+                  <h3 className="text-sm md:text-base font-black text-slate-800 dark:text-white uppercase tracking-tight">Painel de Relatórios</h3>
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 w-full">
                   <RelatoriosSection externalTrigger={externalReportTrigger} onTriggerClean={() => setExternalReportTrigger(null)} />
                 </div>
               </div>
