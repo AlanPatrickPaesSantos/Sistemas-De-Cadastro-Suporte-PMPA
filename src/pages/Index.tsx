@@ -178,8 +178,6 @@ const Index = () => {
               </div>
               <div className="absolute bottom-0 left-0 w-0 h-1 bg-[#004e9a] group-hover:w-full transition-all duration-500" />
             </div>
-        </div>
-
           </div>
 
           {/* Main Content Grid */}
