@@ -80,15 +80,15 @@ const Index = () => {
               <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Cadastro</span>
             </div>
 
-            {/* Suporte */}
+            {/* Serv_Int_Ext */}
             <div 
-              onClick={() => setEqSuporteOpen(true)} 
+              onClick={() => navigate("/servico-interno-externo")} 
               className="group bg-white dark:bg-slate-900 rounded-[2rem] p-6 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-slate-100 dark:border-slate-800"
             >
               <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-colors duration-300 shadow-inner">
-                <Headphones className="w-8 h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
+                <Server className="w-8 h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Suporte</span>
+              <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Serv_Int_Ext</span>
             </div>
 
             {/* Telecom */}
@@ -113,15 +113,15 @@ const Index = () => {
               <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Unidade</span>
             </div>
 
-            {/* Serv_Int_Ext */}
+            {/* Suporte */}
             <div 
-              onClick={() => navigate("/servico-interno-externo")} 
+              onClick={() => setEqSuporteOpen(true)} 
               className="group bg-white dark:bg-slate-900 rounded-[2rem] p-6 flex flex-col items-center justify-center gap-4 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-slate-100 dark:border-slate-800"
             >
               <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center group-hover:bg-[#004e9a] transition-colors duration-300 shadow-inner">
-                <Server className="w-8 h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
+                <Headphones className="w-8 h-8 text-[#004e9a] dark:text-blue-400 group-hover:text-white transition-colors" />
               </div>
-              <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Serv_Int_Ext</span>
+              <span className="text-sm font-black text-slate-700 dark:text-slate-200 uppercase tracking-tight">Suporte</span>
             </div>
 
           </div>
