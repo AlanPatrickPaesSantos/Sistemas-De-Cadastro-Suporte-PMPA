@@ -222,20 +222,19 @@ const Index = () => {
       {/* Footer */}
       <footer className="w-full mt-auto bg-white/80 dark:bg-slate-900 relative border-t border-slate-200 dark:border-slate-800">
         <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#004e9a]/20 to-transparent" />
-        <div className="w-full max-w-screen-xl mx-auto px-4 py-3 text-center flex flex-col items-center justify-center">
-          <div className="flex items-center gap-2 mb-1.5">
+        <div className="w-full max-w-screen-xl mx-auto px-4 py-4 text-center flex flex-col items-center justify-center">
+          <div className="flex flex-col md:flex-row items-center gap-2 mb-2">
             <Shield className="shrink-0 h-4 w-4 text-pmpa-navy opacity-80" />
-            <p className="text-[10px] md:text-xs font-extrabold text-pmpa-navy dark:text-white tracking-widest uppercase leading-tight">
+            <p className="text-[9px] md:text-xs font-extrabold text-pmpa-navy dark:text-white tracking-widest uppercase leading-tight max-w-[280px] md:max-w-none">
               PROGRAMA DE CADASTRO DE EQUIPAMENTOS E SERVIÇOS DA PMPA
             </p>
           </div>
-          <p className="text-[10px] md:text-[11px] text-muted-foreground leading-relaxed flex items-center gap-2">
-            Ditel - Diretoria de Informática e Telecomunicações.
-            <span className="opacity-30">|</span>
-            <span className="font-black uppercase tracking-[0.3em] text-[9px] opacity-40 hover:opacity-100 transition-opacity cursor-default">System Design by Alan Santos</span>
-          </p>
+          <div className="text-[9px] md:text-[11px] text-muted-foreground leading-relaxed flex flex-col md:flex-row items-center gap-1 md:gap-2">
+            <span>Ditel - Diretoria de Informática e Telecomunicações</span>
+            <span className="hidden md:inline opacity-30">|</span>
+            <span className="font-black uppercase tracking-[0.2em] text-[8px] md:text-[9px] opacity-40">System Design by Alan Santos</span>
+          </div>
         </div>
-        {/* Linha fina azul marinho no fundo para dar um acabamento PMPA igual ao header */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-pmpa-navy" />
       </footer>
 

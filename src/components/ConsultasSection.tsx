@@ -141,22 +141,22 @@ export const ConsultasSection = () => {
               onClick={() => loadRecord(record)}
             >
               <div className="absolute top-0 left-0 bottom-0 w-1.5 bg-gradient-to-b from-[#004e9a] to-[#002f5c] opacity-80 group-hover:opacity-100 transition-opacity" />
-              <div className="flex justify-between items-start mb-3 pl-2">
-                <span className="text-[13px] font-black text-white bg-[#004e9a] px-3 py-1 rounded-md shadow-sm tracking-wider">
+              <div className="flex justify-between items-start mb-3 pl-2 gap-2">
+                <span className="text-[11px] md:text-[13px] font-black text-white bg-[#004e9a] px-2 md:px-3 py-1 rounded-md shadow-sm tracking-wider shrink-0">
                   OS #{record.Id_cod}
                 </span>
-                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded-md">
+                <span className="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded-md truncate">
                   {new Date(record.Data_Ent).toLocaleDateString()}
                 </span>
               </div>
-              <h3 className="font-bold text-slate-800 text-base mb-3 group-hover:text-[#004e9a] transition-colors truncate pl-2">
+              <h3 className="font-bold text-slate-800 text-sm md:text-base mb-3 group-hover:text-[#004e9a] transition-colors truncate pl-2">
                 {record.T_EquipSuporte || record.T_EquipTelecom || "Equipamento Indefinido"}
               </h3>
-              <div className="flex flex-wrap gap-2 pl-2">
-                <span className="text-[11px] bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-1 rounded-lg font-bold uppercase shadow-sm">
+              <div className="flex flex-wrap gap-1.5 md:gap-2 pl-2">
+                <span className="text-[10px] md:text-[11px] bg-slate-100 text-slate-600 border border-slate-200 px-2 py-0.5 md:py-1 rounded-lg font-bold uppercase">
                   RP: {record.RP || "-"}
                 </span>
-                <span className="text-[11px] bg-blue-50 text-[#004e9a] border border-blue-100 px-2.5 py-1 rounded-lg font-bold uppercase shadow-sm">
+                <span className="text-[10px] md:text-[11px] bg-blue-50 text-[#004e9a] border border-blue-100 px-2 py-0.5 md:py-1 rounded-lg font-bold uppercase">
                   Unidade: {record.Unidade || "-"}
                 </span>
               </div>
