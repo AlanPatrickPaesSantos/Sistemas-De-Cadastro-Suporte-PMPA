@@ -65,12 +65,16 @@ export const OnboardingTour = () => {
   const [active, setActive] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [coords, setCoords] = useState({ top: 0, left: 0, width: 0, height: 0 });
+  const [isMobile, setIsMobile] = useState(false);
 
   const updateCoords = useCallback(() => {
     if (!active) return;
     const target = steps[currentStep].targetId;
     const element = document.getElementById(target);
     
+    // Detecta se é mobile
+    setIsMobile(window.innerWidth < 768);
+
     if (element) {
       const rect = element.getBoundingClientRect();
       setCoords({
@@ -80,7 +84,6 @@ export const OnboardingTour = () => {
         height: rect.height
       });
     } else {
-      // Se o elemento não existe (ex: Cadastro escondido), pula para o próximo
       if (currentStep < steps.length - 1) {
         setCurrentStep(prev => prev + 1);
       } else {
@@ -99,7 +102,9 @@ export const OnboardingTour = () => {
     if (active) {
       const element = document.getElementById(steps[currentStep].targetId);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // No mobile, rola um pouco mais para cima para o balão fixo não cobrir o elemento
+        const block = window.innerWidth < 768 ? 'start' : 'center';
+        element.scrollIntoView({ behavior: 'smooth', block });
       }
     }
   }, [active, currentStep]);
@@ -123,8 +128,32 @@ export const OnboardingTour = () => {
     }
   };
 
-  // Padding para o highlight não ficar colado (respiro)
   const p = 6; 
+
+  // Lógica de posicionamento dinâmica
+  const getDialogStyles = () => {
+    if (isMobile) {
+      return {
+        position: 'fixed' as const,
+        bottom: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: 'calc(100% - 40px)',
+        maxWidth: '360px',
+      };
+    }
+
+    return {
+      position: 'fixed' as const,
+      top: steps[currentStep].position === 'bottom' ? (coords.top + coords.height + 30) : 
+           steps[currentStep].position === 'top' ? (coords.top - 240) :
+           steps[currentStep].position === 'center' ? '50%' : coords.top,
+      left: steps[currentStep].position === 'right' ? (coords.left + coords.width + 30) :
+            steps[currentStep].position === 'left' ? (coords.left - 330) :
+            steps[currentStep].position === 'center' ? '50%' : Math.max(20, Math.min(window.innerWidth - 340, coords.left)),
+      transform: steps[currentStep].position === 'center' ? 'translate(-50%, -50%)' : 'none',
+    };
+  };
 
   return (
     <>
@@ -168,16 +197,7 @@ export const OnboardingTour = () => {
             <motion.div
               initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              style={{ 
-                position: 'fixed',
-                top: steps[currentStep].position === 'bottom' ? (coords.top + coords.height + 30) : 
-                     steps[currentStep].position === 'top' ? (coords.top - 240) :
-                     steps[currentStep].position === 'center' ? '50%' : coords.top,
-                left: steps[currentStep].position === 'right' ? (coords.left + coords.width + 30) :
-                      steps[currentStep].position === 'left' ? (coords.left - 330) :
-                      steps[currentStep].position === 'center' ? '50%' : Math.max(20, Math.min(window.innerWidth - 340, coords.left)),
-                transform: steps[currentStep].position === 'center' ? 'translate(-50%, -50%)' : 'none',
-              }}
+              style={getDialogStyles()}
               className="z-[10000] w-[320px] bg-white dark:bg-slate-900 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.6)] p-6 pointer-events-auto border-t-4 border-[#004e9a]"
             >
               <div className="flex items-center justify-between mb-4">
