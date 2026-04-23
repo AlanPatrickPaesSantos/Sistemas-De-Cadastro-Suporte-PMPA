@@ -31,7 +31,7 @@ export const Header = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 md:gap-4">
+        <div id="header-user-menu" className="flex items-center gap-2 md:gap-4">
           <div className="hidden lg:flex flex-col items-end mr-2">
             <span className="text-[11px] font-black text-white uppercase tracking-wider leading-none">
               {user?.nomeCompleto || user?.username || 'Usuário'}
