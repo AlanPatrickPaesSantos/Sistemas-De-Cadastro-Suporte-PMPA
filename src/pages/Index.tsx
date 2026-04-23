@@ -12,6 +12,7 @@ const EqUnidadeDialog = lazy(() => import("@/components/EqUnidadeDialog").then(m
 import { Database, Headphones, Phone, Building, Server, Shield, Wrench, Activity, Loader2, Search } from "lucide-react";
 import { API_BASE } from "@/lib/api-config";
 import { toast } from "sonner";
+import { OnboardingTour } from "@/components/OnboardingTour";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -61,11 +62,11 @@ const Index = () => {
 
         <div className="relative z-10 w-full mb-8 md:mb-10">
           <div className="mb-5 md:mb-6 px-1 md:px-0">
-            <h2 className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight drop-shadow-sm">Centro de Comando</h2>
+            <h2 id="command-center-title" className="text-2xl md:text-3xl font-black text-slate-800 dark:text-white tracking-tight drop-shadow-sm inline-block">Centro de Comando</h2>
           </div>
 
           {/* EXECUTIVE COMMAND TOOLBAR (High-End Design) */}
-          <div className="flex flex-wrap items-stretch gap-3 md:gap-4 mb-8">
+          <div id="executive-toolbar" className="flex flex-wrap items-stretch gap-3 md:gap-4 mb-8">
             
             {/* Cadastro */}
             <div 
@@ -144,6 +145,7 @@ const Index = () => {
             
             {/* Widget: Manutenção */}
             <div 
+              id="widget-manutencao"
               onClick={() => {
                 const now = new Date();
                 const yearStart = `${now.getFullYear()}-01-01`;
@@ -175,6 +177,7 @@ const Index = () => {
 
             {/* Widget: Missões */}
             <div 
+              id="widget-missoes"
               onClick={() => {
                 const now = new Date();
                 const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
@@ -209,7 +212,7 @@ const Index = () => {
           <div className="mt-8 grid lg:grid-cols-2 gap-4 md:gap-6 items-stretch w-full max-w-full">
             
             {/* Box de Busca */}
-            <div className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-b-2xl rounded-t-none p-4 md:p-6 shadow-sm transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
+            <div id="box-busca-rapida" className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-b-2xl rounded-t-none p-4 md:p-6 shadow-sm transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
               <div className="flex items-center gap-3 mb-5 md:mb-6">
                 <div className="p-2 bg-[#004e9a]/10 rounded-lg">
                   <Search className="w-4 h-4 md:w-5 md:h-5 text-[#004e9a]" />
@@ -227,7 +230,7 @@ const Index = () => {
                 <Loader2 className="h-8 w-8 animate-spin text-pmpa-navy/20" />
               </div>
             }>
-              <div className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-b-2xl rounded-t-none p-4 md:p-6 shadow-sm transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
+              <div id="box-relatorios" className="bg-white dark:bg-slate-900 backdrop-blur-md rounded-b-2xl rounded-t-none p-4 md:p-6 shadow-sm transition-all duration-300 h-full flex flex-col w-full max-w-full overflow-hidden">
                 <div className="flex items-center gap-3 mb-5 md:mb-6">
                   <div className="p-2 bg-[#004e9a]/10 rounded-lg">
                     <Activity className="w-4 h-4 md:w-5 md:h-5 text-[#004e9a]" />
@@ -267,6 +270,8 @@ const Index = () => {
         <EqTelecomDialog open={eqTelecomOpen} onOpenChange={setEqTelecomOpen} />
         <EqUnidadeDialog open={eqUnidadeOpen} onOpenChange={setEqUnidadeOpen} />
       </Suspense>
+
+      <OnboardingTour />
     </div>
   );
 };
