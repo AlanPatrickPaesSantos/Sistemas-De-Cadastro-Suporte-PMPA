@@ -13,44 +13,50 @@ interface Step {
 const steps: Step[] = [
   {
     targetId: 'command-center-title',
-    title: 'Centro de Comando 🛰️',
-    content: 'Este é o seu painel estratégico. Aqui você monitora em tempo real a produtividade e o status operacional da Ditel.',
+    title: 'Bem-vindo ao Centro de Comando 🛰️',
+    content: 'Este é o coração operacional da Ditel. Projetado para oferecer uma visão tática e analítica completa, este painel consolida todos os indicadores críticos de desempenho e status da rede em um único ambiente de alta performance.',
     position: 'bottom'
   },
   {
     targetId: 'executive-toolbar',
-    title: 'Módulos Operacionais 🛠️',
-    content: 'Acesso rápido aos sistemas de Cadastro, Telecomunicações e Suporte Técnico. Clique em cada card para gerenciar os dados específicos.',
+    title: 'Barra de Operações Estratégicas 🛠️',
+    content: 'Navegação rápida por módulos. Aqui você gerencia o Cadastro de Equipamentos, monitora enlaces de Telecom, controla o suporte às Unidades e o atendimento técnico. Cada card é uma porta de entrada para fluxos de dados especializados.',
     position: 'bottom'
   },
   {
     targetId: 'widget-manutencao',
-    title: 'Status de Manutenção 🔧',
-    content: 'Indicador em tempo real de equipamentos em reparo. Clique para gerar o relatório anual consolidado de manutenções.',
+    title: 'Monitor de Ativos em Reparo 🔧',
+    content: 'Visualização direta do volume de equipamentos em manutenção. **DICA:** Clique neste widget para gerar instantaneamente o Relatório de Equipamentos consolidado desde janeiro, permitindo análise de falhas recorrentes.',
     position: 'top'
   },
   {
     targetId: 'widget-missoes',
-    title: 'Produção Mensal 📈',
-    content: 'Monitor de missões finalizadas no mês atual. Este widget oferece acesso direto ao relatório de desempenho da equipe.',
+    title: 'Indicador de Produtividade Mensal 📈',
+    content: 'Métricas de sucesso da equipe no mês vigente. Acompanhe a volumetria de missões finalizadas. Clique para abrir o Relatório de Missão Consolidado e analisar a distribuição de carga horária e tipos de atendimento.',
     position: 'top'
   },
   {
     targetId: 'box-busca-rapida',
-    title: 'Busca Inteligente 🔍',
-    content: 'Localize qualquer registro instantaneamente por ID, Unidade ou Descrição. Agilidade total na recuperação de informações.',
+    title: 'Motor de Busca Avançada 🔍',
+    content: 'Sistema de indexação em tempo real. Localize qualquer item por Número de Série, Unidade Militar, Matrícula de Operador ou Descrição. Resultados instantâneos para suporte crítico e auditoria imediata.',
     position: 'top'
   },
   {
     targetId: 'box-relatorios',
-    title: 'Painel de Inteligência 📊',
-    content: 'Gere relatórios complexos e visualize tendências operacionais para suporte à decisão do Comando.',
+    title: 'Business Intelligence (BI) 📊',
+    content: 'Painel analítico para extração de relatórios consolidados. Exporte dados para PDF ou Excel e visualize gráficos de missões por categoria (Interna, Externa ou Remota) para auxiliar na tomada de decisões do Comando.',
     position: 'top'
   },
   {
     targetId: 'header-user-menu',
-    title: 'Gestão de Perfil 👤',
-    content: 'Acesse suas configurações de conta, alterne o modo visual ou saia do sistema com segurança aqui no topo.',
+    title: 'Central de Identidade e Segurança 👤',
+    content: 'Gerencie sua sessão aqui. Alterne entre os temas Dark/Light para maior conforto visual e acesse suas credenciais. Lembre-se: o sistema utiliza criptografia ponta-a-ponta para todas as operações.',
+    position: 'bottom'
+  },
+  {
+    targetId: 'command-center-title',
+    title: 'Atalho Maestro: Ctrl + K ⌨️',
+    content: 'Para uma navegação profissional, utilize o atalho **Ctrl + K** em qualquer tela. Ele abre o menu de comando global, permitindo saltar entre módulos e buscar funções sem tirar as mãos do teclado.',
     position: 'bottom'
   }
 ];
