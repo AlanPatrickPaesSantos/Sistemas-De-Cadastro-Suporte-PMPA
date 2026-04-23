@@ -67,7 +67,6 @@ export const EqTelecomDialog = ({ open, onOpenChange, readOnly }: EqTelecomDialo
                 <Phone className="h-6 w-6 md:h-7 md:h-7 text-white" strokeWidth={2.5} />
               </div>
               <div>
-              <div>
                 <DialogTitle className="text-xl md:text-2xl font-black text-white uppercase tracking-tight leading-tight">
                   Telecom {readOnly && " (Visualização)"}
                 </DialogTitle>
