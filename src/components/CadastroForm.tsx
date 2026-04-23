@@ -24,6 +24,29 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { EquipCombobox } from "./EquipCombobox";
 import { UnidadeCombobox } from "./UnidadeCombobox";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { 
+  Printer, 
+  Loader2, 
+  ChevronLeft, 
+  ChevronRight, 
+  Clock, 
+  User, 
+  Building, 
+  Calendar, 
+  Tag, 
+  Hash, 
+  Layout, 
+  Stethoscope, 
+  CheckCircle2, 
+  History, 
+  Sparkles,
+  Save,
+  Lock
+} from "lucide-react";
 
 const cadastroSchema = z.object({
   os: z.string().optional(),
@@ -65,28 +88,6 @@ interface CadastroFormProps {
   readOnly?: boolean;
 }
 
-import { 
-  Printer, 
-  Loader2, 
-  ChevronLeft, 
-  ChevronRight, 
-  Clock, 
-  User, 
-  Building, 
-  Calendar, 
-  Tag, 
-  Hash, 
-  Layout, 
-  Stethoscope, 
-  CheckCircle2, 
-  History, 
-  Sparkles,
-  Save
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
 
 export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, hasPrev, hasNext, initialData, id = "cadastro-form", isEditMode, readOnly }: CadastroFormProps) => {
   const form = useForm<CadastroFormValues>({

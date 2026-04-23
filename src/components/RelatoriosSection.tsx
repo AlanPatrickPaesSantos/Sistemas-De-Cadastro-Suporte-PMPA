@@ -12,6 +12,7 @@ import { API_BASE } from "../lib/api-config";
 import { LaudoPrint } from "./LaudoPrint";
 import { UnidadeCombobox } from "./UnidadeCombobox";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface RelatoriosSectionProps {
   externalTrigger?: { id: string; dateRange?: { start: string; end: string }; q?: string; status?: string } | null;
@@ -42,6 +43,8 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
   const [isLoading, setIsLoading] = useState(false);
   const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "", unidade: "", bateria: false, garantia: false });
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
+  const { user } = useAuth();
+  const isViewer = user?.papel === 'visualizador';
   const [stats, setStats] = useState<{
     total: number;
     interno: number;
@@ -913,6 +916,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                 onSubmit={handleSave}
                 onPrint={(type) => { setPrintType(type); setTimeout(() => window.print(), 100); }}
                 isEditMode={!!selectedRecord}
+                readOnly={isViewer}
               />
             ) : (
               <CadastroForm
@@ -922,6 +926,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                 onSubmit={handleSave}
                 onPrint={(type) => { setPrintType(type); setTimeout(() => window.print(), 100); }}
                 isEditMode={!!selectedRecord}
+                readOnly={isViewer}
               />
             )}
             {selectedRecord && <LaudoPrint data={selectedRecord} type={printType} />}
