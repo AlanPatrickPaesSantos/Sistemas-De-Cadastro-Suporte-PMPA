@@ -165,7 +165,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
 
       const res = await fetch(`${API_BASE}/${endpoint}/${id}`, {
         method: "PUT",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
@@ -240,9 +240,9 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     const topDefeitos = stats.rankings?.defeitos || [];
 
     // Coleta dados locais para o relatório de manutenção (v40.2)
-    const manutencaoStats = { 
-      total: stats.total, 
-      prontas: stats.pronto 
+    const manutencaoStats = {
+      total: stats.total,
+      prontas: stats.pronto
     };
 
     const logoBase = window.location.origin;
@@ -419,7 +419,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           <img src="${logoBase}/logo-pmpa.png" class="logo" onerror="this.style.display='none'" />
           <div class="header-text">
             <div>GOVERNO DO ESTADO DO PARÁ</div>
-            <div>SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA</div>
+            <div>SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA E DEFESA SOCIAL</div>
             <div>POLÍCIA MILITAR DO PARÁ</div>
             <div>DEPARTAMENTO GERAL DE ADMINISTRAÇÃO</div>
             <div class="ditel">DIRETORIA DE TELEMÁTICA</div>
@@ -641,7 +641,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                 <div className="flex justify-between items-center mb-1">
                   <label className="text-xs font-bold text-foreground uppercase tracking-wider">Unidade</label>
                   {filters.unidade && (
-                    <button 
+                    <button
                       onClick={() => setFilters({ ...filters, unidade: "" })}
                       className="text-[9px] font-black px-1.5 py-0.5 rounded uppercase bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors flex items-center gap-1"
                     >
@@ -650,9 +650,9 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                     </button>
                   )}
                 </div>
-                <UnidadeCombobox 
-                  value={filters.unidade} 
-                  onChange={(val) => setFilters({ ...filters, unidade: val })} 
+                <UnidadeCombobox
+                  value={filters.unidade}
+                  onChange={(val) => setFilters({ ...filters, unidade: val })}
                 />
               </div>
               <div className="space-y-1.5 flex-1 min-w-[200px]">
@@ -692,9 +692,9 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                 </div>
               </div>
 
-                <Button onClick={() => fetchReportData(filters.startDate, filters.endDate, activeReport!)} disabled={isLoading} className="h-10 md:h-12 bg-pmpa-navy hover:bg-pmpa-navy/90 text-[10px] md:text-xs font-bold uppercase tracking-widest px-4 md:px-8 rounded-xl shadow-md transition-all">
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Gerar Dados"}
-                </Button>
+              <Button onClick={() => fetchReportData(filters.startDate, filters.endDate, activeReport!)} disabled={isLoading} className="h-10 md:h-12 bg-pmpa-navy hover:bg-pmpa-navy/90 text-[10px] md:text-xs font-bold uppercase tracking-widest px-4 md:px-8 rounded-xl shadow-md transition-all">
+                {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Gerar Dados"}
+              </Button>
 
               {results.length > 0 && activeReport === "Rel_Missao_Consolidado" && (
                 <Button onClick={handlePrint} variant="outline" className="border-pmpa-navy text-pmpa-navy hover:bg-pmpa-navy/5 gap-2 h-10">
@@ -863,7 +863,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
                         {activeReport === "Rel_Missao_Consolidado" ? "Tipo" : "Status"}
                       </p>
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${getStatusStyle(item)}`}>
-                        {activeReport === "Rel_Missao_Consolidado" 
+                        {activeReport === "Rel_Missao_Consolidado"
                           ? (String(item.servico || "N/A").toUpperCase().includes("COMPARTILHAMENTO") ? "PASTA COMPARTILHADA" : String(item.servico || "N/A"))
                           : String(item.Serviço || "PENDENTE")}
                       </span>
