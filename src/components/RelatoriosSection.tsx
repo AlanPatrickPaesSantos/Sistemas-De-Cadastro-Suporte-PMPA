@@ -419,7 +419,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           <img src="${logoBase}/logo-pmpa.png" class="logo" onerror="this.style.display='none'" />
           <div class="header-text">
             <div>GOVERNO DO ESTADO DO PARÁ</div>
-            <div>SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA E DEFESA SOCIAL</div>
+            <div>SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA</div>
             <div>POLÍCIA MILITAR DO PARÁ</div>
             <div>DEPARTAMENTO GERAL DE ADMINISTRAÇÃO</div>
             <div class="ditel">DIRETORIA DE TELEMÁTICA</div>
