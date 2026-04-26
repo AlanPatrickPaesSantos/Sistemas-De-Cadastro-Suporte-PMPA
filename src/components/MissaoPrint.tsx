@@ -63,7 +63,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          opacity: 0.13;
+          opacity: 0.05;
           z-index: -100;
           width: 450px;
           pointer-events: none;
