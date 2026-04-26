@@ -200,7 +200,7 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
         )}
 
         {/* TERMO DE ENCERRAMENTO */}
-        <div className="mt-12 mb-16">
+        <div className="mt-24 mb-16">
           <div className="grid grid-cols-2 gap-24 px-8 text-center">
             <div className="space-y-4">
               <div className="border-t border-slate-900 pt-2">

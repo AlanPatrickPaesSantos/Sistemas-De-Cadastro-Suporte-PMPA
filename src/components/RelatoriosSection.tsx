@@ -532,7 +532,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           </div>
         </section>
 
-        <div class="signatures" style="margin-top: 60px;">
+        <div class="signatures" style="margin-top: 100px;">
           <div class="signature-box">
             <div class="sig-title">Oficial Responsável pela Emissão</div>
             <div class="sig-rank">DITEL - PMPA</div>
