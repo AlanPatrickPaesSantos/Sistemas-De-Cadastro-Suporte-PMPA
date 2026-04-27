@@ -43,6 +43,8 @@ import { API_BASE } from "@/lib/api-config";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PainelDemandas } from "@/components/PainelDemandas";
 
 interface Usuario {
   _id: string;
@@ -181,31 +183,45 @@ const Admin = () => {
       <Header />
       
       <main className="flex-1 container max-w-6xl mx-auto p-4 md:p-8 animate-in fade-in duration-500">
-        <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-pmpa-navy">
-              <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="rounded-full">
-                <ArrowLeft className="h-5 w-5" />
+        <Tabs defaultValue="demandas" className="space-y-6">
+          <TabsList className="bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 p-1 rounded-xl w-full justify-start overflow-x-auto h-auto">
+            <TabsTrigger value="demandas" className="py-3 px-6 rounded-lg font-bold data-[state=active]:bg-[#004e9a] data-[state=active]:text-white">
+              <AlertCircle className="h-4 w-4 mr-2" />
+              Central de Demandas Externas
+            </TabsTrigger>
+            <TabsTrigger value="usuarios" className="py-3 px-6 rounded-lg font-bold data-[state=active]:bg-[#004e9a] data-[state=active]:text-white">
+              <Users className="h-4 w-4 mr-2" />
+              Gestão de Usuários (DITEL)
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="demandas">
+            <PainelDemandas />
+          </TabsContent>
+
+          <TabsContent value="usuarios">
+            <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 text-pmpa-navy">
+                  <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight flex items-center gap-3">
+                    <Shield className="h-8 w-8 text-pmpa-navy" />
+                    Gestão de Usuários
+                  </h1>
+                </div>
+                <p className="text-muted-foreground font-medium flex items-center gap-2 pl-12">
+                  Controle de acesso e privilégios administrativos
+                </p>
+              </div>
+
+              <Button 
+                onClick={handleOpenCreate}
+                className="bg-pmpa-navy hover:bg-pmpa-navy/90 text-white font-black uppercase tracking-tighter shadow-lg shadow-pmpa-navy/20 gap-2 h-12 px-6"
+              >
+                <UserPlus className="h-5 w-5" />
+                Novo Usuário
               </Button>
-              <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight flex items-center gap-3">
-                <Shield className="h-8 w-8 text-pmpa-navy" />
-                Gestão de Usuários
-              </h1>
-            </div>
-            <p className="text-muted-foreground font-medium flex items-center gap-2 pl-12">
-              Controle de acesso e privilégios administrativos
-            </p>
-          </div>
 
-          <Button 
-            onClick={handleOpenCreate}
-            className="bg-pmpa-navy hover:bg-pmpa-navy/90 text-white font-black uppercase tracking-tighter shadow-lg shadow-pmpa-navy/20 gap-2 h-12 px-6"
-          >
-            <UserPlus className="h-5 w-5" />
-            Novo Usuário
-          </Button>
-
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+              <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogContent className="sm:max-w-[425px]">
               <form onSubmit={handleSubmit}>
                 <DialogHeader>
@@ -388,6 +404,8 @@ const Admin = () => {
             </p>
           </div>
         </div>
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );

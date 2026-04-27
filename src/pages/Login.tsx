@@ -12,7 +12,7 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,10 +39,10 @@ const Login = () => {
       }
 
       login(data.token, { username: data.username, papel: data.papel, nomeCompleto: data.nomeCompleto });
-      
+
       const destination = location.state?.from?.pathname || '/';
       navigate(destination, { replace: true });
-      
+
       toast({
         title: "Acesso Autorizado",
         description: `Bem-vindo de volta, ${data.username}!`,
@@ -63,23 +63,23 @@ const Login = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-b from-[#004e9a] to-[#002f5c] p-4 relative overflow-hidden">
-      
+
       {/* Background Decorativo Elegante */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden flex justify-center items-center opacity-[0.03]">
-        <img 
-          src="/logo-pmpa.png" 
-          alt="Watermark PMPA" 
+        <img
+          src="/logo-pmpa.png"
+          alt="Watermark PMPA"
           className="w-[80vw] max-w-[800px] h-auto object-contain grayscale scale-150 rotate-[-15deg]"
         />
       </div>
 
       <div className="w-full max-w-[420px] relative z-10 flex flex-col items-center">
-        
+
         {/* Brasão PMPA com Destaque Premium */}
         <div className="w-32 h-36 mb-6 flex justify-center drop-shadow-2xl hover:scale-105 transition-transform duration-500">
-          <img 
-            src="/logo-pmpa.png" 
-            alt="Brasão PMPA" 
+          <img
+            src="/logo-pmpa.png"
+            alt="Brasão PMPA"
             className="w-full h-full object-contain filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]"
           />
         </div>
@@ -102,9 +102,9 @@ const Login = () => {
 
           <form onSubmit={handleLogin} className="space-y-5">
             <div className="relative group">
-              <Input 
+              <Input
                 autoFocus
-                placeholder="Login / Matrícula" 
+                placeholder="Login / Matrícula"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="h-12 border-slate-300 rounded-xl bg-white text-slate-900 text-base pl-4 pr-11 focus-visible:ring-2 focus-visible:ring-[#004e9a] focus-visible:border-transparent transition-all placeholder:text-slate-400 font-medium"
@@ -115,9 +115,9 @@ const Login = () => {
             </div>
 
             <div className="relative group">
-              <Input 
-                type="password" 
-                placeholder="Senha Corporativa" 
+              <Input
+                type="password"
+                placeholder="Senha Corporativa"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="h-12 border-slate-300 rounded-xl bg-white text-slate-900 text-base pl-4 pr-11 focus-visible:ring-2 focus-visible:ring-[#004e9a] focus-visible:border-transparent transition-all placeholder:text-slate-400 font-medium"
@@ -128,8 +128,8 @@ const Login = () => {
             </div>
 
             <div className="pt-4">
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isLoading || !username || !password}
                 className="w-full h-12 bg-[#004e9a] hover:bg-[#003d7a] text-white font-bold text-base rounded-xl tracking-wide shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
               >
@@ -137,8 +137,21 @@ const Login = () => {
               </Button>
             </div>
           </form>
-        </Card>
 
+          {/* Botão Mock para Protótipo CPR */}
+          <div className="mt-6 pt-6 border-t border-slate-100 flex flex-col items-center gap-2">
+            <p className="text-xs text-slate-400 font-medium uppercase tracking-widest">Acesso Restrito</p>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => navigate('/portal-unidade')}
+              className="w-full h-11 border-blue-200 text-blue-700 hover:bg-blue-50 hover:text-blue-800 font-bold text-sm rounded-xl tracking-wide transition-all"
+            >
+              <Terminal className="w-4 h-4 mr-2" />
+              Portal da Unidade (Protótipo)
+            </Button>
+          </div>
+        </Card>
         <p className="mt-8 text-center text-xs text-blue-200/60 font-medium uppercase tracking-widest drop-shadow-sm">
           Diretoria de Telemática © 2026
         </p>

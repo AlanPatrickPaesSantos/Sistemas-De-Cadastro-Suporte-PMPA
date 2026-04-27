@@ -10,6 +10,7 @@ import ServicoInternoExterno from "./pages/ServicoInternoExterno";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
+import PortalUnidade from "./pages/PortalUnidade";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/cadastro" element={<ProtectedRoute><Cadastro /></ProtectedRoute>} />
               <Route path="/servico-interno-externo" element={<ProtectedRoute><ServicoInternoExterno /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+              <Route path="/portal-unidade" element={<PortalUnidade />} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />

@@ -71,7 +71,7 @@ export const OnboardingTour = () => {
     if (!active) return;
     const target = steps[currentStep].targetId;
     const element = document.getElementById(target);
-    
+
     // Detecta se é mobile
     setIsMobile(window.innerWidth < 768);
 
@@ -128,7 +128,7 @@ export const OnboardingTour = () => {
     }
   };
 
-  const p = 6; 
+  const p = 6;
 
   // Lógica de posicionamento dinâmica
   const getDialogStyles = () => {
@@ -145,12 +145,12 @@ export const OnboardingTour = () => {
 
     return {
       position: 'fixed' as const,
-      top: steps[currentStep].position === 'bottom' ? (coords.top + coords.height + 30) : 
-           steps[currentStep].position === 'top' ? (coords.top - 240) :
-           steps[currentStep].position === 'center' ? '50%' : coords.top,
+      top: steps[currentStep].position === 'bottom' ? (coords.top + coords.height + 30) :
+        steps[currentStep].position === 'top' ? (coords.top - 240) :
+          steps[currentStep].position === 'center' ? '50%' : coords.top,
       left: steps[currentStep].position === 'right' ? (coords.left + coords.width + 30) :
-            steps[currentStep].position === 'left' ? (coords.left - 330) :
-            steps[currentStep].position === 'center' ? '50%' : Math.max(20, Math.min(window.innerWidth - 340, coords.left)),
+        steps[currentStep].position === 'left' ? (coords.left - 330) :
+          steps[currentStep].position === 'center' ? '50%' : Math.max(20, Math.min(window.innerWidth - 340, coords.left)),
       transform: steps[currentStep].position === 'center' ? 'translate(-50%, -50%)' : 'none',
     };
   };
@@ -173,7 +173,7 @@ export const OnboardingTour = () => {
       <AnimatePresence>
         {active && (
           <div className="fixed inset-0 z-[9999] pointer-events-none overflow-hidden">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -217,21 +217,21 @@ export const OnboardingTour = () => {
               </p>
 
               <div className="flex items-center justify-between gap-4">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={handlePrev}
                   disabled={currentStep === 0}
                   className="flex-1 text-slate-500 font-bold uppercase text-[10px] h-10 border-slate-200"
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" /> Anterior
                 </Button>
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   onClick={handleNext}
                   className="flex-1 bg-[#004e9a] hover:bg-blue-600 text-white font-black uppercase text-[10px] h-10 shadow-lg shadow-blue-500/20"
                 >
-                  {currentStep === steps.length - 1 ? 'Concluir' : 'Próximo'} 
+                  {currentStep === steps.length - 1 ? 'Concluir' : 'Próximo'}
                   {currentStep < steps.length - 1 && <ChevronRight className="h-4 w-4 ml-1" />}
                 </Button>
               </div>
