@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Radio, AlertTriangle, CheckCircle2, Clock, Send, LogOut, ShieldAlert } from "lucide-react";
+import { Radio, AlertTriangle, CheckCircle2, Clock, Send, LogOut, ShieldAlert, Monitor, Server, Activity, Wrench, XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -136,48 +136,168 @@ const PortalUnidade = () => {
             </Card>
           </TabsContent>
 
-          {/* ABA 2: INVENTÁRIO (SOMENTE LEITURA) */}
-          <TabsContent value="inventario">
-            <Card className="border-0 shadow-lg bg-white dark:bg-slate-900 rounded-2xl overflow-hidden">
-              <CardHeader className="bg-slate-50/50 dark:bg-slate-800/50 border-b">
-                <CardTitle className="text-lg">Carga Atual: CPR I (Santarém)</CardTitle>
-                <CardDescription>Esta é a visão do DITEL sobre a sua carga. Se houver divergências, abra um chamado.</CardDescription>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="text-xs text-slate-500 uppercase bg-slate-50 dark:bg-slate-800/80">
-                      <tr>
-                        <th className="px-6 py-4">Tipo</th>
-                        <th className="px-6 py-4">Modelo</th>
-                        <th className="px-6 py-4">Quantidade</th>
-                        <th className="px-6 py-4 text-center">Status Predominante</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b dark:border-slate-800">
-                        <td className="px-6 py-4 font-bold">Rádio Portátil (HT)</td>
-                        <td className="px-6 py-4">Motorola APX 2000</td>
-                        <td className="px-6 py-4">45</td>
-                        <td className="px-6 py-4 text-center"><Badge className="bg-green-500/10 text-green-600 hover:bg-green-500/20 border-0">Operante</Badge></td>
-                      </tr>
-                      <tr className="border-b dark:border-slate-800">
-                        <td className="px-6 py-4 font-bold">Rádio Móvel (Vtr)</td>
-                        <td className="px-6 py-4">Motorola APX 2500</td>
-                        <td className="px-6 py-4">12</td>
-                        <td className="px-6 py-4 text-center"><Badge className="bg-green-500/10 text-green-600 hover:bg-green-500/20 border-0">Operante</Badge></td>
-                      </tr>
-                      <tr className="border-b dark:border-slate-800">
-                        <td className="px-6 py-4 font-bold">Repetidora</td>
-                        <td className="px-6 py-4">Motorola SLR 5300</td>
-                        <td className="px-6 py-4">2</td>
-                        <td className="px-6 py-4 text-center"><Badge className="bg-yellow-500/10 text-yellow-600 hover:bg-yellow-500/20 border-0">1 em Manutenção</Badge></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
+          {/* ABA 2: INVENTÁRIO DECLARADO (DASHBOARD) */}
+          <TabsContent value="inventario" className="space-y-6">
+            {/* Cards de Resumo */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <CardContent className="p-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Carga Total</p>
+                    <p className="text-2xl font-black text-slate-800 dark:text-slate-100">89</p>
+                  </div>
+                  <div className="h-10 w-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                    <Server className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white dark:bg-slate-900 border border-green-100 dark:border-green-900/50 shadow-sm">
+                <CardContent className="p-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-green-600 dark:text-green-500 mb-1">Em Operação</p>
+                    <p className="text-2xl font-black text-green-700 dark:text-green-400">75</p>
+                  </div>
+                  <div className="h-10 w-10 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
+                    <Activity className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white dark:bg-slate-900 border border-yellow-100 dark:border-yellow-900/50 shadow-sm">
+                <CardContent className="p-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-yellow-600 dark:text-yellow-500 mb-1">Manutenção</p>
+                    <p className="text-2xl font-black text-yellow-700 dark:text-yellow-400">8</p>
+                  </div>
+                  <div className="h-10 w-10 rounded-full bg-yellow-50 dark:bg-yellow-900/20 flex items-center justify-center">
+                    <Wrench className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white dark:bg-slate-900 border border-red-100 dark:border-red-900/50 shadow-sm">
+                <CardContent className="p-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-red-600 dark:text-red-500 mb-1">Inoperantes</p>
+                    <p className="text-2xl font-black text-red-700 dark:text-red-400">6</p>
+                  </div>
+                  <div className="h-10 w-10 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center">
+                    <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              {/* Tabela de Radiocomunicação */}
+              <Card className="border-0 shadow-lg bg-white dark:bg-slate-900 rounded-2xl overflow-hidden">
+                <CardHeader className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 py-4">
+                  <div className="flex items-center gap-2">
+                    <Radio className="h-5 w-5 text-[#004e9a] dark:text-blue-400" />
+                    <CardTitle className="text-lg">Radiocomunicação</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left">
+                      <thead className="text-[10px] font-black text-slate-500 uppercase bg-slate-50 dark:bg-slate-800/80 tracking-widest">
+                        <tr>
+                          <th className="px-4 py-3">Equipamento</th>
+                          <th className="px-2 py-3 text-center">Total</th>
+                          <th className="px-2 py-3 text-center text-green-600">OPE</th>
+                          <th className="px-2 py-3 text-center text-yellow-600">MAN</th>
+                          <th className="px-2 py-3 text-center text-red-600">INO</th>
+                          <th className="px-4 py-3">Motivo (Inoperantes)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                          <td className="px-4 py-3 font-bold text-slate-700 dark:text-slate-200">HT Motorola APX 2000</td>
+                          <td className="px-2 py-3 text-center font-black bg-slate-50 dark:bg-slate-800/50">45</td>
+                          <td className="px-2 py-3 text-center font-bold text-green-600">40</td>
+                          <td className="px-2 py-3 text-center font-bold text-yellow-600">3</td>
+                          <td className="px-2 py-3 text-center font-bold text-red-600">2</td>
+                          <td className="px-4 py-3 text-xs text-slate-500">Bateria viciada / Display quebrado</td>
+                        </tr>
+                        <tr className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                          <td className="px-4 py-3 font-bold text-slate-700 dark:text-slate-200">Rádio Fixo APX 2500</td>
+                          <td className="px-2 py-3 text-center font-black bg-slate-50 dark:bg-slate-800/50">12</td>
+                          <td className="px-2 py-3 text-center font-bold text-green-600">10</td>
+                          <td className="px-2 py-3 text-center font-bold text-yellow-600">1</td>
+                          <td className="px-2 py-3 text-center font-bold text-red-600">1</td>
+                          <td className="px-4 py-3 text-xs text-slate-500">Falta de Antena Veicular</td>
+                        </tr>
+                        <tr className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                          <td className="px-4 py-3 font-bold text-slate-700 dark:text-slate-200">Repetidora SLR 5300</td>
+                          <td className="px-2 py-3 text-center font-black bg-slate-50 dark:bg-slate-800/50">2</td>
+                          <td className="px-2 py-3 text-center font-bold text-green-600">1</td>
+                          <td className="px-2 py-3 text-center font-bold text-yellow-600">1</td>
+                          <td className="px-2 py-3 text-center font-bold text-red-600">0</td>
+                          <td className="px-4 py-3 text-xs text-slate-500">-</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Tabela de Informática */}
+              <Card className="border-0 shadow-lg bg-white dark:bg-slate-900 rounded-2xl overflow-hidden">
+                <CardHeader className="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 py-4">
+                  <div className="flex items-center gap-2">
+                    <Monitor className="h-5 w-5 text-[#004e9a] dark:text-blue-400" />
+                    <CardTitle className="text-lg">Informática e Redes</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left">
+                      <thead className="text-[10px] font-black text-slate-500 uppercase bg-slate-50 dark:bg-slate-800/80 tracking-widest">
+                        <tr>
+                          <th className="px-4 py-3">Equipamento</th>
+                          <th className="px-2 py-3 text-center">Total</th>
+                          <th className="px-2 py-3 text-center text-green-600">OPE</th>
+                          <th className="px-2 py-3 text-center text-yellow-600">MAN</th>
+                          <th className="px-2 py-3 text-center text-red-600">INO</th>
+                          <th className="px-4 py-3">Motivo (Inoperantes)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                          <td className="px-4 py-3 font-bold text-slate-700 dark:text-slate-200">Computador Desktop (Sede)</td>
+                          <td className="px-2 py-3 text-center font-black bg-slate-50 dark:bg-slate-800/50">25</td>
+                          <td className="px-2 py-3 text-center font-bold text-green-600">20</td>
+                          <td className="px-2 py-3 text-center font-bold text-yellow-600">2</td>
+                          <td className="px-2 py-3 text-center font-bold text-red-600">3</td>
+                          <td className="px-4 py-3 text-xs text-slate-500">Placa mãe queimada / Sem HD</td>
+                        </tr>
+                        <tr className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                          <td className="px-4 py-3 font-bold text-slate-700 dark:text-slate-200">Notebook Lenovo</td>
+                          <td className="px-2 py-3 text-center font-black bg-slate-50 dark:bg-slate-800/50">4</td>
+                          <td className="px-2 py-3 text-center font-bold text-green-600">3</td>
+                          <td className="px-2 py-3 text-center font-bold text-yellow-600">1</td>
+                          <td className="px-2 py-3 text-center font-bold text-red-600">0</td>
+                          <td className="px-4 py-3 text-xs text-slate-500">-</td>
+                        </tr>
+                        <tr className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                          <td className="px-4 py-3 font-bold text-slate-700 dark:text-slate-200">Switch Cisco 24p</td>
+                          <td className="px-2 py-3 text-center font-black bg-slate-50 dark:bg-slate-800/50">1</td>
+                          <td className="px-2 py-3 text-center font-bold text-green-600">1</td>
+                          <td className="px-2 py-3 text-center font-bold text-yellow-600">0</td>
+                          <td className="px-2 py-3 text-center font-bold text-red-600">0</td>
+                          <td className="px-4 py-3 text-xs text-slate-500">-</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="flex items-start gap-2 bg-blue-50 dark:bg-blue-900/10 p-4 rounded-xl border border-blue-100 dark:border-blue-900/30">
+              <ShieldAlert className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
+              <p className="text-sm text-blue-800 dark:text-blue-300 font-medium">
+                Os números apresentados acima refletem o controle oficial do sistema DITEL. Se os equipamentos da sua OPM não baterem com essa tabela, por favor, abra um <strong className="font-bold">Chamado de Regularização de Carga</strong> na aba ao lado informando a inconsistência.
+              </p>
+            </div>
           </TabsContent>
 
           {/* ABA 3: HISTÓRICO */}
