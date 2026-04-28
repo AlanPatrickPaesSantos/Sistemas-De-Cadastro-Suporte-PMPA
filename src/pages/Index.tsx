@@ -116,7 +116,7 @@ const Index = () => {
 
             {/* Telecom */}
             <div
-              onClick={() => setEqTelecomOpen(true)}
+              onClick={() => window.open('https://athenas-pmpa.vercel.app', '_blank')}
               className="flex-1 min-w-[140px] group relative bg-white dark:bg-slate-900 backdrop-blur-md p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md"
             >
               <div className="p-2 bg-slate-800/5 dark:bg-white/5 rounded-lg group-hover:bg-[#004e9a]/10 transition-colors">
