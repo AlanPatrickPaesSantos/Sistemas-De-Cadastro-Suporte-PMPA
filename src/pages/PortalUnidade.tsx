@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Radio, AlertTriangle, CheckCircle2, Clock, Send, LogOut, ShieldAlert, Monitor, Server, Activity, Wrench, XCircle } from "lucide-react";
+import { Radio, AlertTriangle, CheckCircle2, Clock, Send, LogOut, ShieldAlert, Monitor, Server, Activity, Wrench, XCircle, UploadCloud, User, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -14,6 +14,7 @@ const PortalUnidade = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [tipoDemanda, setTipoDemanda] = useState("manutencao_radio");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,9 +84,23 @@ const PortalUnidade = () => {
               <CardContent className="p-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Dados de Contato */}
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <User className="h-4 w-4 text-[#004e9a]" /> Nome do Solicitante
+                      </label>
+                      <Input placeholder="Ex: SGT PM Silva" className="h-12 bg-slate-50 dark:bg-slate-950" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <Phone className="h-4 w-4 text-[#004e9a]" /> WhatsApp / Contato
+                      </label>
+                      <Input placeholder="(91) 90000-0000" className="h-12 bg-slate-50 dark:bg-slate-950" />
+                    </div>
+
                     <div className="space-y-2">
                       <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Tipo de Demanda</label>
-                      <Select defaultValue="manutencao_radio">
+                      <Select value={tipoDemanda} onValueChange={setTipoDemanda}>
                         <SelectTrigger className="h-12 bg-slate-50 dark:bg-slate-950">
                           <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
@@ -113,12 +128,40 @@ const PortalUnidade = () => {
                     </div>
                   </div>
 
+                  {/* Campos Dinâmicos */}
+                  {tipoDemanda === "manutencao_radio" && (
+                    <div className="p-4 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/30 animate-in fade-in zoom-in-95 duration-300">
+                      <label className="text-sm font-bold text-blue-800 dark:text-blue-300 mb-2 block">Número de Série (Tombamento)</label>
+                      <Input placeholder="Digite o serial do equipamento com defeito" className="h-12 bg-white dark:bg-slate-950 border-blue-200 dark:border-blue-800" />
+                    </div>
+                  )}
+
+                  {tipoDemanda === "solicitacao_novo" && (
+                    <div className="p-4 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-100 dark:border-green-900/30 animate-in fade-in zoom-in-95 duration-300">
+                      <label className="text-sm font-bold text-green-800 dark:text-green-300 mb-2 block">Quantidade Desejada</label>
+                      <Input type="number" min="1" placeholder="Ex: 5" className="h-12 bg-white dark:bg-slate-950 border-green-200 dark:border-green-800 w-full sm:w-1/3" />
+                      <p className="text-xs text-green-600 mt-2 font-medium">Justifique a necessidade no campo de descrição abaixo.</p>
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Descrição Detalhada</label>
                     <Textarea 
-                      placeholder="Descreva o problema. Ex: O rádio HT de serial XYZ não está ligando mesmo após troca de bateria." 
-                      className="min-h-[150px] bg-slate-50 dark:bg-slate-950 resize-y"
+                      placeholder="Descreva o problema ou justificativa. Seja o mais claro possível." 
+                      className="min-h-[120px] bg-slate-50 dark:bg-slate-950 resize-y"
                     />
+                  </div>
+
+                  {/* Mock Upload de Arquivos */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Anexar Evidências (Fotos/Ofícios)</label>
+                    <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors cursor-pointer group">
+                      <div className="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <UploadCloud className="h-6 w-6 text-[#004e9a] dark:text-blue-400" />
+                      </div>
+                      <p className="text-sm font-bold text-slate-700 dark:text-slate-300">Clique para anexar ou arraste os arquivos</p>
+                      <p className="text-xs text-slate-500 mt-1">PNG, JPG ou PDF (Máx. 5MB)</p>
+                    </div>
                   </div>
 
                   <div className="flex justify-end pt-4 border-t border-slate-100 dark:border-slate-800">
