@@ -29,9 +29,25 @@ const relatoriosMock = unidadesMock.map(unidade => {
     unidade,
     oficialResponsavel: solicitantesMock[Math.floor(Math.random() * solicitantesMock.length)],
     statusGeral,
-    maiorNecessidade: ['Radios HT', 'Radios Moveis', 'Baterias', 'Repetidoras', 'Manutencao', 'Nenhuma'][Math.floor(Math.random() * 6)],
-    qtdOperantes: Math.floor(Math.random() * 50) + 20,
-    qtdInoperantes: isCritico ? Math.floor(Math.random() * 30) + 10 : Math.floor(Math.random() * 5),
+    maiorNecessidade: ['Radios HT', 'Radios Moveis', 'Baterias', 'Repetidoras', 'Manutencao', 'Computadores', 'Nenhuma'][Math.floor(Math.random() * 7)],
+    equipamentos: {
+      radiosHT: { 
+        operantes: Math.floor(Math.random() * 40) + 10, 
+        inoperantes: isCritico ? Math.floor(Math.random() * 15) + 5 : Math.floor(Math.random() * 3) 
+      },
+      radiosMoveis: { 
+        operantes: Math.floor(Math.random() * 15) + 5, 
+        inoperantes: isCritico ? Math.floor(Math.random() * 8) + 2 : Math.floor(Math.random() * 2) 
+      },
+      computadores: { 
+        operantes: Math.floor(Math.random() * 10) + 5, 
+        inoperantes: isCritico ? Math.floor(Math.random() * 5) + 2 : Math.floor(Math.random() * 1) 
+      },
+      baterias: { 
+        operantes: Math.floor(Math.random() * 60) + 20, 
+        inoperantes: isCritico ? Math.floor(Math.random() * 25) + 10 : Math.floor(Math.random() * 5) 
+      }
+    },
     relatorioLivre: "Estamos necessitando de atenção especial na região. " + (isCritico ? "Muitos equipamentos parando por bateria viciada." : "Situação sob controle mas requer preventivas."),
     mesReferencia: new Date().toISOString().substring(0, 7) // Ex: "2026-04"
   };

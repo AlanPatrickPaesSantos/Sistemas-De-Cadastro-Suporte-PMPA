@@ -20,18 +20,15 @@ const relatorioQualidadeSchema = new mongoose.Schema({
   },
   maiorNecessidade: {
     type: String,
-    enum: ['Radios HT', 'Radios Moveis', 'Baterias', 'Repetidoras', 'Manutencao', 'Nenhuma'],
+    enum: ['Radios HT', 'Radios Moveis', 'Baterias', 'Repetidoras', 'Manutencao', 'Computadores', 'Nenhuma'],
     required: true
   },
-  qtdOperantes: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  qtdInoperantes: {
-    type: Number,
-    required: true,
-    default: 0
+  // Detalhes logísticos
+  equipamentos: {
+    radiosHT: { operantes: { type: Number, default: 0 }, inoperantes: { type: Number, default: 0 } },
+    radiosMoveis: { operantes: { type: Number, default: 0 }, inoperantes: { type: Number, default: 0 } },
+    computadores: { operantes: { type: Number, default: 0 }, inoperantes: { type: Number, default: 0 } },
+    baterias: { operantes: { type: Number, default: 0 }, inoperantes: { type: Number, default: 0 } }
   },
   relatorioLivre: {
     type: String,

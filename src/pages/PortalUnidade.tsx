@@ -24,8 +24,12 @@ const PortalUnidade = () => {
   const [qualidadeData, setQualidadeData] = useState({
     statusGeral: "Boa",
     maiorNecessidade: "Radios HT",
-    qtdOperantes: "",
-    qtdInoperantes: "",
+    equipamentos: {
+      radiosHT: { operantes: "", inoperantes: "" },
+      radiosMoveis: { operantes: "", inoperantes: "" },
+      computadores: { operantes: "", inoperantes: "" },
+      baterias: { operantes: "", inoperantes: "" }
+    },
     relatorioLivre: ""
   });
 
@@ -57,8 +61,24 @@ const PortalUnidade = () => {
           mesReferencia: mesAtual,
           statusGeral: qualidadeData.statusGeral,
           maiorNecessidade: qualidadeData.maiorNecessidade,
-          qtdOperantes: parseInt(qualidadeData.qtdOperantes) || 0,
-          qtdInoperantes: parseInt(qualidadeData.qtdInoperantes) || 0,
+          equipamentos: {
+            radiosHT: { 
+              operantes: parseInt(qualidadeData.equipamentos.radiosHT.operantes) || 0, 
+              inoperantes: parseInt(qualidadeData.equipamentos.radiosHT.inoperantes) || 0 
+            },
+            radiosMoveis: { 
+              operantes: parseInt(qualidadeData.equipamentos.radiosMoveis.operantes) || 0, 
+              inoperantes: parseInt(qualidadeData.equipamentos.radiosMoveis.inoperantes) || 0 
+            },
+            computadores: { 
+              operantes: parseInt(qualidadeData.equipamentos.computadores.operantes) || 0, 
+              inoperantes: parseInt(qualidadeData.equipamentos.computadores.inoperantes) || 0 
+            },
+            baterias: { 
+              operantes: parseInt(qualidadeData.equipamentos.baterias.operantes) || 0, 
+              inoperantes: parseInt(qualidadeData.equipamentos.baterias.inoperantes) || 0 
+            }
+          },
           relatorioLivre: qualidadeData.relatorioLivre
         })
       });
@@ -556,15 +576,57 @@ const PortalUnidade = () => {
                         </SelectContent>
                       </Select>
                     </div>
+                  </div>
 
-                    <div className="space-y-2">
-                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Quantidade de HTs Operantes</label>
-                      <Input type="number" min="0" placeholder="Ex: 15" className="h-12 bg-slate-50 dark:bg-slate-950" value={qualidadeData.qtdOperantes} onChange={(e) => setQualidadeData({...qualidadeData, qtdOperantes: e.target.value})} />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Quantidade de HTs Inoperantes</label>
-                      <Input type="number" min="0" placeholder="Ex: 3" className="h-12 bg-slate-50 dark:bg-slate-950" value={qualidadeData.qtdInoperantes} onChange={(e) => setQualidadeData({...qualidadeData, qtdInoperantes: e.target.value})} />
+                  <div className="space-y-4">
+                    <label className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
+                      <Monitor className="w-4 h-4 text-[#004e9a]" /> Detalhamento de Equipamentos
+                    </label>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {Object.entries(qualidadeData.equipamentos).map(([key, value]) => (
+                        <div key={key} className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                          <h4 className="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 capitalize">
+                            {key === 'radiosHT' ? 'Rádios Portáteis (HT)' : 
+                             key === 'radiosMoveis' ? 'Rádios Móveis/Fixos' : 
+                             key === 'computadores' ? 'Computadores/Notebooks' : 'Baterias'}
+                          </h4>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-1">
+                              <span className="text-[10px] font-bold text-green-600 uppercase">Operantes</span>
+                              <Input 
+                                type="number" min="0" 
+                                placeholder="0" 
+                                className="h-10 bg-white dark:bg-slate-900 border-green-100 dark:border-green-900/30"
+                                value={value.operantes} 
+                                onChange={(e) => setQualidadeData({
+                                  ...qualidadeData, 
+                                  equipamentos: {
+                                    ...qualidadeData.equipamentos,
+                                    [key]: { ...value, operantes: e.target.value }
+                                  }
+                                })} 
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <span className="text-[10px] font-bold text-red-600 uppercase">Inoperantes</span>
+                              <Input 
+                                type="number" min="0" 
+                                placeholder="0" 
+                                className="h-10 bg-white dark:bg-slate-900 border-red-100 dark:border-red-900/30"
+                                value={value.inoperantes} 
+                                onChange={(e) => setQualidadeData({
+                                  ...qualidadeData, 
+                                  equipamentos: {
+                                    ...qualidadeData.equipamentos,
+                                    [key]: { ...value, inoperantes: e.target.value }
+                                  }
+                                })} 
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
