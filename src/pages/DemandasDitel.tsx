@@ -29,12 +29,12 @@ export default function DemandasDitel() {
 
       if (resChamados.ok) {
         const data = await resChamados.json();
-        setChamados(data.chamados || []);
+        setChamados(Array.isArray(data) ? data : data.chamados || []);
       }
       
       if (resRelatorios.ok) {
         const data = await resRelatorios.json();
-        setRelatorios(data.relatorios || []);
+        setRelatorios(Array.isArray(data) ? data : data.relatorios || []);
       }
     } catch (err) {
       console.error(err);
