@@ -113,19 +113,19 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
       </div>
 
       {/* Defeitos */}
-      <div className="space-y-2 flex-1 mb-1">
+      <div className="space-y-1.5 flex-1 mb-1">
         <div>
-          <h3 className="font-bold uppercase mb-0.5 text-[10px]">Defeito Reclamado:</h3>
-          <p className="min-h-[1.5rem]">{data.Defeito_Recl || 'Não informado.'}</p>
+          <h3 className="font-bold uppercase mb-0 text-[9px]">Defeito Reclamado:</h3>
+          <p className="min-h-[1rem] text-[9px] leading-[1.2]">{data.Defeito_Recl || 'Não informado.'}</p>
         </div>
         <div>
-          <h3 className="font-bold uppercase mb-0.5 text-[10px]">Defeito Constatado / Análise Técnica:</h3>
-          <p className="min-h-[1.5rem]">{data.Analise_Tecnica || 'Sob análise.'}</p>
+          <h3 className="font-bold uppercase mb-0 text-[9px]">Defeito Constatado / Análise Técnica:</h3>
+          <p className="min-h-[1rem] text-[9px] leading-[1.2]">{data.Analise_Tecnica || 'Sob análise.'}</p>
         </div>
         {type === 'laudo' && (
           <div>
-            <h3 className="font-bold uppercase mb-0.5 text-[10px]">Laudo Técnico:</h3>
-            <p className="min-h-[1.5rem] font-medium">{data.Laudo_Tecnico}</p>
+            <h3 className="font-bold uppercase mb-0 text-[9px]">Laudo Técnico:</h3>
+            <p className="min-h-[1rem] text-[9px] leading-[1.2] font-medium">{data.Laudo_Tecnico}</p>
           </div>
         )}
       </div>
