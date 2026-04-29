@@ -1006,17 +1006,6 @@ app.put('/api/missoes/:id', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-// ====== SERVIR FRONTEND ESTÁTICO (PRODUÇÃO) ======
-if (process.env.NODE_ENV === 'production' || process.env.RENDER) {
-  const distPath = path.join(__dirname, '..', 'dist');
-  app.use(express.static(distPath));
-
-  // Middleware de captura final para o React (SPA)
-  // Se não caiu em nenhuma rota /api, entrega o index.html
-  app.use((req, res) => {
-    res.sendFile(path.join(distPath, 'index.html'));
-  });
-}
 
 // ====== ROTAS DE CHAMADOS E RELATÓRIOS (MULTI-TENANT) ======
 
@@ -1096,6 +1085,17 @@ app.post('/api/relatorios-qualidade', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// ====== SERVIR FRONTEND ESTÁTICO (PRODUÇÃO) ======
+if (process.env.NODE_ENV === 'production' || process.env.RENDER) {
+  const distPath = path.join(__dirname, '..', 'dist');
+  app.use(express.static(distPath));
+
+  // Middleware de captura final para o React (SPA)
+  // Se não caiu em nenhuma rota /api, entrega o index.html
+  app.use((req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 
 const server = app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT} [MODO: ${process.env.NODE_ENV || 'development'}]`);
