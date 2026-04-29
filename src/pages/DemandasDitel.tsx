@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, Inbox, Activity, CheckCircle2, AlertTriangle, MessageSquare, Wrench, Shield, Monitor, Battery, Radio } from "lucide-react";
+import { Loader2, Inbox, Activity, CheckCircle2, AlertTriangle, MessageSquare, Wrench, Shield, Monitor, Battery, Radio, ArrowLeft } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { API_BASE } from "@/lib/api-config";
 import { format, startOfDay, subDays } from "date-fns";
@@ -14,13 +14,25 @@ import {
   PieChart, Pie, Cell, BarChart, Bar, Legend 
 } from 'recharts';
 import MapaInterativoPara from "@/components/MapaInterativoPara";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function DemandasDitel() {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [chamados, setChamados] = useState<any[]>([]);
   const [relatorios, setRelatorios] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCPR, setSelectedCPR] = useState<string>('');
+
+  // Proteção de Rota: Apenas Admin acessa esta página
+  useEffect(() => {
+    if (user && user.papel !== 'admin') {
+      toast({ title: "Acesso Negado", description: "Esta área é restrita a administradores.", variant: "destructive" });
+      navigate("/");
+    }
+  }, [user, navigate, toast]);
 
   const fetchDados = async () => {
     setIsLoading(true);
@@ -136,13 +148,23 @@ export default function DemandasDitel() {
       <main className="w-full max-w-7xl mx-auto flex-1 px-4 py-8">
         
         <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 flex items-center gap-3 tracking-tighter">
-              DITEL CENTRAL COMMAND
-            </h1>
-            <p className="text-slate-400 mt-1 font-medium">
-              {selectedCPR ? `Visualizando: ${selectedCPR}` : 'Gestão de Demandas Estaduais e Inteligência Logística'}
-            </p>
+          <div className="flex flex-col gap-4">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => navigate("/")}
+              className="w-fit text-slate-400 hover:text-white hover:bg-white/10 -ml-2 gap-2 font-bold uppercase text-[10px] tracking-widest"
+            >
+              <ArrowLeft className="h-4 w-4" /> Voltar ao Painel
+            </Button>
+            <div>
+              <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 flex items-center gap-3 tracking-tighter">
+                DITEL CENTRAL COMMAND
+              </h1>
+              <p className="text-slate-400 mt-1 font-medium">
+                {selectedCPR ? `Visualizando: ${selectedCPR}` : 'Gestão de Demandas Estaduais e Inteligência Logística'}
+              </p>
+            </div>
           </div>
           <div className="flex gap-2">
              <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/20 px-3 py-1">V.4.5 GEOGRAPHIC</Badge>
