@@ -159,22 +159,6 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Demandas OPM - Admin */}
-            {!isViewer && user?.papel === 'admin' && (
-              <div
-                onClick={() => navigate("/demandas")}
-                className="flex-1 min-w-[140px] group relative bg-amber-50 dark:bg-amber-900/20 backdrop-blur-md p-4 md:p-5 cursor-pointer transition-all duration-300 flex flex-col items-start gap-3 overflow-hidden rounded-t-xl shadow-sm hover:shadow-md border border-amber-200 dark:border-amber-800"
-              >
-                <div className="p-2 bg-amber-500/10 rounded-lg group-hover:bg-amber-500/20 transition-colors">
-                  <Activity className="w-5 h-5 md:w-6 md:h-6 text-amber-600 dark:text-amber-400" />
-                </div>
-                <span className="block text-sm md:text-base font-black text-amber-900 dark:text-amber-100 tracking-tight uppercase">C.Q. & Demandas</span>
-                <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]" />
-                </div>
-              </div>
-            )}
-
           </div>
 
 
