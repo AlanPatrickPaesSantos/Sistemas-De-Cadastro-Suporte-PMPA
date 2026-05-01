@@ -862,12 +862,11 @@ app.get('/api/stats/consolidated', async (req, res) => {
         { $limit: 5 }
       ]),
 
-      // Widget Dashboard Specific (v40.14 - YTD Maintenance & YTD Missions)
+      // Widget Dashboard Specific (v40.14 - YTD Maintenance & Monthly Missions)
       Promise.all([
         Servico.countDocuments({ Serviço: /^\s*PENDENTE\s*$/i, Data_Ent: { $gte: ytdStart } }), // [0] Maintenance YTD
         Servico.countDocuments({ Serviço: /^\s*PRONTO\s*$/i, Data_Ent: { $gte: ytdStart } }),   // [1] Ready YTD
-        Missao.countDocuments(baseMissaoQuery),                                                // [2] Missions in Period (Filtered)
-        Missao.countDocuments({ data: { $gte: ytdStart } })                                    // [3] Missions YTD (For Widget)
+        Missao.countDocuments(baseMissaoQuery)                                                 // [2] Missions in Period (Monthly)
       ])
     ]);
 
@@ -875,7 +874,7 @@ app.get('/api/stats/consolidated', async (req, res) => {
       dashboard: {
         maintenance: dashboardCounts[0],
         ready: dashboardCounts[1],
-        missions: dashboardCounts[3] // Exibe o acumulado do ano para evitar widget zerado
+        missions: dashboardCounts[2]
       },
       missoes: {
         total: counts[0],
