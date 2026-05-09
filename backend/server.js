@@ -14,6 +14,17 @@ if (fs.existsSync(envPath)) {
   console.log('🌐 Usando variáveis de ambiente do sistema/Render');
 }
 
+// Verificação rígida de segurança da chave JWT
+if (!process.env.JWT_SECRET) {
+  if (process.env.NODE_ENV === 'production') {
+    console.error('❌ ERRO CRÍTICO DE SEGURANÇA: A variável de ambiente JWT_SECRET não está definida em produção!');
+    process.exit(1);
+  } else {
+    console.warn('⚠️ AVISO DE SEGURANÇA: JWT_SECRET não definida. Definindo chave padrão para desenvolvimento.');
+    process.env.JWT_SECRET = 'DitelPMPA-Seguranca-Fixa-2026';
+  }
+}
+
 const https = require('https');
 const jwt = require('jsonwebtoken');
 
@@ -55,6 +66,20 @@ app.get('/api/status', (req, res) => {
   res.json({ status: 'Rodando', database: mongoose.connection.readyState === 1 ? 'Conectado' : 'Desconectado' });
 });
 
+// Keep-Alive para evitar que o Render hiberne (Self-Ping a cada 14 minutos)
+const EXTERNAL_URL = process.env.RENDER_EXTERNAL_URL;
+if (EXTERNAL_URL) {
+  const delayMinutes = 14;
+  console.log(`📡 Keep-Alive ativado: Ping programado para ${EXTERNAL_URL}/api/status a cada ${delayMinutes} minutos.`);
+  setInterval(() => {
+    https.get(`${EXTERNAL_URL}/api/status`, (res) => {
+      console.log(`🤖 Self-Ping Keep-Alive executado. Status: ${res.statusCode}`);
+    }).on('error', (err) => {
+      console.error('❌ Erro no self-ping Keep-Alive:', err.message);
+    });
+  }, delayMinutes * 60 * 1000);
+}
+
 // ====== ROTA DE AUTENTICAÇÃO ======
 app.post('/api/auth/login', async (req, res) => {
   try {
@@ -73,12 +98,8 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ success: false, error: 'Acesso Negado: Senha inválida.' });
     }
 
-    // Segurança de Token: Prioriza variável de ambiente para produção on-premise (Ditel/PMPA)
-    const SECRET = process.env.JWT_SECRET;
-    if (!SECRET && process.env.NODE_ENV === 'production') {
-      console.warn('⚠️ AVISO DE SEGURANÇA: JWT_SECRET não definida. Usando chave padrão (NÃO RECOMENDADO EM PRODUÇÃO)!');
-    }
-    const finalSecret = SECRET || 'DitelPMPA-Seguranca-Fixa-2026';
+    // Segurança de Token: Utiliza a chave devidamente configurada no ambiente
+    const finalSecret = process.env.JWT_SECRET;
     const token = jwt.sign(
       { 
         id: user._id, 

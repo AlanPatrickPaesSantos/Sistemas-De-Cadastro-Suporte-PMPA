@@ -13,7 +13,7 @@ const verificarToken = (req, res, next) => {
 
   try {
     // Processa e verifica com o segredo (Deve ser IDÊNTICO ao do server.js)
-    const SECRET = process.env.JWT_SECRET || 'DitelPMPA-Seguranca-Fixa-2026';
+    const SECRET = process.env.JWT_SECRET;
     const chaveDecodificada = jwt.verify(token, SECRET);
     
     // Anexa as informações do usuário logado na requisição (usando 'user' para compatibilidade)

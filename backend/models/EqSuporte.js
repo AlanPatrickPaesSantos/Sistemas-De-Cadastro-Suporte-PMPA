@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const EqSuporteSchema = new mongoose.Schema({
   ID_EQUIP: { type: Number, unique: true, index: true },
-  EQUIPAMENTO: { type: String, required: true }
+  EQUIPAMENTO: { type: String, required: true, index: true }
 }, {
   timestamps: true,
   collection: 'eqsuportes'

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { ConsultasSection } from "@/components/ConsultasSection";
 import { UnidadeCombobox } from "@/components/UnidadeCombobox";
+import { HUDRadialGauge } from "@/components/HUDRadialGauge";
 // Lazy load components that are not needed immediately
 const RelatoriosSection = lazy(() => import("@/components/RelatoriosSection").then(m => ({ default: m.RelatoriosSection })));
 const EqSuporteDialog = lazy(() => import("@/components/EqSuporteDialog").then(m => ({ default: m.EqSuporteDialog })));
@@ -163,72 +164,37 @@ const Index = () => {
 
 
 
-          {/* EXECUTIVE STATS WIDGETS */}
+          {/* EXECUTIVE STATS WIDGETS (HUD Radial Gauges) */}
           <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-
-            {/* Widget: Manutenção */}
-            <div
-              id="widget-manutencao"
+            <HUDRadialGauge
+              title="Equipamentos em Manutenção"
+              value={stats.maintenance}
+              max={150} // Escala máxima aproximada para controle visual
+              colorClass="red"
+              icon={<Wrench className="w-5 h-5 md:w-6 md:h-6" />}
+              isLoading={isLoading}
               onClick={() => {
                 const now = new Date();
                 const yearStart = `${now.getFullYear()}-01-01`;
                 const yearEnd = `${now.getFullYear()}-12-31`;
                 setExternalReportTrigger({ id: "Rel_Equipamentos", dateRange: { start: yearStart, end: yearEnd } });
               }}
-              className="group relative bg-white dark:bg-slate-900 backdrop-blur-md p-5 md:p-6 cursor-pointer transition-all duration-300 flex items-center gap-5 overflow-hidden rounded-xl shadow-sm hover:shadow-md"
-            >
-              <img
-                src="/images/maintenance_bg.png"
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover opacity-[0.08] group-hover:opacity-[0.15] transition-opacity duration-700"
-              />
-              <div className="relative z-10 p-3.5 bg-red-50 dark:bg-red-900/20 rounded-lg group-hover:bg-red-500 transition-colors duration-500">
-                <Wrench className="w-6 h-6 text-red-500 group-hover:text-white transition-colors" />
-              </div>
-              <div className="relative z-10">
-                <div className="flex items-baseline gap-2">
-                  <p className="text-3xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
-                    {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-red-500/50" /> : stats.maintenance}
-                  </p>
-                  <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">Em Manutenção</span>
-                </div>
-              </div>
-              <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]" />
-              </div>
-            </div>
+            />
 
-            {/* Widget: Missões */}
-            <div
-              id="widget-missoes"
+            <HUDRadialGauge
+              title="Missões Realizadas (Mês)"
+              value={stats.missions}
+              max={100} // Escala máxima aproximada
+              colorClass="blue"
+              icon={<Activity className="w-5 h-5 md:w-6 md:h-6" />}
+              isLoading={isLoading}
               onClick={() => {
                 const now = new Date();
                 const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
                 const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
                 setExternalReportTrigger({ id: "Rel_Missao_Consolidado", dateRange: { start: firstDay, end: lastDay } });
               }}
-              className="group relative bg-white dark:bg-slate-900 backdrop-blur-md p-5 md:p-6 cursor-pointer transition-all duration-300 flex items-center gap-5 overflow-hidden rounded-xl shadow-sm hover:shadow-md"
-            >
-              <img
-                src="/images/missions_bg.png"
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover opacity-[0.08] group-hover:opacity-[0.15] transition-opacity duration-700"
-              />
-              <div className="relative z-10 p-3.5 bg-blue-50 dark:bg-blue-900/20 rounded-lg group-hover:bg-[#004e9a] transition-colors duration-500">
-                <Activity className="w-6 h-6 text-[#004e9a] group-hover:text-white transition-colors" />
-              </div>
-              <div className="relative z-10">
-                <div className="flex items-baseline gap-2">
-                  <p className="text-3xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
-                    {isLoading ? <Loader2 className="h-6 w-6 animate-spin text-blue-500/50" /> : stats.missions}
-                  </p>
-                  <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">Missões do Mês</span>
-                </div>
-              </div>
-              <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#004e9a] shadow-[0_0_8px_#004e9a]" />
-              </div>
-            </div>
+            />
           </div>
 
           {/* Main Content Grid */}
