@@ -92,7 +92,7 @@ const Login = () => {
         {/* Títulos Corporativos Melhorados */}
         <div className="text-center mb-8 space-y-1">
           <h1 className="text-white text-2xl md:text-[28px] font-bold tracking-tight drop-shadow-lg">
-            Polícia do Estado do Pará
+            Polícia Militar do Estado do Pará
           </h1>
           <h2 className="text-blue-100 text-[15px] md:text-lg font-medium opacity-90 tracking-wide">
             Sistema de Cadastro Ditel
