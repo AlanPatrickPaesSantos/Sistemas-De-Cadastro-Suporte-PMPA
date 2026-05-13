@@ -30,7 +30,7 @@ RUN cd backend && npm install --production
 COPY backend/ ./backend/
 
 # Copia o build estático do frontend do estágio 1 para a raiz onde o server.js o servirá
-COPY --from=build-stage /app/frontend/dist ./dist
+COPY --from=build-stage /app/dist ./dist
 
 # Expõe a porta operacional padrão
 EXPOSE 5001
