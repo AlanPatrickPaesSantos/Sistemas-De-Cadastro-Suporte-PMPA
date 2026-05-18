@@ -45,7 +45,8 @@ const Login = () => {
         unidadeVinculada: data.unidadeVinculada
       });
 
-      const destination = location.state?.from?.pathname || '/';
+      const defaultDestination = data.papel === 'tecnico' ? '/tecnico' : '/';
+      const destination = location.state?.from?.pathname || defaultDestination;
       navigate(destination, { replace: true });
 
       toast({

@@ -18,7 +18,7 @@ const usuarioSchema = new mongoose.Schema({
   },
   papel: {
     type: String,
-    enum: ['admin', 'operador', 'visualizador'],
+    enum: ['admin', 'operador', 'visualizador', 'tecnico'],
     default: 'operador'
   },
   unidadeVinculada: {

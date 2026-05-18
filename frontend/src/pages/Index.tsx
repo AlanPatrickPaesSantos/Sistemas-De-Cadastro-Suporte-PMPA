@@ -41,6 +41,10 @@ const Index = () => {
   const isAdmin = user?.papel === 'admin';
 
   useEffect(() => {
+    if (user?.papel === 'tecnico') {
+      navigate('/tecnico', { replace: true });
+      return;
+    }
     const fetchDashboardStats = async () => {
       try {
         const now = new Date();

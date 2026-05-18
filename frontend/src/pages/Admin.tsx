@@ -10,7 +10,8 @@ import {
   Loader2,
   Lock,
   ArrowLeft,
-  Pencil
+  Pencil,
+  Wrench
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -276,6 +277,12 @@ const Admin = () => {
                             <span>Visualizador (Leitura)</span>
                           </div>
                         </SelectItem>
+                        <SelectItem value="tecnico">
+                          <div className="flex items-center gap-2">
+                            <Wrench className="h-4 w-4 text-green-600" />
+                            <span>Técnico (Apenas Missões Internas)</span>
+                          </div>
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -346,9 +353,11 @@ const Admin = () => {
                           ? 'bg-red-50 text-red-600 border border-red-100 dark:bg-red-900/20 dark:text-red-400' 
                           : u.papel === 'visualizador'
                             ? 'bg-amber-50 text-amber-600 border border-amber-100 dark:bg-amber-900/20 dark:text-amber-400'
-                            : 'bg-blue-50 text-blue-600 border border-blue-100 dark:bg-blue-900/20 dark:text-blue-400'
+                            : u.papel === 'tecnico'
+                              ? 'bg-green-50 text-green-600 border border-green-100 dark:bg-green-900/20 dark:text-green-400'
+                              : 'bg-blue-50 text-blue-600 border border-blue-100 dark:bg-blue-900/20 dark:text-blue-400'
                       }`}>
-                        {u.papel === 'admin' ? <Shield className="h-3 w-3" /> : u.papel === 'visualizador' ? <Lock className="h-3 w-3" /> : <UserCheck className="h-3 w-3" />}
+                        {u.papel === 'admin' ? <Shield className="h-3 w-3" /> : u.papel === 'visualizador' ? <Lock className="h-3 w-3" /> : u.papel === 'tecnico' ? <Wrench className="h-3 w-3" /> : <UserCheck className="h-3 w-3" />}
                         {u.papel}
                       </span>
                     </TableCell>
