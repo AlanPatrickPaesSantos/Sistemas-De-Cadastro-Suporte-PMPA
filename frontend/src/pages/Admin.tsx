@@ -43,8 +43,6 @@ import { API_BASE } from "@/lib/api-config";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PainelDemandas } from "@/components/PainelDemandas";
 
 interface Usuario {
   _id: string;
@@ -188,23 +186,7 @@ const Admin = () => {
             <ArrowLeft className="h-4 w-4" /> Voltar ao Início
           </Button>
         </div>
-        <Tabs defaultValue="demandas" className="space-y-6">
-          <TabsList className="bg-white dark:bg-slate-900 shadow-sm border border-slate-200 dark:border-slate-800 p-1 rounded-xl w-full justify-start overflow-x-auto h-auto">
-            <TabsTrigger value="demandas" className="py-3 px-6 rounded-lg font-bold data-[state=active]:bg-[#004e9a] data-[state=active]:text-white">
-              <AlertCircle className="h-4 w-4 mr-2" />
-              Central de Demandas Externas
-            </TabsTrigger>
-            <TabsTrigger value="usuarios" className="py-3 px-6 rounded-lg font-bold data-[state=active]:bg-[#004e9a] data-[state=active]:text-white">
-              <Users className="h-4 w-4 mr-2" />
-              Gestão de Usuários (DITEL)
-            </TabsTrigger>
-          </TabsList>
 
-          <TabsContent value="demandas">
-            <PainelDemandas />
-          </TabsContent>
-
-          <TabsContent value="usuarios">
             <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2 text-pmpa-navy">
@@ -409,8 +391,7 @@ const Admin = () => {
             </p>
           </div>
         </div>
-          </TabsContent>
-        </Tabs>
+
       </main>
     </div>
   );
