@@ -32,6 +32,7 @@ const formSchema = z.object({
   servico: z.string().optional(), // Status (Pronto/Pendente)
   categoria: z.string().min(1, "Categoria é obrigatória"), // Tipo (Interno/Externo)
   horario: z.string().optional(),
+  horario_saida: z.string().optional(),
   analise: z.string().optional(),
   observacao: z.string().optional(),
   solucao: z.string().optional(),
@@ -111,6 +112,7 @@ export const ServicoInternoExternoForm = ({
           ? "interno" // Fallback if it was Pendente
           : String(initialData.categoria || initialData.servico || "interno").toLowerCase(),
         horario: initialData.horario || initialData.Horário || "",
+        horario_saida: initialData.horario_saida || "",
         analise: initialData.analise || initialData.Analise_Tecnica || initialData.Analise || "",
         observacao: initialData.observacao || initialData.Observaçoes || initialData.Observacao || "",
         solucao: initialData.solucao || initialData.Solução || initialData.Solucao || initialData.Soluções || "",
@@ -194,19 +196,24 @@ export const ServicoInternoExternoForm = ({
           </div>
         </div>
 
-        {/* Row 2: Data, Horário, Técnicos */}
-        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-3">
-          <div className="space-y-1.5 lg:col-span-1">
+        {/* Row 2: Data, Horários, Técnicos */}
+        <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-6 gap-3">
+          <div className="space-y-1.5 lg:col-span-1 md:col-span-1">
             <Label htmlFor="data" className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Data *</Label>
             <Input id="data" type="date" {...register("data")} className={`h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium ${errors.data ? "border-destructive" : ""}`} />
           </div>
 
-          <div className="space-y-1.5 lg:col-span-1">
-            <Label htmlFor="horario" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Horário</Label>
+          <div className="space-y-1.5 lg:col-span-1 md:col-span-1">
+            <Label htmlFor="horario" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Entrada</Label>
             <Input id="horario" {...register("horario")} placeholder="HH:MM" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" />
           </div>
 
-          <div className="space-y-1.5 md:col-span-2 lg:col-span-4">
+          <div className="space-y-1.5 lg:col-span-1 md:col-span-1">
+            <Label htmlFor="horario_saida" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Saída</Label>
+            <Input id="horario_saida" {...register("horario_saida")} placeholder="HH:MM" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" />
+          </div>
+
+          <div className="space-y-1.5 md:col-span-2 lg:col-span-3">
             <Label htmlFor="tecnicos" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Técnicos</Label>
             <Input id="tecnicos" {...register("tecnicos")} placeholder="Nome dos técnicos" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" />
           </div>

@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Loader2, Send, PenTool } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { UnidadeCombobox } from "@/components/UnidadeCombobox";
 
 const TecnicoDashboard = () => {
   const { user } = useAuth();
@@ -23,7 +24,7 @@ const TecnicoDashboard = () => {
     horario_saida: "",
     data: new Date().toISOString().split("T")[0],
     categoria: "Serviço Interno",
-    secao: "",
+    unidade: "",
     status: "Pendente"
   });
 
@@ -37,8 +38,8 @@ const TecnicoDashboard = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.solicitante || !formData.def_recla || !formData.secao) {
-      toast.warning("Preencha os campos obrigatórios (Solicitante, Problema e Seção).");
+    if (!formData.solicitante || !formData.def_recla || !formData.unidade) {
+      toast.warning("Preencha os campos obrigatórios (Solicitante, Problema e Unidade/Seção).");
       return;
     }
 
@@ -67,7 +68,7 @@ const TecnicoDashboard = () => {
           horario_saida: "",
           data: new Date().toISOString().split("T")[0],
           categoria: "Serviço Interno",
-          secao: "",
+          unidade: "",
           status: "Pendente"
         });
       } else {
@@ -145,19 +146,11 @@ const TecnicoDashboard = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Seção <span className="text-red-500">*</span></Label>
-                  <Select value={formData.secao} onValueChange={(val) => handleSelectChange("secao", val)}>
-                    <SelectTrigger className="h-12">
-                      <SelectValue placeholder="Selecione..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Suporte">Suporte</SelectItem>
-                      <SelectItem value="Manutenção">Manutenção</SelectItem>
-                      <SelectItem value="Telecom">Telecom</SelectItem>
-                      <SelectItem value="Redes">Redes</SelectItem>
-                      <SelectItem value="Desenvolvimento">Desenvolvimento</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Unidade / Seção <span className="text-red-500">*</span></Label>
+                  <UnidadeCombobox 
+                    value={formData.unidade} 
+                    onChange={(val) => handleSelectChange("unidade", val)} 
+                  />
                 </div>
                 
                 <div className="space-y-2">
