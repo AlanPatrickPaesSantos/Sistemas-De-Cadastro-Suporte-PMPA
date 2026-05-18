@@ -8,6 +8,7 @@ const MissaoSchema = new mongoose.Schema({
   horario: String,
   horario_saida: String,
   tecnicos: String,
+  status: String,
   def_recla: String,
   solicitante: { type: String, index: true },
   n_pae: String,

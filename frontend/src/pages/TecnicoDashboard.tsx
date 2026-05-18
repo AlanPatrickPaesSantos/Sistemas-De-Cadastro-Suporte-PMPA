@@ -9,6 +9,7 @@ import { API_BASE } from "@/lib/api-config";
 import { toast } from "sonner";
 import { Loader2, Send, PenTool } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const TecnicoDashboard = () => {
   const { user } = useAuth();
@@ -21,17 +22,23 @@ const TecnicoDashboard = () => {
     horario: "",
     horario_saida: "",
     data: new Date().toISOString().split("T")[0],
-    categoria: "Serviço Interno"
+    categoria: "Serviço Interno",
+    secao: "",
+    status: "Pendente"
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.solicitante || !formData.def_recla) {
-      toast.warning("Preencha os campos obrigatórios (Solicitante e Problema).");
+    if (!formData.solicitante || !formData.def_recla || !formData.secao) {
+      toast.warning("Preencha os campos obrigatórios (Solicitante, Problema e Seção).");
       return;
     }
 
@@ -59,7 +66,9 @@ const TecnicoDashboard = () => {
           horario: "",
           horario_saida: "",
           data: new Date().toISOString().split("T")[0],
-          categoria: "Serviço Interno"
+          categoria: "Serviço Interno",
+          secao: "",
+          status: "Pendente"
         });
       } else {
         toast.error("Erro ao salvar: " + (result.error || "Tente novamente."));
@@ -132,6 +141,38 @@ const TecnicoDashboard = () => {
                   placeholder="O que foi feito..."
                   className="min-h-[80px] resize-none"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Seção <span className="text-red-500">*</span></Label>
+                  <Select value={formData.secao} onValueChange={(val) => handleSelectChange("secao", val)}>
+                    <SelectTrigger className="h-12">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Suporte">Suporte</SelectItem>
+                      <SelectItem value="Manutenção">Manutenção</SelectItem>
+                      <SelectItem value="Telecom">Telecom</SelectItem>
+                      <SelectItem value="Redes">Redes</SelectItem>
+                      <SelectItem value="Desenvolvimento">Desenvolvimento</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Status <span className="text-red-500">*</span></Label>
+                  <Select value={formData.status} onValueChange={(val) => handleSelectChange("status", val)}>
+                    <SelectTrigger className="h-12">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Pendente">Pendente</SelectItem>
+                      <SelectItem value="Em Andamento">Em Andamento</SelectItem>
+                      <SelectItem value="Concluído">Concluído</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
