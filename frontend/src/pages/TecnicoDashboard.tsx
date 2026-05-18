@@ -46,13 +46,18 @@ const TecnicoDashboard = () => {
     setIsLoading(true);
     try {
       const token = localStorage.getItem("ditel_token");
+      const payload = {
+        ...formData,
+        servico: formData.status === "Concluído" ? "PRONTO" : "PENDENTE"
+      };
+      
       const res = await fetch(`${API_BASE}/missoes`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
       
       const result = await res.json();
