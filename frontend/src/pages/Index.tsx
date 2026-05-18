@@ -188,6 +188,8 @@ const Index = () => {
               colorClass="blue"
               icon={<Activity className="w-5 h-5 md:w-6 md:h-6" />}
               isLoading={isLoading}
+              suffixSingular="Serviço"
+              suffixPlural="Serviços"
               onClick={() => {
                 const now = new Date();
                 const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];

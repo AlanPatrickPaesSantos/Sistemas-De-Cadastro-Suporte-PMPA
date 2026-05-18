@@ -9,6 +9,8 @@ interface HUDRadialGaugeProps {
   colorClass: "red" | "blue";
   onClick?: () => void;
   isLoading?: boolean;
+  suffixSingular?: string;
+  suffixPlural?: string;
 }
 
 export function HUDRadialGauge({
@@ -19,6 +21,8 @@ export function HUDRadialGauge({
   colorClass,
   onClick,
   isLoading = false,
+  suffixSingular = "Equipamento",
+  suffixPlural = "Equipamentos",
 }: HUDRadialGaugeProps) {
   const [animatedStroke, setAnimatedStroke] = useState(0);
 
@@ -70,7 +74,7 @@ export function HUDRadialGauge({
             {title}
           </span>
           <p className="text-lg md:text-xl font-black text-slate-800 dark:text-white tracking-tight leading-none">
-            {isLoading ? "Buscando..." : `${value} Equipamento${value !== 1 ? 's' : ''}`}
+            {isLoading ? "Buscando..." : `${value} ${value === 1 ? suffixSingular : suffixPlural}`}
           </p>
         </div>
       </div>
