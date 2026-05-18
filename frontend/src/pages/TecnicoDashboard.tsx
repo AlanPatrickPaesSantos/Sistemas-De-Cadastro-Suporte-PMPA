@@ -23,7 +23,7 @@ const TecnicoDashboard = () => {
     horario: "",
     horario_saida: "",
     data: new Date().toISOString().split("T")[0],
-    categoria: "Serviço Interno",
+    categoria: "interno",
     unidade: "",
     status: "Pendente"
   });
@@ -67,7 +67,7 @@ const TecnicoDashboard = () => {
           horario: "",
           horario_saida: "",
           data: new Date().toISOString().split("T")[0],
-          categoria: "Serviço Interno",
+          categoria: "interno",
           unidade: "",
           status: "Pendente"
         });
@@ -120,6 +120,26 @@ const TecnicoDashboard = () => {
                   placeholder="Nome de quem chamou"
                   className="h-12"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Tipo de Atendimento <span className="text-red-500">*</span></Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleSelectChange("categoria", "interno")}
+                    className={`py-3 px-4 text-sm font-semibold rounded-xl border transition-all ${formData.categoria === "interno" ? "bg-[#004e9a] text-white border-[#004e9a] shadow-md shadow-[#004e9a]/10" : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100/50"}`}
+                  >
+                    Interno (Presencial)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSelectChange("categoria", "remoto")}
+                    className={`py-3 px-4 text-sm font-semibold rounded-xl border transition-all ${formData.categoria === "remoto" ? "bg-[#004e9a] text-white border-[#004e9a] shadow-md shadow-[#004e9a]/10" : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100/50"}`}
+                  >
+                    Remoto (Anydesk)
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-2">
