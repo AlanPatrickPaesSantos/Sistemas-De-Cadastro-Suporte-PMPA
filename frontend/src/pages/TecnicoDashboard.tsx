@@ -268,8 +268,8 @@ const TecnicoDashboard = () => {
 
             <div className="text-center">
               {isReadOnly ? (
-                <span className="text-xs font-black uppercase text-amber-600 dark:text-amber-400 bg-amber-100/60 dark:bg-amber-950/40 px-2.5 py-1 rounded-full border border-amber-200/50 dark:border-amber-900/50 flex items-center gap-1.5 shadow-sm">
-                  <Lock className="h-3 w-3" /> Modo Leitura
+                <span className="text-xs font-black uppercase text-amber-600 dark:text-amber-400 bg-amber-100/60 dark:bg-amber-950/40 px-2.5 py-1 rounded-full border border-amber-200/50 dark:border-amber-900/50 shadow-sm">
+                  Modo Leitura
                 </span>
               ) : (
                 <span className="text-xs font-black uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-100/60 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-200/50 dark:border-emerald-900/50 shadow-sm">
