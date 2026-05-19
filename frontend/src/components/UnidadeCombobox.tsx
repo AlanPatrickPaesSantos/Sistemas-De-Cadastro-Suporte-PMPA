@@ -20,9 +20,10 @@ import {
 interface UnidadeComboboxProps {
   value?: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
-export function UnidadeCombobox({ value, onChange }: UnidadeComboboxProps) {
+export function UnidadeCombobox({ value, onChange, disabled }: UnidadeComboboxProps) {
   const [open, setOpen] = useState(false);
   const [unidades, setUnidades] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +51,7 @@ export function UnidadeCombobox({ value, onChange }: UnidadeComboboxProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          disabled={disabled}
           className="w-full justify-between h-10 font-normal border-input bg-background hover:bg-muted/30"
         >
           <span className={cn("truncate", !value && "text-muted-foreground")}>

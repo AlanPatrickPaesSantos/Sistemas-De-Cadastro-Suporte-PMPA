@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { API_BASE } from "@/lib/api-config";
 import { toast } from "sonner";
-import { Loader2, Send, PenTool } from "lucide-react";
+import { Loader2, Send, PenTool, ChevronLeft, ChevronRight, Plus, Lock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UnidadeCombobox } from "@/components/UnidadeCombobox";
@@ -15,29 +15,176 @@ import { UnidadeCombobox } from "@/components/UnidadeCombobox";
 const TecnicoDashboard = () => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    tecnicos: user?.nomeCompleto || user?.username || "",
-    solicitante: "",
-    def_recla: "",
-    solucao: "",
-    horario: "",
-    horario_saida: "",
-    data: new Date().toISOString().split("T")[0],
-    categoria: "interno",
-    unidade: "",
-    status: "Pendente"
+  const [currentOsRecord, setCurrentOsRecord] = useState<any>(null);
+  const [hasPrev, setHasPrev] = useState(false);
+  const [hasNext, setHasNext] = useState(false);
+  const [isNavLoading, setIsNavLoading] = useState(false);
+  const [draftFormData, setDraftFormData] = useState<any>(null);
+
+  const [formData, setFormData] = useState(() => {
+    // Tenta recuperar rascunho ativo
+    const savedDraft = localStorage.getItem("ditel_tecnico_draft");
+    if (savedDraft) {
+      try {
+        return JSON.parse(savedDraft);
+      } catch (e) {
+        console.error("Erro ao analisar rascunho salvo:", e);
+      }
+    }
+
+    // Inicialização padrão
+    const savedTecnico = localStorage.getItem("ditel_tecnico_name");
+    return {
+      tecnicos: savedTecnico || "",
+      solicitante: "",
+      def_recla: "",
+      solucao: "",
+      horario: "",
+      horario_saida: "",
+      data: new Date().toISOString().split("T")[0],
+      categoria: "interno",
+      unidade: "",
+      status: "Pendente"
+    };
   });
 
+  const isReadOnly = currentOsRecord !== null;
+
+  // Sincroniza rascunho no localStorage
+  useEffect(() => {
+    if (currentOsRecord === null) {
+      localStorage.setItem("ditel_tecnico_draft", JSON.stringify(formData));
+    }
+  }, [formData, currentOsRecord]);
+
+  // Sincroniza o nome do técnico separadamente para maior conveniência
+  useEffect(() => {
+    if (formData.tecnicos && currentOsRecord === null) {
+      localStorage.setItem("ditel_tecnico_name", formData.tecnicos);
+    }
+  }, [formData.tecnicos, currentOsRecord]);
+
+  // Carrega nome do usuário atual assim que o AuthContext estiver pronto
+  useEffect(() => {
+    if (user && !formData.tecnicos) {
+      const savedTecnico = localStorage.getItem("ditel_tecnico_name");
+      setFormData(prev => ({
+        ...prev,
+        tecnicos: savedTecnico || user.nomeCompleto || user.username || ""
+      }));
+    }
+  }, [user]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (isReadOnly) return;
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSelectChange = (name: string, value: string) => {
+    if (isReadOnly) return;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Navegar para próximo ou anterior
+  const handleNavigate = async (direction: "prev" | "next") => {
+    if (isNavLoading) return;
+
+    // Se estiver saindo do rascunho de criação, salva rascunho
+    if (currentOsRecord === null) {
+      setDraftFormData(formData);
+    }
+
+    try {
+      let osToQuery: number;
+
+      if (currentOsRecord === null) {
+        // Buscamos a última O.S no sistema
+        const token = localStorage.getItem("ditel_token");
+        const res = await fetch(`${API_BASE}/missoes/next-os`, {
+          headers: { "Authorization": `Bearer ${token}` }
+        });
+        const data = await res.json();
+        const latestOs = data.nextOs - 1;
+        if (latestOs < 1) {
+          toast.warning("Não há O.S registradas no sistema.");
+          return;
+        }
+        osToQuery = latestOs;
+      } else {
+        osToQuery = currentOsRecord.os;
+      }
+
+      setIsNavLoading(true);
+      const token = localStorage.getItem("ditel_token");
+      const res = await fetch(`${API_BASE}/missoes/${osToQuery}/${direction}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+
+      if (!res.ok) {
+        if (direction === "next" && currentOsRecord) {
+          handleNewCall();
+          return;
+        }
+        throw new Error("Fim dos registros");
+      }
+
+      const data = await res.json();
+      setCurrentOsRecord(data.record);
+      setHasPrev(data.hasPrev);
+      setHasNext(data.hasNext);
+
+      setFormData({
+        tecnicos: data.record.tecnicos || "",
+        solicitante: data.record.solicitante || "",
+        def_recla: data.record.def_recla || "",
+        solucao: data.record.solucao || "",
+        horario: data.record.horario || "",
+        horario_saida: data.record.horario_saida || "",
+        data: data.record.data ? new Date(data.record.data).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+        categoria: data.record.categoria || "interno",
+        unidade: data.record.unidade || "",
+        status: data.record.status || "Pendente"
+      });
+
+      toast.success(`Visualizando O.S ${data.record.os}`);
+    } catch {
+      toast.error("Não há mais missões nesta direção.");
+    } finally {
+      setIsNavLoading(false);
+    }
+  };
+
+  // Retorna para o Modo de Criação (Novo Chamado)
+  const handleNewCall = () => {
+    setCurrentOsRecord(null);
+    setHasPrev(false);
+    setHasNext(false);
+
+    if (draftFormData) {
+      setFormData(draftFormData);
+      setDraftFormData(null);
+      toast.success("Rascunho de O.S restaurado!");
+    } else {
+      const savedTecnico = localStorage.getItem("ditel_tecnico_name");
+      setFormData({
+        tecnicos: savedTecnico || user?.nomeCompleto || user?.username || "",
+        solicitante: "",
+        def_recla: "",
+        solucao: "",
+        horario: "",
+        horario_saida: "",
+        data: new Date().toISOString().split("T")[0],
+        categoria: "interno",
+        unidade: "",
+        status: "Pendente"
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isReadOnly) return;
+
     if (!formData.solicitante || !formData.def_recla || !formData.unidade) {
       toast.warning("Preencha os campos obrigatórios (Solicitante, Problema e Unidade/Seção).");
       return;
@@ -50,7 +197,7 @@ const TecnicoDashboard = () => {
         ...formData,
         servico: formData.status === "Concluído" ? "PRONTO" : "PENDENTE"
       };
-      
+
       const res = await fetch(`${API_BASE}/missoes`, {
         method: "POST",
         headers: { 
@@ -59,13 +206,17 @@ const TecnicoDashboard = () => {
         },
         body: JSON.stringify(payload),
       });
-      
+
       const result = await res.json();
       if (res.ok && result.success) {
         toast.success(`✅ Chamado Interno O.S ${result.missao.os} criado com sucesso!`);
-        // Reset form
+        
+        // Remove rascunho após criação bem-sucedida
+        localStorage.removeItem("ditel_tecnico_draft");
+        const savedTecnico = localStorage.getItem("ditel_tecnico_name");
+        
         setFormData({
-          tecnicos: user?.nomeCompleto || user?.username || "",
+          tecnicos: savedTecnico || user?.nomeCompleto || user?.username || "",
           solicitante: "",
           def_recla: "",
           solucao: "",
@@ -89,22 +240,72 @@ const TecnicoDashboard = () => {
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-950 flex flex-col">
       <Header />
-      
+
       <main className="flex-1 w-full max-w-lg mx-auto p-4 md:p-6 animate-in fade-in duration-500 flex flex-col justify-center">
         <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-md dark:bg-slate-900 overflow-hidden rounded-2xl mb-8">
-          <CardHeader className="bg-[#004e9a] text-white p-6 pb-8">
+          <CardHeader className="bg-[#004e9a] text-white p-6 pb-8 relative">
             <CardTitle className="text-2xl font-black flex items-center gap-3">
               <PenTool className="h-6 w-6" />
-              Missão Interna
+              {isReadOnly ? `Visualizando O.S ${currentOsRecord?.os}` : "Nova Missão Interna"}
             </CardTitle>
             <CardDescription className="text-blue-100 font-medium text-sm">
-              Abertura de O.S (Uso Exclusivo Técnico)
+              {isReadOnly ? "Modo de Leitura (Histórico)" : "Abertura de O.S (Uso Exclusivo Técnico)"}
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="p-6 -mt-4 bg-white dark:bg-slate-900 rounded-t-3xl relative z-10">
+          {/* Barra de Navegação Rápida entre O.S */}
+          <div className="flex items-center justify-between p-3 border-b bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => handleNavigate("prev")}
+              disabled={isNavLoading}
+              className="text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800"
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" /> Anterior
+            </Button>
+
+            <div className="text-center">
+              {isReadOnly ? (
+                <span className="text-xs font-black uppercase text-amber-600 dark:text-amber-400 bg-amber-100/60 dark:bg-amber-950/40 px-2.5 py-1 rounded-full border border-amber-200/50 dark:border-amber-900/50 flex items-center gap-1.5 shadow-sm">
+                  <Lock className="h-3 w-3" /> Modo Leitura
+                </span>
+              ) : (
+                <span className="text-xs font-black uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-100/60 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-200/50 dark:border-emerald-900/50 shadow-sm">
+                  Novo Chamado
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-1">
+              {isReadOnly && (
+                <Button
+                  type="button"
+                  variant="default"
+                  size="sm"
+                  onClick={handleNewCall}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs h-8 px-2.5 rounded-lg flex items-center shadow-sm"
+                >
+                  <Plus className="h-3 w-3 mr-1" /> Novo
+                </Button>
+              )}
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => handleNavigate("next")}
+                disabled={isNavLoading || (!hasNext && !isReadOnly)}
+                className="text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800"
+              >
+                Próximo <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+
+          <CardContent className="p-6 bg-white dark:bg-slate-900 relative z-10">
             <form onSubmit={handleSubmit} className="space-y-5">
-              
+
               <div className="space-y-2">
                 <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Técnico</Label>
                 <Input 
@@ -112,7 +313,8 @@ const TecnicoDashboard = () => {
                   value={formData.tecnicos}
                   onChange={handleChange}
                   placeholder="Seu nome"
-                  className="h-12 bg-slate-50 dark:bg-slate-800"
+                  disabled={isReadOnly}
+                  className={`h-12 ${isReadOnly ? "bg-slate-50 dark:bg-slate-800 text-slate-500 border-slate-200" : ""}`}
                 />
               </div>
 
@@ -123,7 +325,8 @@ const TecnicoDashboard = () => {
                   value={formData.solicitante}
                   onChange={handleChange}
                   placeholder="Nome de quem chamou"
-                  className="h-12"
+                  disabled={isReadOnly}
+                  className={`h-12 ${isReadOnly ? "bg-slate-50 dark:bg-slate-800 text-slate-500 border-slate-200" : ""}`}
                 />
               </div>
 
@@ -132,15 +335,17 @@ const TecnicoDashboard = () => {
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
+                    disabled={isReadOnly}
                     onClick={() => handleSelectChange("categoria", "interno")}
-                    className={`py-3 px-4 text-sm font-semibold rounded-xl border transition-all ${formData.categoria === "interno" ? "bg-[#004e9a] text-white border-[#004e9a] shadow-md shadow-[#004e9a]/10" : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100/50"}`}
+                    className={`py-3 px-4 text-sm font-semibold rounded-xl border transition-all ${formData.categoria === "interno" ? "bg-[#004e9a] text-white border-[#004e9a] shadow-md shadow-[#004e9a]/10" : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100/50"} ${isReadOnly && formData.categoria !== "interno" ? "opacity-40" : ""}`}
                   >
                     Interno (Presencial)
                   </button>
                   <button
                     type="button"
+                    disabled={isReadOnly}
                     onClick={() => handleSelectChange("categoria", "remoto")}
-                    className={`py-3 px-4 text-sm font-semibold rounded-xl border transition-all ${formData.categoria === "remoto" ? "bg-[#004e9a] text-white border-[#004e9a] shadow-md shadow-[#004e9a]/10" : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100/50"}`}
+                    className={`py-3 px-4 text-sm font-semibold rounded-xl border transition-all ${formData.categoria === "remoto" ? "bg-[#004e9a] text-white border-[#004e9a] shadow-md shadow-[#004e9a]/10" : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100/50"} ${isReadOnly && formData.categoria !== "remoto" ? "opacity-40" : ""}`}
                   >
                     Remoto (Anydesk)
                   </button>
@@ -154,7 +359,8 @@ const TecnicoDashboard = () => {
                   value={formData.def_recla}
                   onChange={handleChange}
                   placeholder="Descreva o problema..."
-                  className="min-h-[80px] resize-none"
+                  disabled={isReadOnly}
+                  className={`min-h-[80px] resize-none ${isReadOnly ? "bg-slate-50 dark:bg-slate-800 text-slate-500 border-slate-200" : ""}`}
                 />
               </div>
 
@@ -165,23 +371,25 @@ const TecnicoDashboard = () => {
                   value={formData.solucao}
                   onChange={handleChange}
                   placeholder="O que foi feito..."
-                  className="min-h-[80px] resize-none"
+                  disabled={isReadOnly}
+                  className={`min-h-[80px] resize-none ${isReadOnly ? "bg-slate-50 dark:bg-slate-800 text-slate-500 border-slate-200" : ""}`}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Unidade / Seção <span className="text-red-500">*</span></Label>
+                <div className="space-y-2 flex flex-col">
+                  <Label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Unidade / Seção <span className="text-red-500">*</span></Label>
                   <UnidadeCombobox 
                     value={formData.unidade} 
                     onChange={(val) => handleSelectChange("unidade", val)} 
+                    disabled={isReadOnly}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-500">Status <span className="text-red-500">*</span></Label>
-                  <Select value={formData.status} onValueChange={(val) => handleSelectChange("status", val)}>
-                    <SelectTrigger className="h-12">
+                  <Select value={formData.status} onValueChange={(val) => handleSelectChange("status", val)} disabled={isReadOnly}>
+                    <SelectTrigger className={`h-12 ${isReadOnly ? "bg-slate-50 dark:bg-slate-800 text-slate-500 border-slate-200" : ""}`}>
                       <SelectValue placeholder="Selecione..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -201,7 +409,8 @@ const TecnicoDashboard = () => {
                     name="horario"
                     value={formData.horario}
                     onChange={handleChange}
-                    className="h-12"
+                    disabled={isReadOnly}
+                    className={`h-12 ${isReadOnly ? "bg-slate-50 dark:bg-slate-800 text-slate-500 border-slate-200" : ""}`}
                   />
                 </div>
                 <div className="space-y-2">
@@ -211,22 +420,41 @@ const TecnicoDashboard = () => {
                     name="horario_saida"
                     value={formData.horario_saida}
                     onChange={handleChange}
-                    className="h-12"
+                    disabled={isReadOnly}
+                    className={`h-12 ${isReadOnly ? "bg-slate-50 dark:bg-slate-800 text-slate-500 border-slate-200" : ""}`}
                   />
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full h-14 bg-[#004e9a] hover:bg-[#003d7a] text-white font-black text-lg uppercase tracking-widest shadow-lg rounded-xl mt-4"
-                disabled={isLoading}
-              >
-                {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : (
-                  <>
-                    <Send className="h-5 w-5 mr-2" /> GRAVAR O.S
-                  </>
-                )}
-              </Button>
+              {isReadOnly ? (
+                <div className="p-4 bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-900/50 rounded-2xl text-center shadow-inner mt-4 animate-in slide-in-from-bottom duration-300">
+                  <p className="text-xs font-black text-amber-700 dark:text-amber-400 flex items-center justify-center gap-1.5 uppercase tracking-wider">
+                    <Lock className="h-3.5 w-3.5" /> Modo de Visualização Ativo
+                  </p>
+                  <p className="text-[11px] font-medium text-amber-600 dark:text-amber-500 mt-1">
+                    Técnicos possuem permissão apenas para visualizar chamados anteriores.
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={handleNewCall}
+                    className="mt-3.5 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase py-2 h-10 rounded-xl transition-all shadow-md shadow-emerald-500/10"
+                  >
+                    Abrir Nova O.S (Chamado)
+                  </Button>
+                </div>
+              ) : (
+                <Button 
+                  type="submit" 
+                  className="w-full h-14 bg-[#004e9a] hover:bg-[#003d7a] text-white font-black text-lg uppercase tracking-widest shadow-lg rounded-xl mt-4 transition-all"
+                  disabled={isLoading}
+                >
+                  {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : (
+                    <>
+                      <Send className="h-5 w-5 mr-2" /> GRAVAR O.S
+                    </>
+                  )}
+                </Button>
+              )}
             </form>
           </CardContent>
         </Card>
