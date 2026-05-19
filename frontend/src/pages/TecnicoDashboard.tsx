@@ -244,9 +244,16 @@ const TecnicoDashboard = () => {
       <main className="flex-1 w-full max-w-lg mx-auto p-4 md:p-6 animate-in fade-in duration-500 flex flex-col justify-center">
         <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-md dark:bg-slate-900 overflow-hidden rounded-2xl mb-8">
           <CardHeader className="bg-[#004e9a] text-white p-6 pb-8 relative">
-            <CardTitle className="text-2xl font-black flex items-center gap-3">
-              <PenTool className="h-6 w-6" />
-              {isReadOnly ? `Visualizando O.S ${currentOsRecord?.os}` : "Nova Missão Interna"}
+            <CardTitle className="text-2xl font-black flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-3">
+                <PenTool className="h-6 w-6 text-blue-100" />
+                <span>{isReadOnly ? `O.S ${currentOsRecord?.os}` : "Nova Missão Interna"}</span>
+              </div>
+              {!isReadOnly && (
+                <span className="text-[10px] tracking-widest font-black uppercase text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded-md border border-emerald-500/30 shadow-sm animate-pulse">
+                  Novo Chamado
+                </span>
+              )}
             </CardTitle>
             <CardDescription className="text-blue-100 font-medium text-sm">
               {isReadOnly ? "Modo de Leitura (Histórico)" : "Abertura de O.S (Uso Exclusivo Técnico)"}
@@ -266,15 +273,7 @@ const TecnicoDashboard = () => {
               <ChevronLeft className="h-4 w-4 mr-1" /> Anterior
             </Button>
 
-            <div className="text-center">
-              {!isReadOnly && (
-                <span className="text-xs font-black uppercase text-emerald-600 dark:text-emerald-400 bg-emerald-100/60 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-200/50 dark:border-emerald-900/50 shadow-sm">
-                  Novo Chamado
-                </span>
-              )}
-            </div>
-
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               {isReadOnly && (
                 <Button
                   type="button"
