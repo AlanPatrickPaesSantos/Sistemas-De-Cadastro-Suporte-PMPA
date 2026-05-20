@@ -299,11 +299,6 @@ const TecnicoDashboard = () => {
                 <PenTool className="h-6 w-6 text-blue-100" />
                 <span>{isReadOnly ? `O.S ${currentOsRecord?.os}` : "Nova Missão Interna"}</span>
               </div>
-              {!isReadOnly && (
-                <span className="text-[10px] tracking-widest font-black uppercase text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded-md border border-emerald-500/30 shadow-sm animate-pulse">
-                  Novo Chamado
-                </span>
-              )}
             </CardTitle>
             <CardDescription className="text-blue-100 font-medium text-sm">
               {isReadOnly ? "Modo de Leitura (Histórico)" : "Abertura de O.S (Uso Exclusivo Técnico)"}
