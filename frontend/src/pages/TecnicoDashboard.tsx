@@ -96,7 +96,7 @@ const TecnicoDashboard = () => {
     }
 
     try {
-      let osToQuery: number;
+      let url: string;
 
       if (currentOsRecord === null) {
         // Buscamos a última O.S no sistema
@@ -110,14 +110,21 @@ const TecnicoDashboard = () => {
           toast.warning("Não há O.S registradas no sistema.");
           return;
         }
-        osToQuery = latestOs;
+
+        // Se estamos no modo de criação e clicamos em "Anterior",
+        // queremos carregar diretamente a última O.S (sem aplicar "prev" sobre ela)
+        if (direction === "prev") {
+          url = `${API_BASE}/missoes/${latestOs}`;
+        } else {
+          url = `${API_BASE}/missoes/${latestOs}/${direction}`;
+        }
       } else {
-        osToQuery = currentOsRecord.os;
+        url = `${API_BASE}/missoes/${currentOsRecord.os}/${direction}`;
       }
 
       setIsNavLoading(true);
       const token = localStorage.getItem("ditel_token");
-      const res = await fetch(`${API_BASE}/missoes/${osToQuery}/${direction}`, {
+      const res = await fetch(url, {
         headers: { "Authorization": `Bearer ${token}` }
       });
 
