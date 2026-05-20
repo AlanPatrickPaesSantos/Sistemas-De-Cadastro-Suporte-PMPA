@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/contexts/AuthContext";
 import { API_BASE } from "@/lib/api-config";
 import { toast } from "sonner";
-import { Loader2, Send, PenTool, ChevronLeft, ChevronRight, Plus, Lock } from "lucide-react";
+import { Loader2, Send, PenTool, ChevronLeft, ChevronRight, Plus, Lock, Search } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UnidadeCombobox } from "@/components/UnidadeCombobox";
@@ -20,6 +20,7 @@ const TecnicoDashboard = () => {
   const [hasNext, setHasNext] = useState(false);
   const [isNavLoading, setIsNavLoading] = useState(false);
   const [draftFormData, setDraftFormData] = useState<any>(null);
+  const [searchOs, setSearchOs] = useState("");
 
   const [formData, setFormData] = useState(() => {
     // Tenta recuperar rascunho ativo
@@ -154,6 +155,48 @@ const TecnicoDashboard = () => {
     }
   };
 
+  const handleSearch = async (osNumberToSearch?: string) => {
+    const osToSearch = osNumberToSearch || searchOs;
+    if (!osToSearch) return;
+
+    setIsNavLoading(true);
+    try {
+      const token = localStorage.getItem("ditel_token");
+      const res = await fetch(`${API_BASE}/missoes/${osToSearch}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+
+      if (!res.ok) {
+        throw new Error("O.S não encontrada");
+      }
+
+      const data = await res.json();
+      setCurrentOsRecord(data.record);
+      setHasPrev(data.hasPrev);
+      setHasNext(data.hasNext);
+
+      setFormData({
+        tecnicos: data.record.tecnicos || "",
+        solicitante: data.record.solicitante || "",
+        def_recla: data.record.def_recla || "",
+        solucao: data.record.solucao || "",
+        horario: data.record.horario || "",
+        horario_saida: data.record.horario_saida || "",
+        data: data.record.data ? new Date(data.record.data).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+        categoria: data.record.categoria || "interno",
+        unidade: data.record.unidade || "",
+        status: data.record.status || "Pendente"
+      });
+
+      toast.success(`Visualizando O.S ${data.record.os}`);
+      setSearchOs("");
+    } catch (err) {
+      toast.error("O.S não encontrada no sistema.");
+    } finally {
+      setIsNavLoading(false);
+    }
+  };
+
   // Retorna para o Modo de Criação (Novo Chamado)
   const handleNewCall = () => {
     setCurrentOsRecord(null);
@@ -260,31 +303,64 @@ const TecnicoDashboard = () => {
             </CardDescription>
           </CardHeader>
 
-          {/* Barra de Navegação Rápida entre O.S */}
-          <div className="flex items-center justify-between p-3 border-b bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800">
+          {/* Barra de Pesquisa de O.S */}
+          <div className="p-4 border-b bg-slate-50/50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800 flex gap-2">
+            <div className="relative flex-1">
+              <Input
+                type="number"
+                placeholder="Buscar por O.S..."
+                value={searchOs}
+                onChange={(e) => setSearchOs(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSearch();
+                  }
+                }}
+                className="h-10 pr-10 rounded-xl bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 focus-visible:ring-1 focus-visible:ring-[#004e9a]"
+              />
+              <Search className="absolute right-3 top-3 h-4 w-4 text-slate-400 pointer-events-none" />
+            </div>
             <Button
               type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => handleNavigate("prev")}
-              disabled={isNavLoading}
-              className="text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800"
+              onClick={() => handleSearch()}
+              disabled={isNavLoading || !searchOs}
+              className="bg-[#004e9a] hover:bg-[#003d7a] text-white px-4 h-10 rounded-xl font-bold text-xs"
             >
-              <ChevronLeft className="h-4 w-4 mr-1" /> Anterior
+              Buscar
             </Button>
+          </div>
 
-            <div className="flex items-center gap-1.5">
+          {/* Barra de Navegação Rápida entre O.S */}
+          <div className="grid grid-cols-3 items-center p-3 border-b bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-slate-800">
+            <div className="flex justify-start">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => handleNavigate("prev")}
+                disabled={isNavLoading}
+                className="text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800"
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" /> Anterior
+              </Button>
+            </div>
+
+            <div className="flex justify-center">
               {isReadOnly && (
                 <Button
                   type="button"
                   variant="default"
                   size="sm"
                   onClick={handleNewCall}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs h-8 px-2.5 rounded-lg flex items-center shadow-sm"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs h-8 px-2.5 rounded-lg flex items-center shadow-sm animate-in fade-in zoom-in-90 duration-200"
                 >
                   <Plus className="h-3 w-3 mr-1" /> Novo
                 </Button>
               )}
+            </div>
+
+            <div className="flex justify-end">
               <Button
                 type="button"
                 variant="ghost"
