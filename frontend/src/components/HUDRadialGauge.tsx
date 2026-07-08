@@ -73,17 +73,8 @@ export function HUDRadialGauge({
           <span className="block text-[10px] md:text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">
             {title}
           </span>
-          <p className="text-lg md:text-xl font-black text-slate-800 dark:text-white tracking-tight leading-none flex items-baseline">
-            {isLoading ? (
-              "Buscando..."
-            ) : (
-              <>
-                <span>{value}</span>
-                <span className="ml-1.5 text-sm font-semibold text-slate-500 dark:text-slate-400">
-                  {value === 1 ? suffixSingular : suffixPlural}
-                </span>
-              </>
-            )}
+          <p className="text-lg md:text-xl font-black text-slate-800 dark:text-white tracking-tight leading-none">
+            {isLoading ? "Buscando..." : (value === 1 ? suffixSingular : suffixPlural)}
           </p>
         </div>
       </div>
