@@ -74,7 +74,7 @@ export function HUDRadialGauge({
             {title}
           </span>
           <p className="text-lg md:text-xl font-black text-slate-800 dark:text-white tracking-tight leading-none">
-            {isLoading ? "Buscando..." : `${value} ${value === 1 ? suffixSingular : suffixPlural}`}
+            {isLoading ? "Buscando..." : <>{value} {value === 1 ? suffixSingular : suffixPlural}</>}
           </p>
         </div>
       </div>
