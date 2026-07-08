@@ -33,3 +33,15 @@ backend/debug_parts.txt
 backend/final_check*.json
 backend/remoto_os.txt
 backend/unique_legacy_services.txt
+
+# Auditorias, Backups e Relatórios de Segurança
+auditoria-ditel-geral/
+*backup*.json
+final_check*.json
+*.jsonl
+fase-1-seguranca-ditel-relatorio.txt
+.env
+frontend/vite.config.ts.timestamp-*.mjs
+auditoria-inicial.sh
+fase-1-diff-review.txt
+fase-*.txt

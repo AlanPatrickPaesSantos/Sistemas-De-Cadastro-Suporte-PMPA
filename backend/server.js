@@ -4,6 +4,8 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 // Carregamento resiliente do .env (Apenas se o arquivo existir localmente)
 const envPath = path.resolve(__dirname, '.env');
@@ -31,9 +33,39 @@ const jwt = require('jsonwebtoken');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// Configuração do CORS com Restrições (Abordagem Segura)
+const allowedOrigins = [
+  process.env.CORS_ORIGIN,
+  process.env.RENDER_EXTERNAL_URL,
+  'http://localhost:5173',
+  'http://localhost:5001'
+].filter(Boolean);
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Permite requisições sem cabeçalho Origin (como self-ping, health checks, curl, Postman)
+    if (!origin) return callback(null, true);
+    
+    // Em desenvolvimento (NODE_ENV !== 'production'), aceita localhost e 127.0.0.1
+    if (process.env.NODE_ENV !== 'production' && (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1'))) {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Bloqueado pelas diretrizes de CORS da PMPA'));
+    }
+  }
+}));
+
+// Configuração temporária do Helmet (CSP: false temporariamente para não quebrar o React SPA estático)
+app.use(helmet({
+  contentSecurityPolicy: false,
+}));
+
+// Limitação rígida de payload JSON no Express para 100kb
+app.use(express.json({ limit: '100kb' }));
 
 // MongoDB Connection
 if (!process.env.MONGODB_URI) {
@@ -58,6 +90,24 @@ const Chamado = require('./models/Chamado');
 const RelatorioQualidade = require('./models/RelatorioQualidade');
 const bcrypt = require('bcryptjs');
 const verificarToken = require('./middleware/authMiddleware');
+const { bloquearVisualizador } = require('./middleware/roleMiddleware');
+
+// Helper centralizado para tratamento de erros (oculta stack trace em produção)
+function sendServerError(res, err, fallback = 'Erro interno ao processar requisição.') {
+  console.error('SERVER ERROR:', err);
+  return res.status(500).json({
+    error: process.env.NODE_ENV === 'production' ? fallback : err.message
+  });
+}
+
+// Configuração do Rate Limiter para Login
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // Janela de 15 minutos
+  max: 20, // Limite de 20 tentativas por IP
+  message: { success: false, error: 'Muitas tentativas de login a partir deste IP. Tente novamente em 15 minutos.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 const escapeRegex = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -81,7 +131,7 @@ if (EXTERNAL_URL) {
 }
 
 // ====== ROTA DE AUTENTICAÇÃO ======
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', loginLimiter, async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -90,12 +140,12 @@ app.post('/api/auth/login', async (req, res) => {
 
     const user = await Usuario.findOne({ username: username.toLowerCase() }).lean();
     if (!user) {
-      return res.status(401).json({ success: false, error: 'Acesso Negado: Usuário incorreto ou inexistente.' });
+      return res.status(401).json({ success: false, error: 'Usuário ou senha inválidos.' });
     }
 
     const senhaValida = await bcrypt.compare(password, user.password);
     if (!senhaValida) {
-      return res.status(401).json({ success: false, error: 'Acesso Negado: Senha inválida.' });
+      return res.status(401).json({ success: false, error: 'Usuário ou senha inválidos.' });
     }
 
     // Segurança de Token: Utiliza a chave devidamente configurada no ambiente
@@ -114,19 +164,18 @@ app.post('/api/auth/login', async (req, res) => {
     
     res.json({ success: true, token, username: user.username, papel: user.papel, nomeCompleto: user.nomeCompleto, unidadeVinculada: user.unidadeVinculada || 'DITEL' });
   } catch (err) {
-    console.error('Erro no login:', err);
-    res.status(500).json({ success: false, error: 'Erro de Autenticação no Servidor.' });
+    return sendServerError(res, err, 'Erro de Autenticação no Servidor.');
   }
 });
 
 // APLICAÇÃO DE BLOQUEIO GLOBAL: Daqui para baixo, todas essas rotas exigem Token (Sessão Logada)
-app.use('/api/servicos', verificarToken);
-app.use('/api/missoes', verificarToken);
-app.use('/api/unidades', verificarToken);
-app.use('/api/eqsuporte', verificarToken);
+app.use('/api/servicos', verificarToken, bloquearVisualizador);
+app.use('/api/missoes', verificarToken, bloquearVisualizador);
+app.use('/api/unidades', verificarToken, bloquearVisualizador);
+app.use('/api/eqsuporte', verificarToken, bloquearVisualizador);
 app.use('/api/stats', verificarToken);
-app.use('/api/chamados', verificarToken);
-app.use('/api/relatorios-qualidade', verificarToken);
+app.use('/api/chamados', verificarToken, bloquearVisualizador);
+app.use('/api/relatorios-qualidade', verificarToken, bloquearVisualizador);
 
 // Middleware adicional para verificar se é ADMIN
 const verificarAdmin = (req, res, next) => {
@@ -143,7 +192,7 @@ app.get('/api/usuarios', verificarToken, verificarAdmin, async (req, res) => {
     const usuarios = await Usuario.find({}, '-password').sort({ username: 1 }).lean();
     res.json(usuarios);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao listar usuários.');
   }
 });
 
@@ -173,7 +222,7 @@ app.post('/api/usuarios', verificarToken, verificarAdmin, async (req, res) => {
     await novo.save();
     res.status(201).json({ success: true, user: { _id: novo._id, username: novo.username, papel: novo.papel } });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao criar usuário.');
   }
 });
 
@@ -195,7 +244,7 @@ app.put('/api/usuarios/:id', verificarToken, verificarAdmin, async (req, res) =>
     
     res.json({ success: true, user: updated });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao atualizar usuário.');
   }
 });
 
@@ -211,7 +260,7 @@ app.delete('/api/usuarios/:id', verificarToken, verificarAdmin, async (req, res)
     
     res.json({ success: true, message: 'Usuário removido com sucesso.' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao remover usuário.');
   }
 });
 
@@ -331,14 +380,31 @@ app.get('/api/servicos/:id', async (req, res) => {
     const record = await Servico.findOne({ Id_cod: id_num }).lean();
     if (!record) return res.status(404).json({ error: 'Registro não encontrado' });
 
+    // Regra de escopo de unidade (IDOR)
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      const userUnit = req.user.unidadeVinculada.trim().toUpperCase();
+      const recordUnit = String(record.Unidade || '').trim().toUpperCase();
+      if (userUnit !== recordUnit) {
+        return res.status(403).json({ error: 'Acesso negado: Este registro pertence a outra unidade.' });
+      }
+    }
+
+    // Filtros de navegação respeitando o escopo do usuário
+    let prevQuery = { Id_cod: { $lt: id_num } };
+    let nextQuery = { Id_cod: { $gt: id_num } };
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      prevQuery.Unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+      nextQuery.Unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+    }
+
     const [hasPrev, hasNext] = await Promise.all([
-      Servico.exists({ Id_cod: { $lt: id_num } }),
-      Servico.exists({ Id_cod: { $gt: id_num } })
+      Servico.exists(prevQuery),
+      Servico.exists(nextQuery)
     ]);
 
     res.json({ record, hasPrev: !!hasPrev, hasNext: !!hasNext });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao obter registro.');
   }
 });
 
@@ -346,17 +412,42 @@ app.get('/api/servicos/:id', async (req, res) => {
 app.get('/api/servicos/:id/prev', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const record = await Servico.findOne({ Id_cod: { $lt: id } }).sort({ Id_cod: -1 }).lean();
+    
+    // Verifica acesso ao registro de origem (IDOR)
+    const currentRecord = await Servico.findOne({ Id_cod: id }).lean();
+    if (currentRecord) {
+      if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+        const userUnit = req.user.unidadeVinculada.trim().toUpperCase();
+        const recordUnit = String(currentRecord.Unidade || '').trim().toUpperCase();
+        if (userUnit !== recordUnit) {
+          return res.status(403).json({ error: 'Acesso negado: Este registro pertence a outra unidade.' });
+        }
+      }
+    }
+
+    let query = { Id_cod: { $lt: id } };
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      query.Unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+    }
+
+    const record = await Servico.findOne(query).sort({ Id_cod: -1 }).lean();
     if (!record) return res.status(404).json({ error: 'Sem registro anterior' });
 
+    let prevQuery = { Id_cod: { $lt: record.Id_cod } };
+    let nextQuery = { Id_cod: { $gt: record.Id_cod } };
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      prevQuery.Unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+      nextQuery.Unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+    }
+
     const [hasPrev, hasNext] = await Promise.all([
-      Servico.exists({ Id_cod: { $lt: record.Id_cod } }),
-      Servico.exists({ Id_cod: { $gt: record.Id_cod } })
+      Servico.exists(prevQuery),
+      Servico.exists(nextQuery)
     ]);
 
     res.json({ record, hasPrev: !!hasPrev, hasNext: !!hasNext });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao obter registro anterior.');
   }
 });
 
@@ -364,19 +455,46 @@ app.get('/api/servicos/:id/prev', async (req, res) => {
 app.get('/api/servicos/:id/next', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const record = await Servico.findOne({ Id_cod: { $gt: id } }).sort({ Id_cod: 1 }).lean();
+    
+    // Verifica acesso ao registro de origem (IDOR)
+    const currentRecord = await Servico.findOne({ Id_cod: id }).lean();
+    if (currentRecord) {
+      if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+        const userUnit = req.user.unidadeVinculada.trim().toUpperCase();
+        const recordUnit = String(currentRecord.Unidade || '').trim().toUpperCase();
+        if (userUnit !== recordUnit) {
+          return res.status(403).json({ error: 'Acesso negado: Este registro pertence a outra unidade.' });
+        }
+      }
+    }
+
+    let query = { Id_cod: { $gt: id } };
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      query.Unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+    }
+
+    const record = await Servico.findOne(query).sort({ Id_cod: 1 }).lean();
     if (!record) return res.status(404).json({ error: 'Sem próximo registro' });
 
+    let prevQuery = { Id_cod: { $lt: record.Id_cod } };
+    let nextQuery = { Id_cod: { $gt: record.Id_cod } };
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      prevQuery.Unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+      nextQuery.Unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+    }
+
     const [hasPrev, hasNext] = await Promise.all([
-      Servico.exists({ Id_cod: { $lt: record.Id_cod } }),
-      Servico.exists({ Id_cod: { $gt: record.Id_cod } })
+      Servico.exists(prevQuery),
+      Servico.exists(nextQuery)
     ]);
 
     res.json({ record, hasPrev: !!hasPrev, hasNext: !!hasNext });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao obter próximo registro.');
   }
 });
+
+// ====== ROTAS DE UNIDADES (SIMPLES E CRUD) ======
 
 // ====== ROTAS DE UNIDADES (SIMPLES E CRUD) ======
 
@@ -386,7 +504,7 @@ app.get('/api/unidades', async (req, res) => {
     const unidades = await Unidade.find({}, 'UNIDADE').sort({ UNIDADE: 1 }).lean();
     res.json(unidades.map(u => u.UNIDADE));
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao listar siglas de unidades.');
   }
 });
 
@@ -403,7 +521,7 @@ app.get('/api/unidades/list', async (req, res) => {
     const unidades = await Unidade.find(query).sort({ ID_UNID_SEÇÃO: 1 }).lean();
     res.json(unidades);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao listar unidades.');
   }
 });
 
@@ -413,7 +531,7 @@ app.get('/api/unidades/next-id', async (req, res) => {
     const last = await Unidade.findOne().sort({ ID_UNID_SEÇÃO: -1 }).lean();
     res.json({ nextId: last && last.ID_UNID_SEÇÃO ? last.ID_UNID_SEÇÃO + 1 : 1 });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao obter próximo ID de unidade.');
   }
 });
 
@@ -445,7 +563,7 @@ app.post('/api/unidades', async (req, res) => {
     await novaUnidade.save();
     res.status(201).json({ success: true, unidade: novaUnidade });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao criar unidade.');
   }
 });
 
@@ -480,7 +598,7 @@ app.put('/api/unidades/:id', async (req, res) => {
     if (!updated) return res.status(404).json({ error: 'Unidade não encontrada.' });
     res.json({ success: true, unidade: updated });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao atualizar unidade.');
   }
 });
 
@@ -493,7 +611,7 @@ app.delete('/api/unidades/:id', async (req, res) => {
     if (!deleted) return res.status(404).json({ error: 'Unidade não encontrada.' });
     res.json({ success: true, message: 'Unidade removida com sucesso.' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao excluir unidade.');
   }
 });
 
@@ -506,7 +624,7 @@ app.get('/api/eqsuporte', async (req, res) => {
     const equips = await EqSuporte.find({}, 'EQUIPAMENTO').sort({ EQUIPAMENTO: 1 }).lean();
     res.json(equips.map(e => e.EQUIPAMENTO));
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao listar equipamentos de suporte.');
   }
 });
 
@@ -521,7 +639,7 @@ app.get('/api/eqsuporte/list', async (req, res) => {
     const equips = await EqSuporte.find(query).sort({ ID_EQUIP: 1 }).lean();
     res.json(equips);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao buscar equipamentos de suporte.');
   }
 });
 
@@ -531,7 +649,7 @@ app.get('/api/eqsuporte/next-id', async (req, res) => {
     const last = await EqSuporte.findOne().sort({ ID_EQUIP: -1 }).lean();
     res.json({ nextId: last && last.ID_EQUIP ? last.ID_EQUIP + 1 : 1 });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao obter próximo ID de equipamento.');
   }
 });
 
@@ -556,7 +674,7 @@ app.post('/api/eqsuporte', async (req, res) => {
     await novo.save();
     res.status(201).json({ success: true, equipamento: novo });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao criar equipamento de suporte.');
   }
 });
 
@@ -589,7 +707,7 @@ app.put('/api/eqsuporte/:id', async (req, res) => {
     if (!updated) return res.status(404).json({ error: 'Equipamento não encontrado.' });
     res.json({ success: true, equipamento: updated });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao atualizar equipamento de suporte.');
   }
 });
 
@@ -601,7 +719,7 @@ app.delete('/api/eqsuporte/:id', async (req, res) => {
     if (!deleted) return res.status(404).json({ error: 'Equipamento não encontrado.' });
     res.json({ success: true, message: 'Equipamento removido com sucesso.' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao excluir equipamento de suporte.');
   }
 });
 
@@ -610,6 +728,11 @@ app.delete('/api/eqsuporte/:id', async (req, res) => {
 app.post('/api/servicos', async (req, res) => {
   try {
     const data = req.body;
+    
+    // Forçar a unidade do usuário logado se não for Admin/DITEL
+    const userIsAdminOrDitel = req.user && (req.user.papel === 'admin' || req.user.unidadeVinculada === 'DITEL');
+    const finalUnidade = userIsAdminOrDitel ? (data.unidade || '') : req.user.unidadeVinculada;
+
     let saved = false;
     let retries = 0;
     let novoRecord = null;
@@ -626,7 +749,7 @@ app.post('/api/servicos', async (req, res) => {
           Tecnico: data.tecnico || '',
           T_EquipSuporte: data.tEquipSuporte || '',
           Solicitante: data.solicitante || '',
-          Unidade: data.unidade || '',
+          Unidade: finalUnidade,
           'Nº_PAE': data.nPae || '',
           RP: data.rp || '',
           'Nº_Serie': data.nSerie || '',
@@ -666,10 +789,9 @@ app.post('/api/servicos', async (req, res) => {
 
     res.status(201).json({ success: true, os: finalId, record: novoRecord });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao criar registro de serviço.');
   }
 });
-
 
 // Atualizar registro existente
 app.put('/api/servicos/:id', async (req, res) => {
@@ -677,40 +799,50 @@ app.put('/api/servicos/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     const data = req.body;
 
-    const updated = await Servico.findOneAndUpdate(
-      { Id_cod: id },
-      {
-        $set: {
-          Tecnico: data.tecnico || '',
-          T_EquipSuporte: data.tEquipSuporte || '',
-          Solicitante: data.solicitante || '',
-          Unidade: data.unidade || '',
-          'Nº_PAE': data.nPae || '',
-          RP: data.rp || '',
-          'Nº_Serie': data.nSerie || '',
-          Defeito_Recl: data.defeitoRecl || '',
-          Analise_Tecnica: data.analiseTecnica || '',
-          'Serviço': data.servico || '',
-          Garantia: data.garantia || '',
-          Laudo_Tecnico: data.laudoTecnico || '',
-          Data_Ent: data.dataEnt ? new Date(data.dataEnt) : undefined,
-          Data_Envio: data.dataEnvio ? new Date(data.dataEnvio) : null,
-          Data_Retorno: data.dataRetorno ? new Date(data.dataRetorno) : null,
-          Data_Saida: data.dataSaida ? new Date(data.dataSaida) : null,
-          saidaEquip: data.saidaEquip || '',
-          Bateria: data.bateria || '',
-          telefone: data.telefone || '',
-          Seção_Ditel: data.secaoDitel || '',
-          fonteCabo: data.fonteCabo || false,
-        }
-      },
-      { new: true }
-    );
+    const existingRecord = await Servico.findOne({ Id_cod: id });
+    if (!existingRecord) {
+      return res.status(404).json({ error: 'Registro não encontrado' });
+    }
 
-    if (!updated) return res.status(404).json({ error: 'Registro não encontrado' });
-    res.json({ success: true, record: updated });
+    // Regra de escopo de unidade (IDOR)
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      const userUnit = req.user.unidadeVinculada.trim().toUpperCase();
+      const recordUnit = String(existingRecord.Unidade || '').trim().toUpperCase();
+      if (userUnit !== recordUnit) {
+        return res.status(403).json({ error: 'Acesso negado: Este registro pertence a outra unidade.' });
+      }
+    }
+
+    // Forçar a unidade do usuário logado se não for Admin/DITEL
+    const userIsAdminOrDitel = req.user && (req.user.papel === 'admin' || req.user.unidadeVinculada === 'DITEL');
+    const finalUnidade = userIsAdminOrDitel ? (data.unidade || '') : req.user.unidadeVinculada;
+
+    existingRecord.Tecnico = data.tecnico || '';
+    existingRecord.T_EquipSuporte = data.tEquipSuporte || '';
+    existingRecord.Solicitante = data.solicitante || '';
+    existingRecord.Unidade = finalUnidade;
+    existingRecord['Nº_PAE'] = data.nPae || '';
+    existingRecord.RP = data.rp || '';
+    existingRecord['Nº_Serie'] = data.nSerie || '';
+    existingRecord.Defeito_Recl = data.defeitoRecl || '';
+    existingRecord.Analise_Tecnica = data.analiseTecnica || '';
+    existingRecord['Serviço'] = data.servico || '';
+    existingRecord.Garantia = data.garantia || '';
+    existingRecord.Laudo_Tecnico = data.laudoTecnico || '';
+    if (data.dataEnt) existingRecord.Data_Ent = new Date(data.dataEnt);
+    existingRecord.Data_Envio = data.dataEnvio ? new Date(data.dataEnvio) : null;
+    existingRecord.Data_Retorno = data.dataRetorno ? new Date(data.dataRetorno) : null;
+    existingRecord.Data_Saida = data.dataSaida ? new Date(data.dataSaida) : null;
+    existingRecord.saidaEquip = data.saidaEquip || '';
+    existingRecord.Bateria = data.bateria || '';
+    existingRecord.telefone = data.telefone || '',
+    existingRecord.Seção_Ditel = data.secaoDitel || '',
+    existingRecord.fonteCabo = data.fonteCabo || false,
+
+    await existingRecord.save();
+    res.json({ success: true, record: existingRecord });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao atualizar registro de serviço.');
   }
 });
 
@@ -718,11 +850,25 @@ app.put('/api/servicos/:id', async (req, res) => {
 app.delete('/api/servicos/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const deleted = await Servico.findOneAndDelete({ Id_cod: id });
-    if (!deleted) return res.status(404).json({ error: 'Registro não encontrado' });
+
+    const existingRecord = await Servico.findOne({ Id_cod: id });
+    if (!existingRecord) {
+      return res.status(404).json({ error: 'Registro não encontrado' });
+    }
+
+    // Regra de escopo de unidade (IDOR)
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      const userUnit = req.user.unidadeVinculada.trim().toUpperCase();
+      const recordUnit = String(existingRecord.Unidade || '').trim().toUpperCase();
+      if (userUnit !== recordUnit) {
+        return res.status(403).json({ error: 'Acesso negado: Este registro pertence a outra unidade.' });
+      }
+    }
+
+    await Servico.deleteOne({ Id_cod: id });
     res.json({ success: true, message: 'Registro excluído com sucesso.' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao excluir registro.');
   }
 });
 
@@ -931,7 +1077,7 @@ app.get('/api/missoes/next-os', async (req, res) => {
     const last = await Missao.findOne({}, 'os').sort({ os: -1 }).lean();
     res.json({ nextOs: last ? last.os + 1 : 1 });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao obter próxima OS de missão.');
   }
 });
 
@@ -942,10 +1088,26 @@ app.get('/api/missoes/:id', async (req, res) => {
     const missao = await Missao.findOne({ os: os }).lean();
     if (!missao) return res.status(404).json({ error: 'Missão não encontrada' });
     
-    // Verifica se existem adjacentes para controle de UI
+    // Regra de escopo de unidade (IDOR)
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      const userUnit = req.user.unidadeVinculada.trim().toUpperCase();
+      const recordUnit = String(missao.unidade || '').trim().toUpperCase();
+      if (userUnit !== recordUnit) {
+        return res.status(403).json({ error: 'Acesso negado: Esta missão pertence a outra unidade.' });
+      }
+    }
+
+    // Busca de adjacentes respeitando escopo de unidade
+    let prevQuery = { os: { $lt: os } };
+    let nextQuery = { os: { $gt: os } };
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      prevQuery.unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+      nextQuery.unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+    }
+
     const [prev, next] = await Promise.all([
-      Missao.findOne({ os: { $lt: os } }, 'os').sort({ os: -1 }),
-      Missao.findOne({ os: { $gt: os } }, 'os').sort({ os: 1 })
+      Missao.findOne(prevQuery, 'os').sort({ os: -1 }),
+      Missao.findOne(nextQuery, 'os').sort({ os: 1 })
     ]);
 
     res.json({ 
@@ -954,7 +1116,7 @@ app.get('/api/missoes/:id', async (req, res) => {
       hasNext: !!next 
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao buscar missão.');
   }
 });
 
@@ -964,25 +1126,49 @@ app.get('/api/missoes/:id/:direction', async (req, res) => {
     const os = parseInt(req.params.id);
     const { direction } = req.params;
     
-    let record;
-    if (direction === 'prev') {
-      record = await Missao.findOne({ os: { $lt: os } }).sort({ os: -1 }).lean();
-    } else {
-      record = await Missao.findOne({ os: { $gt: os } }).sort({ os: 1 }).lean();
+    // Verifica acesso ao registro de origem (IDOR)
+    const currentMissao = await Missao.findOne({ os: os }).lean();
+    if (currentMissao) {
+      if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+        const userUnit = req.user.unidadeVinculada.trim().toUpperCase();
+        const recordUnit = String(currentMissao.unidade || '').trim().toUpperCase();
+        if (userUnit !== recordUnit) {
+          return res.status(403).json({ error: 'Acesso negado: Esta missão pertence a outra unidade.' });
+        }
+      }
     }
 
+    let query = {};
+    if (direction === 'prev') {
+      query.os = { $lt: os };
+    } else {
+      query.os = { $gt: os };
+    }
+
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      query.unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+    }
+
+    const record = await Missao.findOne(query).sort({ os: direction === 'prev' ? -1 : 1 }).lean();
     if (!record) return res.status(404).json({ error: 'Fim dos registros' });
 
-    // Re-checar adjacentes para o novo record
+    // Re-checar adjacentes para o novo record respeitando escopo
     const newOs = record.os;
+    let prevQuery = { os: { $lt: newOs } };
+    let nextQuery = { os: { $gt: newOs } };
+    if (req.user && req.user.papel !== 'admin' && req.user.unidadeVinculada && req.user.unidadeVinculada !== 'DITEL') {
+      prevQuery.unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+      nextQuery.unidade = { $regex: new RegExp(`^\\s*${escapeRegex(req.user.unidadeVinculada)}\\s*$`, 'i') };
+    }
+
     const [prev, next] = await Promise.all([
-      Missao.findOne({ os: { $lt: newOs } }, 'os').sort({ os: -1 }),
-      Missao.findOne({ os: { $gt: newOs } }, 'os').sort({ os: 1 })
+      Missao.findOne(prevQuery, 'os').sort({ os: -1 }),
+      Missao.findOne(nextQuery, 'os').sort({ os: 1 })
     ]);
 
     res.json({ record, hasPrev: !!prev, hasNext: !!next });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao navegar pelas missões.');
   }
 });
 
@@ -993,15 +1179,35 @@ app.post('/api/missoes', async (req, res) => {
     const last = await Missao.findOne({}, 'os').sort({ os: -1 }).lean();
     const nextOs = last ? last.os + 1 : 1;
 
-    const novaMissao = new Missao({
-      os: nextOs,
-      ...data
-    });
+    // Redução de Mass Assignment (Whitelist)
+    const camposPermitidos = [
+      'secao', 'data', 'horario', 'horario_saida', 'tecnicos', 'status',
+      'def_recla', 'solicitante', 'n_pae', 'servico', 'categoria',
+      'analise', 'observacao', 'solucao', 'relatorio', 'materiais'
+    ];
+    
+    const userIsAdminOrDitel = req.user && (req.user.papel === 'admin' || req.user.unidadeVinculada === 'DITEL');
+    if (userIsAdminOrDitel) {
+      camposPermitidos.push('unidade');
+    }
 
+    const novaMissaoData = { os: nextOs };
+    for (const campo of camposPermitidos) {
+      if (data[campo] !== undefined) {
+        novaMissaoData[campo] = data[campo];
+      }
+    }
+
+    // Forçar unidade do usuário não-admin/DITEL
+    if (!userIsAdminOrDitel) {
+      novaMissaoData.unidade = req.user.unidadeVinculada;
+    }
+
+    const novaMissao = new Missao(novaMissaoData);
     await novaMissao.save();
     res.status(201).json({ success: true, missao: novaMissao });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao criar missão.');
   }
 });
 
@@ -1011,20 +1217,46 @@ app.put('/api/missoes/:id', async (req, res) => {
     const os = parseInt(req.params.id);
     const data = req.body;
 
-    // Proteger IDs
-    delete data._id;
-    delete data.os;
+    const existingMissao = await Missao.findOne({ os: os });
+    if (!existingMissao) {
+      return res.status(404).json({ error: 'Missão não encontrada' });
+    }
 
-    const updated = await Missao.findOneAndUpdate(
-      { os: os },
-      { $set: data },
-      { new: true, lean: true }
-    );
+    // Regra de escopo de unidade (IDOR)
+    const userIsAdminOrDitel = req.user && (req.user.papel === 'admin' || req.user.unidadeVinculada === 'DITEL');
+    if (!userIsAdminOrDitel) {
+      const userUnit = req.user.unidadeVinculada.trim().toUpperCase();
+      const recordUnit = String(existingMissao.unidade || '').trim().toUpperCase();
+      if (userUnit !== recordUnit) {
+        return res.status(403).json({ error: 'Acesso negado: Esta missão pertence a outra unidade.' });
+      }
+    }
 
-    if (!updated) return res.status(404).json({ error: 'Missão não encontrada' });
-    res.json({ success: true, missao: updated });
+    // Redução de Mass Assignment (Whitelist)
+    const camposPermitidos = [
+      'secao', 'data', 'horario', 'horario_saida', 'tecnicos', 'status',
+      'def_recla', 'solicitante', 'n_pae', 'servico', 'categoria',
+      'analise', 'observacao', 'solucao', 'relatorio', 'materiais'
+    ];
+    if (userIsAdminOrDitel) {
+      camposPermitidos.push('unidade');
+    }
+
+    for (const campo of camposPermitidos) {
+      if (data[campo] !== undefined) {
+        existingMissao[campo] = data[campo];
+      }
+    }
+
+    // Forçar unidade do usuário não-admin/DITEL
+    if (!userIsAdminOrDitel) {
+      existingMissao.unidade = req.user.unidadeVinculada;
+    }
+
+    await existingMissao.save();
+    res.json({ success: true, missao: existingMissao });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao atualizar missão.');
   }
 });
 
@@ -1040,35 +1272,77 @@ app.get('/api/chamados', async (req, res) => {
     const chamados = await Chamado.find(query).sort({ dataAbertura: -1 }).lean();
     res.json(chamados);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao buscar chamados.');
   }
 });
 
 // Criar Chamado
 app.post('/api/chamados', async (req, res) => {
   try {
-    const dados = req.body;
-    dados.protocolo = 'DITEL-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 100000);
-    // Força a unidade do usuário logado se não for admin
-    if (req.user.papel !== 'admin') {
-      dados.unidadeSolicitante = req.user.unidadeVinculada;
+    const data = req.body;
+    
+    // Redução de Mass Assignment (Whitelist)
+    const camposPermitidos = [
+      'nomeSolicitante', 'contato', 'tipoDemanda', 'urgencia', 'numeroSerie',
+      'quantidade', 'boletimOcorrencia', 'unidadeDestino', 'descricao'
+    ];
+    
+    const userIsAdminOrDitel = req.user && (req.user.papel === 'admin' || req.user.unidadeVinculada === 'DITEL');
+    if (userIsAdminOrDitel) {
+      camposPermitidos.push('unidadeSolicitante');
     }
-    const novo = new Chamado(dados);
+
+    const novoChamadoData = {};
+    for (const campo of camposPermitidos) {
+      if (data[campo] !== undefined) {
+        novoChamadoData[campo] = data[campo];
+      }
+    }
+
+    // Forçar unidade do solicitante para não-admin
+    if (!userIsAdminOrDitel) {
+      novoChamadoData.unidadeSolicitante = req.user.unidadeVinculada;
+    }
+
+    novoChamadoData.protocolo = 'DITEL-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 100000);
+    novoChamadoData.status = 'pendente';
+    novoChamadoData.dataAbertura = new Date();
+
+    const novo = new Chamado(novoChamadoData);
     await novo.save();
     res.status(201).json({ success: true, chamado: novo });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao criar chamado.');
   }
 });
 
 // Atualizar Chamado (Aprovar/Recusar pelo Admin)
 app.put('/api/chamados/:id', verificarAdmin, async (req, res) => {
   try {
-    const updated = await Chamado.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
-    if (!updated) return res.status(404).json({ error: 'Chamado não encontrado' });
-    res.json({ success: true, chamado: updated });
+    const data = req.body;
+    
+    const existingChamado = await Chamado.findById(req.params.id);
+    if (!existingChamado) {
+      return res.status(404).json({ error: 'Chamado não encontrado' });
+    }
+
+    // Whitelist
+    const camposPermitidos = [
+      'unidadeSolicitante', 'nomeSolicitante', 'contato', 'tipoDemanda', 'urgencia',
+      'numeroSerie', 'quantidade', 'boletimOcorrencia', 'unidadeDestino', 'descricao',
+      'status', 'dataResolucao', 'respostaDitel'
+    ];
+
+    for (const campo of camposPermitidos) {
+      if (data[campo] !== undefined) {
+        existingChamado[campo] = data[campo];
+      }
+    }
+
+    await existingChamado.save();
+    res.json({ success: true, chamado: existingChamado });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao atualizar chamado.');
   }
 });
 
@@ -1083,27 +1357,46 @@ app.get('/api/relatorios-qualidade', async (req, res) => {
     const relatorios = await RelatorioQualidade.find(query).sort({ dataEnvio: -1 }).lean();
     res.json(relatorios);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao buscar relatórios de qualidade.');
   }
 });
 
 app.post('/api/relatorios-qualidade', async (req, res) => {
   try {
-    const dados = req.body;
-    if (req.user.papel !== 'admin') {
-      dados.unidade = req.user.unidadeVinculada;
-    }
+    const data = req.body;
     
+    // Whitelist
+    const camposPermitidos = [
+      'oficialResponsavel', 'mesReferencia', 'statusGeral', 'maiorNecessidade',
+      'equipamentos', 'relatorioLivre'
+    ];
+    
+    const userIsAdminOrDitel = req.user && (req.user.papel === 'admin' || req.user.unidadeVinculada === 'DITEL');
+    if (userIsAdminOrDitel) {
+      camposPermitidos.push('unidade');
+    }
+
+    const novoRelData = {};
+    for (const campo of camposPermitidos) {
+      if (data[campo] !== undefined) {
+        novoRelData[campo] = data[campo];
+      }
+    }
+
+    if (!userIsAdminOrDitel) {
+      novoRelData.unidade = req.user.unidadeVinculada;
+    }
+
     // Upsert (atualiza se já enviou no mês)
     const relatorio = await RelatorioQualidade.findOneAndUpdate(
-      { unidade: dados.unidade, mesReferencia: dados.mesReferencia },
-      { $set: dados },
+      { unidade: novoRelData.unidade, mesReferencia: novoRelData.mesReferencia },
+      { $set: novoRelData },
       { new: true, upsert: true }
     );
     res.status(201).json({ success: true, relatorio });
   } catch (err) {
     if (err.code === 11000) return res.status(400).json({ error: 'Relatório para este mês já existe.' });
-    res.status(500).json({ error: err.message });
+    return sendServerError(res, err, 'Erro ao salvar relatório de qualidade.');
   }
 });
 // ====== SERVIR FRONTEND ESTÁTICO (PRODUÇÃO) ======

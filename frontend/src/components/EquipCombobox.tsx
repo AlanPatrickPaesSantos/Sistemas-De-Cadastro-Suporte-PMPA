@@ -31,7 +31,7 @@ export function EquipCombobox({ value, onChange }: EquipComboboxProps) {
     const fetchEquipamentos = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('ditel_token');
         const authHeaders: any = {};
         if (token) authHeaders['Authorization'] = `Bearer ${token}`; // /api/eqsuporte is unprotected explicitly, but sending token doesn't hurt.
         

@@ -10,3 +10,16 @@ README.md
 DOCKER_DEPLOY.md
 DEPLOYMENT_GUIDE.md
 .vscode
+
+# Dados legados, backups e auditorias
+data/
+*backup*.json
+final_check*.json
+*.jsonl
+auditoria-ditel-geral/
+fase-1-seguranca-ditel-relatorio.txt
+backend/data/
+backend/scripts/backup*.json
+backend/final_check*.json
+backend/remoto_os.txt
+backend/unique_legacy_services.txt

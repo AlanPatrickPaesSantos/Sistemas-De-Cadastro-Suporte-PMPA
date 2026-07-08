@@ -101,7 +101,7 @@ export const EqUnidadeDialog = ({ open, onOpenChange, readOnly }: EqUnidadeDialo
     }
     
     setIsSaving(true);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('ditel_token');
     const authHeaders: any = { 'Content-Type': 'application/json' };
     if (token) authHeaders['Authorization'] = `Bearer ${token}`;
     
@@ -145,7 +145,7 @@ export const EqUnidadeDialog = ({ open, onOpenChange, readOnly }: EqUnidadeDialo
   const confirmDelete = async () => {
     setConfirmOpen(false);
     setIsDeleting(true);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('ditel_token');
     const authHeaders: any = {};
     if (token) authHeaders['Authorization'] = `Bearer ${token}`;
     

@@ -154,7 +154,7 @@ const Cadastro = () => {
 
   const handleDelete = async (os: number) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('ditel_token');
       const response = await fetch(`/api/servicos/${os}`, {
         method: 'DELETE',
         headers: {
