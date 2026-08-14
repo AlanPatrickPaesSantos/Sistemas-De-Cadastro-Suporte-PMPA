@@ -35,7 +35,7 @@ const Login = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Credenciais inválidas');
+        throw new Error(data.error || 'Usuário ou senha incorretos.');
       }
 
       login(data.token, { 
@@ -59,7 +59,7 @@ const Login = () => {
       toast({
         variant: "destructive",
         title: "Acesso Negado",
-        description: err.message,
+        description: "Usuário ou senha incorretos.",
         duration: 5000,
       });
     } finally {

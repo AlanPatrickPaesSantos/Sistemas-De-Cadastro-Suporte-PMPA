@@ -135,17 +135,17 @@ app.post('/api/auth/login', loginLimiter, async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
-      return res.status(400).json({ success: false, error: 'Informe usuário e senha.' });
+      return res.status(400).json({ success: false, error: 'Usuário ou senha incorretos.' });
     }
 
     const user = await Usuario.findOne({ username: username.toLowerCase() }).lean();
     if (!user) {
-      return res.status(401).json({ success: false, error: 'Usuário ou senha inválidos.' });
+      return res.status(401).json({ success: false, error: 'Usuário ou senha incorretos.' });
     }
 
     const senhaValida = await bcrypt.compare(password, user.password);
     if (!senhaValida) {
-      return res.status(401).json({ success: false, error: 'Usuário ou senha inválidos.' });
+      return res.status(401).json({ success: false, error: 'Usuário ou senha incorretos.' });
     }
 
     // Segurança de Token: Utiliza a chave devidamente configurada no ambiente
