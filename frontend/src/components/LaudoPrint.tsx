@@ -143,8 +143,8 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
       {/* Assinaturas */}
       <div className="grid grid-cols-2 gap-12 mt-4 text-center text-[9px]">
         <div className="border-t border-black pt-1 uppercase">
-          <p className="font-bold">MADAKE MARCOS LEAL DO NASCIMENTO - 2º TEN PM RG 44448</p>
-          <p>Chefe das Seções de Telecomunicação e Suporte ao Usuário</p>
+          <p className="font-bold">ODIRSON MICHAEL TAVARES DA SILVA - 2º TEN PM RG 44443</p>
+          <p>Respondendo pelas Seções de Telecomunicação e Suporte ao Usuário</p>
         </div>
         <div className="border-t border-black pt-1 uppercase flex flex-col justify-end">
           <p className="font-bold">RECEBEDOR DO EQUIPAMENTO</p>
