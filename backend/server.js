@@ -764,7 +764,7 @@ app.post('/api/servicos', async (req, res) => {
           saidaEquip: data.saidaEquip || '',
           Bateria: data.bateria || '',
           telefone: data.telefone || '',
-          Seção_Ditel: data.secaoDitel || '',
+          Seção_Ditel: data.secaoDitel || 'SUPORTE',
           fonteCabo: data.fonteCabo || false,
         });
 
@@ -836,7 +836,7 @@ app.put('/api/servicos/:id', async (req, res) => {
     existingRecord.saidaEquip = data.saidaEquip || '';
     existingRecord.Bateria = data.bateria || '';
     existingRecord.telefone = data.telefone || '',
-    existingRecord.Seção_Ditel = data.secaoDitel || '',
+    existingRecord.Seção_Ditel = data.secaoDitel || existingRecord.Seção_Ditel || 'SUPORTE';
     existingRecord.fonteCabo = data.fonteCabo || false,
 
     await existingRecord.save();
