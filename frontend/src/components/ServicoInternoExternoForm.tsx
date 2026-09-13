@@ -16,8 +16,7 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { UnidadeCombobox } from "./UnidadeCombobox";
 import { API_BASE } from "../lib/api-config";
-import { Printer, ChevronLeft, ChevronRight, CheckCircle2, Layout, Car, Globe, Package, Zap, Router, Cable, Layers, Lock } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Printer, ChevronLeft, ChevronRight, CheckCircle2, Layout, Car, Globe, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
@@ -25,7 +24,7 @@ const formSchema = z.object({
   secao: z.string().min(1, "Seção é obrigatória"),
   unidade: z.string().min(1, "Unidade é obrigatória"),
   data: z.string().min(1, "Data é obrigatória"),
-  tecnicos: z.string().optional(),
+  tecnicos: z.string().trim().min(1, "Técnicos é obrigatório"),
   def_recla: z.string().optional(),
   solicitante: z.string().optional(),
   n_pae: z.string().optional(),
@@ -196,26 +195,22 @@ export const ServicoInternoExternoForm = ({
           </div>
         </div>
 
-        {/* Row 2: Data, Horários, Técnicos */}
-        <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-6 gap-3">
-          <div className="space-y-1.5 lg:col-span-1 md:col-span-1">
+        {/* Row 2: Data e Técnicos */}
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
+          <div className="space-y-1.5 md:col-span-2">
             <Label htmlFor="data" className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Data *</Label>
             <Input id="data" type="date" {...register("data")} className={`h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium ${errors.data ? "border-destructive" : ""}`} />
           </div>
 
-          <div className="space-y-1.5 lg:col-span-1 md:col-span-1">
-            <Label htmlFor="horario" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Entrada</Label>
-            <Input id="horario" {...register("horario")} placeholder="HH:MM" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" />
-          </div>
-
-          <div className="space-y-1.5 lg:col-span-1 md:col-span-1">
-            <Label htmlFor="horario_saida" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Saída</Label>
-            <Input id="horario_saida" {...register("horario_saida")} placeholder="HH:MM" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" />
-          </div>
-
-          <div className="space-y-1.5 md:col-span-2 lg:col-span-3">
-            <Label htmlFor="tecnicos" className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Técnicos</Label>
-            <Input id="tecnicos" {...register("tecnicos")} placeholder="Nome dos técnicos" className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" />
+          <div className="space-y-1.5 md:col-span-4">
+            <Label htmlFor="tecnicos" className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Técnicos *</Label>
+            <Input
+              id="tecnicos"
+              {...register("tecnicos")}
+              placeholder="Nome dos técnicos"
+              className={`h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium ${errors.tecnicos ? "border-destructive" : ""}`}
+            />
+            {errors.tecnicos && <p className="text-xs text-destructive">{errors.tecnicos.message}</p>}
           </div>
         </div>
 
@@ -287,41 +282,6 @@ export const ServicoInternoExternoForm = ({
           </div>
         </div>
 
-        {/* CHECKLIST DE MATERIAIS (Sugestão 5) */}
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-3 mt-4 pt-4 border-t border-slate-200/60 dark:border-slate-800">
-          <div className="md:col-span-6">
-            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
-              <Package className="w-3 h-3" /> Materiais Utilizados na Missão
-            </h4>
-          </div>
-          
-          {[
-            { id: "roteador", label: "Roteador", icon: <Router className="w-4 h-4" /> },
-            { id: "cat5", label: "Cabo CAT 5", icon: <Cable className="w-4 h-4" /> },
-            { id: "cat5e", label: "Cabo CAT 5e", icon: <Cable className="w-4 h-4" /> },
-            { id: "cat6", label: "Cabo CAT 6", icon: <Cable className="w-4 h-4" /> },
-            { id: "conectores", label: "Conectores", icon: <Zap className="w-4 h-4" /> },
-            { id: "canaletas", label: "Canaletas", icon: <Layers className="w-4 h-4" /> }
-          ].map((item) => (
-            <div key={item.id} className="flex items-center space-x-2 bg-slate-50/50 dark:bg-slate-800/30 p-2 rounded-lg border border-slate-100 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800 transition-colors">
-              <Checkbox 
-                id={item.id} 
-                checked={watch("materiais")?.includes(item.id)}
-                onCheckedChange={(checked) => {
-                  const current = watch("materiais") || [];
-                  if (checked) {
-                    setValue("materiais", [...current, item.id]);
-                  } else {
-                    setValue("materiais", current.filter(id => id !== item.id));
-                  }
-                }}
-              />
-              <label htmlFor={item.id} className="text-[10px] font-bold uppercase text-slate-600 dark:text-slate-400 cursor-pointer flex items-center gap-1">
-                {item.icon} {item.label}
-              </label>
-            </div>
-          ))}
-        </div>
         </div>
         
         <div className="p-6 bg-slate-50/30 dark:bg-slate-800/20 border border-slate-200/60 dark:border-slate-800 rounded-2xl shadow-sm relative overflow-hidden transition-all focus-within:shadow-[0_8px_30px_rgba(0,78,154,0.06)] focus-within:border-[#004e9a]/30">
