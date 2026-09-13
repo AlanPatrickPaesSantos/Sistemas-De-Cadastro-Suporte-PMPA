@@ -46,9 +46,7 @@ import {
   ChevronRight, 
   Clock, 
   User, 
-  Building, 
   Calendar, 
-  Tag, 
   Hash, 
   Layout, 
   Stethoscope, 
@@ -106,6 +104,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
   const form = useForm<CadastroFormValues>({
     resolver: zodResolver(cadastroSchema),
     defaultValues: {
+      secaoDitel: "SUPORTE",
       fonteCabo: false,
       saidaEquip: "",
       dataSaida: "",
@@ -150,6 +149,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
         // Only load if it's a fresh form
         if (!form.getValues("os")) {
           form.reset(parsed);
+          form.setValue("secaoDitel", "SUPORTE");
           toast.info("📋 Rascunho carregado automaticamente.");
         }
       } catch (e) {}
@@ -194,7 +194,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
       form.reset({
         os: String(initialData.Id_cod || initialData.os || ""),
         tecnico: initialData.Tecnico || initialData.tecnico || initialData.Técnico || "",
-        secaoDitel: initialData.Seção_Ditel || initialData.secaoDitel || "",
+        secaoDitel: initialData.Seção_Ditel || initialData.secaoDitel || "SUPORTE",
         tEquipSuporte: initialData.T_EquipSuporte || initialData.tEquipSuporte || "",
         solicitante: initialData.Solicitante || initialData.solicitante || "",
         unidade: initialData.Unidade || initialData.unidade || "",
@@ -218,7 +218,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
       // Quando não há dados iniciais (Novo Cadastro), reseta para o estado vazio
       form.reset({
         tecnico: "",
-        secaoDitel: "",
+        secaoDitel: "SUPORTE",
         tEquipSuporte: "",
         solicitante: "",
         unidade: "",
@@ -351,7 +351,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
                 <h3 className="text-[13px] font-black text-slate-800 dark:text-slate-200 uppercase tracking-[0.2em] border-b border-slate-100 dark:border-slate-800 pb-2 flex items-center gap-2">
                   Informações Principais
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <FormField control={form.control} name="os" render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">OS (Auto)</FormLabel>
@@ -359,28 +359,9 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
                     </FormItem>
                   )} />
                   <FormField control={form.control} name="tecnico" render={({ field }) => (
-                    <FormItem className="md:col-span-1">
+                    <FormItem className="md:col-span-2">
                       <FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1">
                         <User className="w-3 h-3 text-[#004e9a]" /> Técnico Responsável
-                      </FormLabel>
-                      <FormControl><Input className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" {...field} /></FormControl>
-                    </FormItem>
-                  )} />
-                  <FormField control={form.control} name="secaoDitel" render={({ field }) => (
-                    <FormItem className="md:col-span-1">
-                      <FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1">
-                        <Building className="w-3 h-3 text-[#004e9a]" /> Seção
-                      </FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl><SelectTrigger className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium"><SelectValue placeholder="Selecione" /></SelectTrigger></FormControl>
-                        <SelectContent><SelectItem value="SUPORTE">Suporte</SelectItem><SelectItem value="TELECOM">Telecom</SelectItem></SelectContent>
-                      </Select>
-                    </FormItem>
-                  )} />
-                  <FormField control={form.control} name="telefone" render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[11px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-1">
-                        <Tag className="w-3 h-3 text-[#004e9a]" /> Telefone
                       </FormLabel>
                       <FormControl><Input className="h-11 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium" {...field} /></FormControl>
                     </FormItem>
