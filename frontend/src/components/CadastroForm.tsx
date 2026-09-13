@@ -36,6 +36,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { EquipCombobox } from "./EquipCombobox";
 import { UnidadeCombobox } from "./UnidadeCombobox";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -99,6 +107,72 @@ interface CadastroFormProps {
   readOnly?: boolean;
 }
 
+
+const ANALISE_SUGESTOES_MANUTENCAO = [
+  {
+    label: "Backup & Formatação",
+    text: "Realizado backup dos dados e formatação completa do sistema.",
+  },
+  {
+    label: "Limpeza Interna",
+    text: "Executada limpeza interna preventiva para remoção de poeira e oxidação.",
+  },
+  {
+    label: "Troca de Bateria",
+    text: "Substituição de bateria por componente novo e testes de autonomia realizados.",
+  },
+  {
+    label: "Fonte com defeito",
+    text: "Após análise técnica, constatou-se defeito na fonte de alimentação do equipamento.",
+  },
+  {
+    label: "HD/SSD com defeito",
+    text: "Após análise técnica, constatou-se defeito na unidade de armazenamento (HD/SSD).",
+  },
+  {
+    label: "Memória RAM com defeito",
+    text: "Após análise técnica, constatou-se falha na memória RAM do equipamento.",
+  },
+  {
+    label: "Display/Tela com defeito",
+    text: "Após análise técnica, constatou-se defeito no display/tela do equipamento.",
+  },
+  {
+    label: "Bateria sem carga",
+    text: "Após análise técnica, constatou-se que a bateria encontra-se sem carga e sem autonomia adequada para uso.",
+  },
+] as const;
+
+const ANALISE_SUGESTOES_LAUDO = [
+  {
+    label: "Equipamento sem condições de uso",
+    text: "Após análise técnica, constatou-se que o equipamento encontra-se sem condições de uso, não sendo recomendado o reparo.",
+  },
+  {
+    label: "Equipamento em desuso",
+    text: "Após análise técnica, constatou-se que o equipamento encontra-se em desuso e sem viabilidade de reaproveitamento operacional.",
+  },
+  {
+    label: "Placa lógica/placa-mãe com defeito",
+    text: "Após análise técnica, constatou-se defeito na placa lógica/placa-mãe do equipamento.",
+  },
+  {
+    label: "Placa em curto",
+    text: "Após análise técnica, constatou-se curto-circuito na placa lógica/placa-mãe do equipamento.",
+  },
+  {
+    label: "Sem fonte/cabo",
+    text: "Após análise técnica, constatou-se que o equipamento foi apresentado sem fonte de alimentação e/ou cabo correspondente.",
+  },
+  {
+    label: "Sem viabilidade de reparo",
+    text: "Após análise técnica, constatou-se que o equipamento não apresenta viabilidade técnica/econômica de reparo.",
+  },
+  {
+    label: "Laudo para baixa do equipamento",
+    text: "Após análise técnica, conclui-se que o equipamento encontra-se sem condições de uso, sendo recomendada sua baixa patrimonial, conforme procedimentos administrativos cabíveis.",
+  },
+] as const;
 
 export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete, hasPrev, hasNext, initialData, id = "cadastro-form", isEditMode, readOnly }: CadastroFormProps) => {
   const form = useForm<CadastroFormValues>({
@@ -240,6 +314,19 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
       });
     }
   }, [initialData, form]);
+
+  const addAnaliseSuggestion = (suggestion: string) => {
+    const current = (form.getValues("analiseTecnica") || "").trim();
+
+    if (current && current.toLocaleLowerCase("pt-BR").includes(suggestion.toLocaleLowerCase("pt-BR"))) {
+      toast.info("Essa sugestão já foi adicionada.");
+      return;
+    }
+
+    const separator = current && !/[.!?]$/.test(current) ? ". " : current ? " " : "";
+    const nextValue = current ? `${current}${separator}${suggestion}` : suggestion;
+    form.setValue("analiseTecnica", nextValue, { shouldDirty: true, shouldTouch: true });
+  };
 
   return (
     <Form {...form}>
@@ -466,38 +553,37 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
                     <FormItem>
                       <div className="flex items-center justify-between mb-2">
                         <FormLabel className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Análise Técnica Preliminar</FormLabel>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter flex items-center gap-1">
-                            <Sparkles className="w-3 h-3 text-amber-500" /> Sugestões:
-                          </span>
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            size="sm" 
-                            className="h-6 text-[9px] uppercase font-bold border-emerald-200 hover:bg-emerald-50 text-emerald-700"
-                            onClick={() => form.setValue("analiseTecnica", "Realizado backup dos dados e formatação completa do sistema.")}
-                          >
-                            Backup & Formatação
-                          </Button>
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            size="sm" 
-                            className="h-6 text-[9px] uppercase font-bold border-blue-200 hover:bg-blue-50 text-blue-700"
-                            onClick={() => form.setValue("analiseTecnica", "Executada limpeza interna preventiva para remoção de poeira e oxidação.")}
-                          >
-                            Limpeza Interna
-                          </Button>
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            size="sm" 
-                            className="h-6 text-[9px] uppercase font-bold border-purple-200 hover:bg-purple-50 text-purple-700"
-                            onClick={() => form.setValue("analiseTecnica", "Substituição de bateria por componente novo e testes de autonomia realizados.")}
-                          >
-                            Troca de Bateria
-                          </Button>
-                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="h-7 gap-1.5 text-[10px] uppercase font-bold border-amber-200 hover:bg-amber-50 text-amber-700"
+                            >
+                              <Sparkles className="w-3 h-3" /> Sugestões
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-[330px] max-h-[420px] overflow-y-auto">
+                            <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-slate-500">
+                              Manutenção
+                            </DropdownMenuLabel>
+                            {ANALISE_SUGESTOES_MANUTENCAO.map((item) => (
+                              <DropdownMenuItem key={item.label} onSelect={() => addAnaliseSuggestion(item.text)}>
+                                {item.label}
+                              </DropdownMenuItem>
+                            ))}
+                            <DropdownMenuSeparator />
+                            <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-slate-500">
+                              Laudo
+                            </DropdownMenuLabel>
+                            {ANALISE_SUGESTOES_LAUDO.map((item) => (
+                              <DropdownMenuItem key={item.label} onSelect={() => addAnaliseSuggestion(item.text)}>
+                                {item.label}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                       <FormControl><Textarea {...field} className="min-h-[160px] text-sm leading-relaxed p-4 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium custom-scrollbar" /></FormControl>
                     </FormItem>
