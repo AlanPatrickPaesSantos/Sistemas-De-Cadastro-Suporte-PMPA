@@ -174,23 +174,6 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
           </div>
         </div>
 
-        {/* SEÇÃO 5: MATERIAIS */}
-        {data.materiais && data.materiais.length > 0 && (
-          <div className="premium-border mb-6">
-            <div className="section-header">
-              <h2 className="text-[10px] font-black uppercase tracking-widest text-[#004e9a]">5. Materiais e Componentes Utilizados</h2>
-            </div>
-            <div className="p-4 grid grid-cols-2 gap-4">
-              {data.materiais.map((m, idx) => (
-                <div key={idx} className="flex items-center gap-3 border-b border-slate-100 pb-1">
-                  <div className="h-3 w-3 border border-slate-400 flex items-center justify-center text-[10px] font-bold">✓</div>
-                  <span className="text-[12px] font-bold uppercase text-slate-700">{m}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* OBSERVACÕES ADICIONAIS */}
         {data.observacao && (
           <div className="mb-8 p-4 border border-blue-100 rounded-lg">
