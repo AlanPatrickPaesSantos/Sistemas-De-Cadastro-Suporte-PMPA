@@ -137,14 +137,8 @@ export const MissaoPrint = ({ data }: { data: MissaoData }) => {
             <div className="col-span-3 label-box">
               <span className="text-[12px] font-black uppercase text-slate-800">Técnicos Designados</span>
             </div>
-            <div className="col-span-5 content-box border-r border-slate-300 font-bold uppercase text-[12px]">
+            <div className="col-span-9 content-box font-bold uppercase text-[12px]">
               {data.tecnicos || "Equipe de Plantão Ditel"}
-            </div>
-            <div className="col-span-2 label-box">
-              <span className="text-[12px] font-black uppercase text-slate-800">Seção</span>
-            </div>
-            <div className="col-span-2 content-box font-black text-[12px] text-black">
-              {data.secao || "SUPORTE"}
             </div>
           </div>
         </div>
