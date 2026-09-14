@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -31,8 +31,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { CadastroForm } from "./CadastroForm";
 import { toast } from "sonner";
 import { LaudoPrint } from "./LaudoPrint";
-import { EqSuporteDialog } from "./EqSuporteDialog";
-import { EqUnidadeDialog } from "./EqUnidadeDialog";
+const EqSuporteDialog = lazy(() => import("./EqSuporteDialog").then(m => ({ default: m.EqSuporteDialog })));
+const EqUnidadeDialog = lazy(() => import("./EqUnidadeDialog").then(m => ({ default: m.EqUnidadeDialog })));
 
 type ServiceRecord = { Id_cod: number; [key: string]: unknown };
 
@@ -291,8 +291,10 @@ export function CommandMenu() {
       )}
 
       {/* Catálogos de Equipamentos e Unidades (Renderização condicional para poupar recursos) */}
-      {isSuporteOpen && <EqSuporteDialog open={isSuporteOpen} onOpenChange={setIsSuporteOpen} readOnly={isViewer} />}
-      {isUnidadeOpen && <EqUnidadeDialog open={isUnidadeOpen} onOpenChange={setIsUnidadeOpen} readOnly={isViewer} />}
+      <Suspense fallback={null}>
+        {isSuporteOpen && <EqSuporteDialog open={isSuporteOpen} onOpenChange={setIsSuporteOpen} readOnly={isViewer} />}
+        {isUnidadeOpen && <EqUnidadeDialog open={isUnidadeOpen} onOpenChange={setIsUnidadeOpen} readOnly={isViewer} />}
+      </Suspense>
     </>
   );
 }
