@@ -45,11 +45,10 @@ export const Header = () => {
         <div className="hidden items-center justify-center lg:flex">
           <div className="h-11 w-px bg-white/15" />
           <div className="min-w-[330px] px-10 text-center xl:min-w-[370px]">
-            <span className="block text-[30px] font-extrabold uppercase leading-none tracking-[0.14em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.16)] xl:text-[34px]">
+            <span className="block text-[27px] font-extrabold uppercase leading-none tracking-[0.14em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.16)] xl:text-[31px]">
               SISCAD
             </span>
-            <div className="mx-auto mt-2 h-[2px] w-20 rounded-full bg-gradient-to-r from-transparent via-sky-200/90 to-transparent" />
-            <span className="mt-1.5 block text-[11px] font-medium tracking-[0.08em] text-blue-50/90 xl:text-[12px]">
+            <span className="mt-2.5 block text-[11px] font-medium tracking-[0.08em] text-blue-50/90 xl:text-[12px]">
               Sistemas De Cadastro Suporte
             </span>
           </div>
