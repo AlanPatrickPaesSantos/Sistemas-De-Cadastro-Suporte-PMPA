@@ -56,15 +56,16 @@ export const Header = () => {
         </div>
 
         <div id="header-user-menu" className="flex items-center justify-end">
-          <div className="grid grid-cols-[1fr_44px_1fr] items-center gap-3 sm:min-w-[292px] md:min-w-[320px] md:gap-4">
-            <div className="hidden items-center justify-self-end gap-2.5 sm:flex">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.14] shadow-inner">
-                <UserRound className="h-5 w-5 text-white" />
-              </div>
-              <span className="max-w-[118px] truncate text-[11px] font-black uppercase tracking-wide text-white md:max-w-[135px] md:text-xs">
-                {user?.nomeCompleto || user?.username || "Usuário"}
-              </span>
-            </div>
+  <div className="grid grid-cols-[auto_44px_auto] items-center gap-3 md:gap-4">
+    <div className="hidden items-center justify-self-end gap-2.5 sm:flex">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.14] shadow-inner">
+        <UserRound className="h-5 w-5 text-white" />
+      </div>
+
+      <span className="max-w-[118px] truncate text-[11px] font-black uppercase tracking-wide text-white md:max-w-[135px] md:text-xs">
+        {user?.nomeCompleto || user?.username || "Usuário"}
+      </span>
+    </div>
 
             <div className="justify-self-center rounded-full border border-white/10 bg-white/[0.08] shadow-inner transition-colors hover:bg-white/[0.12]">
               <ThemeToggle />
