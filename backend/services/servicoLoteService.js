@@ -22,16 +22,19 @@ async function createBatch(items, user) {
   const normalizedItems = items.map(item => ({ ...item, unidade: restricted ? user.unidadeVinculada : item.unidade }));
   const rps = normalizedItems.map(item => normalize(item.rp));
   const serials = normalizedItems.map(item => normalize(item.nSerie));
-  const conflicts = await Servico.find({ $expr: { $or: [
+  const conflictFilter = { $expr: { $or: [
     { $in: [{ $toLower: { $trim: { input: { $ifNull: ['$RP', ''] } } } }, rps] },
     { $in: [{ $toLower: { $trim: { input: { $ifNull: ['$Nº_Serie', ''] } } } }, serials] },
-  ] } }, 'Id_cod RP Nº_Serie').lean();
+  ] } };
+  const conflicts = await Servico.find(conflictFilter, 'Id_cod RP Nº_Serie').lean();
   if (conflicts.length) throw new Error(`RP ou patrimônio já cadastrado na O.S. ${conflicts[0].Id_cod}.`);
   const session = await Servico.startSession();
   try {
     for (let attempt = 0; attempt < 5; attempt++) {
       try {
         const records = await session.withTransaction(async () => {
+          const concurrentConflict = await Servico.findOne(conflictFilter, 'Id_cod RP Nº_Serie').session(session).lean();
+          if (concurrentConflict) throw new Error(`RP ou patrimônio já cadastrado na O.S. ${concurrentConflict.Id_cod}.`);
           const last = await Servico.findOne({}, 'Id_cod').sort({ Id_cod: -1 }).session(session).lean();
           const first = (last?.Id_cod || 0) + 1;
           const docs = normalizedItems.map((item, offset) => ({ Id_cod: first + offset, Data_Ent: new Date(item.dataEnt), Tecnico: item.tecnico, Unidade: item.unidade, T_EquipSuporte: item.tEquipSuporte, Analise_Tecnica: item.analiseTecnica, RP: item.rp, 'Nº_Serie': item.nSerie, Serviço: item.servico === 'MANUTENCAO' ? 'PENDENTE' : 'LAUDO', Seção_Ditel: 'SUPORTE' }));
