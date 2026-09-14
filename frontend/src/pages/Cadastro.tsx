@@ -14,9 +14,9 @@ const Cadastro = () => {
   const isViewer = user?.papel === 'visualizador';
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
-  const [selectedRecord, setSelectedRecord] = useState<any>(null);
+  const [selectedRecord, setSelectedRecord] = useState<Record<string, unknown> | null>(null);
   const [hasPrev, setHasPrev] = useState(false);
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<Array<{ Id_cod: number; [key: string]: unknown }>>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNext, setHasNext] = useState(false);
   const [printType, setPrintType] = useState<'laudo' | 'saida' | 'entrada'>('laudo');

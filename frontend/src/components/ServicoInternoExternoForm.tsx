@@ -43,7 +43,7 @@ type FormData = z.infer<typeof formSchema>;
 
 interface ServicoInternoExternoFormProps {
   id?: string;
-  initialData?: any;
+  initialData?: Record<string, unknown>;
   onSubmit: (data: FormData) => void;
   onCancel: () => void;
   onPrint?: (type: 'laudo' | 'saida' | 'entrada') => void;

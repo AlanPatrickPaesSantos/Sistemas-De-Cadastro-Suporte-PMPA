@@ -15,7 +15,7 @@ const ServicoInternoExterno = () => {
   const isViewer = user?.papel === 'visualizador';
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState<any>(null);
+  const [selectedRecord, setSelectedRecord] = useState<Record<string, unknown> | null>(null);
   const [hasPrev, setHasPrev] = useState(false);
   const [hasNext, setHasNext] = useState(false);
   const [isNavLoading, setIsNavLoading] = useState(false);
