@@ -48,7 +48,7 @@ const Cadastro = () => {
   }, [query]);
 
   // Carrega um registro e verifica adjacentes
-  const loadRecord = async (item: any) => {
+  const loadRecord = async (item: { Id_cod: number }) => {
     try {
       const token = localStorage.getItem("ditel_token");
       const res = await fetch(`${API_BASE}/servicos/${item.Id_cod}`, {
@@ -122,7 +122,7 @@ const Cadastro = () => {
   };
 
   // Salva NOVO equipamento ou ATUALIZA existente
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     const isEditing = !!selectedRecord;
     const url = isEditing ? `${API_BASE}/servicos/${selectedRecord.Id_cod}` : `${API_BASE}/servicos`;
     const method = isEditing ? "PUT" : "POST";

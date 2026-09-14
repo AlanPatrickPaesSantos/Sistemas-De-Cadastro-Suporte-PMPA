@@ -76,7 +76,7 @@ const ServicoInternoExterno = () => {
     if (e.key === 'Enter') handleSearch();
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Record<string, unknown>) => {
     try {
       setIsLoading(true);
       let res;
