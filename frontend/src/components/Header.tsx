@@ -42,17 +42,17 @@ export const Header = () => {
           </button>
         </div>
 
-        <div className="hidden items-center justify-center lg:flex">
-          <div className="h-11 w-px bg-white/15" />
-          <div className="min-w-[330px] px-10 text-center xl:min-w-[370px]">
-            <span className="block text-[27px] font-extrabold uppercase leading-none tracking-[0.14em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.16)] xl:text-[31px]">
+        <div className="absolute left-1/2 flex -translate-x-1/2 items-center justify-center lg:static lg:translate-x-0">
+          <div className="hidden h-11 w-px bg-white/15 lg:block" />
+          <div className="px-2 text-center lg:min-w-[330px] lg:px-10 xl:min-w-[370px]">
+            <span className="block text-[17px] font-extrabold uppercase leading-none tracking-[0.12em] text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.16)] sm:text-[21px] lg:text-[27px] xl:text-[31px]">
               SISCAD
             </span>
-            <span className="mt-2.5 block text-[11px] font-medium tracking-[0.08em] text-blue-50/90 xl:text-[12px]">
+            <span className="mt-2.5 hidden text-[11px] font-medium tracking-[0.08em] text-blue-50/90 sm:block xl:text-[12px]">
               Sistemas De Cadastro Suporte
             </span>
           </div>
-          <div className="h-11 w-px bg-white/15" />
+          <div className="hidden h-11 w-px bg-white/15 lg:block" />
         </div>
 
         <div id="header-user-menu" className="flex items-center justify-end">
