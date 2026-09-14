@@ -1,17 +1,17 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import Cadastro from "./pages/Cadastro";
-import CadastroLote from "./pages/CadastroLote";
-import ServicoInternoExterno from "./pages/ServicoInternoExterno";
+const Cadastro = lazy(() => import("./pages/Cadastro"));
+const CadastroLote = lazy(() => import("./pages/CadastroLote"));
+const ServicoInternoExterno = lazy(() => import("./pages/ServicoInternoExterno"));
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
-import Admin from "./pages/Admin";
-import TecnicoDashboard from "./pages/TecnicoDashboard";
+const Admin = lazy(() => import("./pages/Admin"));
+const TecnicoDashboard = lazy(() => import("./pages/TecnicoDashboard"));
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -28,6 +28,7 @@ const App = () => (
         <BrowserRouter>
           <AuthProvider>
             <CommandMenu />
+            <Suspense fallback={<div className="flex min-h-screen items-center justify-center bg-background font-bold text-muted-foreground">CARREGANDO SISTEMA PMPA...</div>}>
             <Routes>
               {/* Rota Privada: O Login do sistema */}
               <Route path="/login" element={<Login />} />
@@ -43,6 +44,7 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<ProtectedRoute><NotFound /></ProtectedRoute>} />
             </Routes>
+            </Suspense>
           </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>
