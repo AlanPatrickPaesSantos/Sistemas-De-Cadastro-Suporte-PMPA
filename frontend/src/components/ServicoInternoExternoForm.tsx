@@ -80,7 +80,7 @@ export const ServicoInternoExternoForm = ({
 
   useEffect(() => {
     if (initialData) {
-      const fmtDate = (d: any) => {
+      const fmtDate = (d: unknown) => {
         if (!d) return "";
         if (typeof d === 'string' && d.includes('/')) {
           const parts = d.split('/');

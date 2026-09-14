@@ -229,7 +229,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
           form.setValue("secaoDitel", "SUPORTE");
           toast.info("📋 Rascunho carregado automaticamente.");
         }
-      } catch (e) {}
+      } catch (e) { console.warn("Falha ao buscar dados históricos", e); }
     }
   }, [isEditMode, initialData, form]);
 
