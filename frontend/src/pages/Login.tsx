@@ -108,7 +108,10 @@ const Login = () => {
 
           <form onSubmit={handleLogin} className="space-y-5">
             <div className="relative group">
+              <label htmlFor="login-username" className="sr-only">Login ou matrícula</label>
               <Input
+                id="login-username"
+                aria-label="Login ou matrícula"
                 autoFocus
                 placeholder="Login / Matrícula"
                 value={username}
@@ -121,7 +124,10 @@ const Login = () => {
             </div>
 
             <div className="relative group">
+              <label htmlFor="login-password" className="sr-only">Senha corporativa</label>
               <Input
+                id="login-password"
+                aria-label="Senha corporativa"
                 type="password"
                 placeholder="Senha Corporativa"
                 value={password}

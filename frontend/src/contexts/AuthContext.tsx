@@ -3,16 +3,23 @@ import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: any;
-  login: (token: string, userData: any) => void;
+  user: UserData | null;
+  login: (token: string, userData: UserData) => void;
   logout: () => void;
+}
+
+export interface UserData {
+  username: string;
+  papel: 'admin' | 'operador' | 'visualizador' | 'tecnico';
+  nomeCompleto?: string;
+  unidadeVinculada?: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,12 +28,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (token && storedUser) {
       setIsAuthenticated(true);
-      setUser(JSON.parse(storedUser));
+      try { setUser(JSON.parse(storedUser) as UserData); } catch { localStorage.removeItem('ditel_user'); localStorage.removeItem('ditel_token'); }
     }
     setLoading(false);
   }, []);
 
-  const login = (token: string, userData: any) => {
+  const login = (token: string, userData: UserData) => {
     localStorage.setItem('ditel_token', token);
     localStorage.setItem('ditel_user', JSON.stringify(userData));
     setIsAuthenticated(true);
