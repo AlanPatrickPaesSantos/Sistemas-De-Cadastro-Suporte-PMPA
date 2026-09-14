@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Chamado = require('./models/Chamado');
 const RelatorioQualidade = require('./models/RelatorioQualidade');
 
-const MONGODB_URI = "mongodb://ALAN:Al%402131@ac-co9oixe-shard-00-00.orghwak.mongodb.net:27017,ac-co9oixe-shard-00-01.orghwak.mongodb.net:27017,ac-co9oixe-shard-00-02.orghwak.mongodb.net:27017/teste?ssl=true&authSource=admin&retryWrites=true&w=majority";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 const unidadesMock = [
   "CPR I - Santarém",
@@ -67,6 +67,7 @@ const chamadosMock = Array.from({ length: 8 }).map((_, i) => ({
 
 async function seed() {
   try {
+    if (!MONGODB_URI) throw new Error('MONGODB_URI não definida. Configure a variável de ambiente antes de executar o seed.');
     console.log("Conectando ao banco...");
     await mongoose.connect(MONGODB_URI);
     console.log("Conectado! Limpando dados antigos...");
