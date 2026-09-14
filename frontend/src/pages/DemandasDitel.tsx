@@ -17,12 +17,16 @@ import MapaInterativoPara from "@/components/MapaInterativoPara";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+type EquipamentoResumo = { operantes?: number; inoperantes?: number };
+type ChamadoResumo = { unidadeSolicitante: string; status: string; dataAbertura?: string; createdAt?: string };
+type RelatorioResumo = { unidade: string; statusGeral: string; equipamentos?: { radiosHT?: EquipamentoResumo; radiosMoveis?: EquipamentoResumo; computadores?: EquipamentoResumo } };
+
 export default function DemandasDitel() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [chamados, setChamados] = useState<any[]>([]);
-  const [relatorios, setRelatorios] = useState<any[]>([]);
+  const [chamados, setChamados] = useState<ChamadoResumo[]>([]);
+  const [relatorios, setRelatorios] = useState<RelatorioResumo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCPR, setSelectedCPR] = useState<string>('');
 
