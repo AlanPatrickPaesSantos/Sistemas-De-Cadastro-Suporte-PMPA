@@ -37,7 +37,7 @@ async function createBatch(items, user) {
           if (concurrentConflict) throw new Error(`RP ou patrimônio já cadastrado na O.S. ${concurrentConflict.Id_cod}.`);
           const last = await Servico.findOne({}, 'Id_cod').sort({ Id_cod: -1 }).session(session).lean();
           const first = (last?.Id_cod || 0) + 1;
-          const docs = normalizedItems.map((item, offset) => ({ Id_cod: first + offset, Data_Ent: new Date(item.dataEnt), Tecnico: item.tecnico, Unidade: item.unidade, T_EquipSuporte: item.tEquipSuporte, Analise_Tecnica: item.analiseTecnica, RP: item.rp, 'Nº_Serie': item.nSerie, Serviço: item.servico === 'MANUTENCAO' ? 'PENDENTE' : 'LAUDO', Seção_Ditel: 'SUPORTE' }));
+          const docs = normalizedItems.map((item, offset) => ({ Id_cod: first + offset, Data_Ent: new Date(item.dataEnt), Tecnico: item.tecnico, Unidade: item.unidade, T_EquipSuporte: item.tEquipSuporte, Analise_Tecnica: item.analiseTecnica, RP: item.rp, 'Nº_Serie': item.nSerie, Serviço: item.servico === 'PRONTO' || item.servico === 'PENDENTE' ? item.servico : 'LAUDO', Seção_Ditel: 'SUPORTE' }));
           return Servico.insertMany(docs, { session, ordered: true });
         });
         return records.map(record => ({ os: record.Id_cod, rp: record.RP, nSerie: record['Nº_Serie'] }));
