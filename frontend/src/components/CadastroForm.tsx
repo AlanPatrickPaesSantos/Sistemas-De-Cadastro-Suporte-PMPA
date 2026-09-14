@@ -329,9 +329,9 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
 
   return (
     <Form {...form}>
-      <form id={id} onSubmit={form.handleSubmit(onSubmit, handleError)} className="flex flex-col h-full">
-        <fieldset disabled={readOnly} className="flex-1 flex flex-col min-h-0 border-none p-0 m-0">
-          <Tabs defaultValue="identificacao" className="flex-1 flex flex-col min-h-0">
+      <form id={id} onSubmit={form.handleSubmit(onSubmit, handleError)} className="flex min-w-0 w-full flex-col h-full">
+        <fieldset disabled={readOnly} className="flex-1 min-w-0 flex flex-col min-h-0 border-none p-0 m-0">
+          <Tabs defaultValue="identificacao" className="flex-1 min-w-0 flex flex-col min-h-0">
           <TabsList className="w-full inline-flex p-1 bg-slate-100/80 dark:bg-slate-800/80 rounded-xl mb-6 gap-1 overflow-x-auto overflow-y-hidden no-scrollbar justify-start border border-slate-200/50 dark:border-slate-700/50">
             <TabsTrigger value="identificacao" className="data-[state=active]:bg-white data-[state=active]:dark:bg-slate-700 data-[state=active]:text-[#004e9a] data-[state=active]:dark:text-white data-[state=active]:shadow-sm rounded-lg px-5 md:px-8 py-2.5 font-bold uppercase tracking-wider text-[11px] md:text-sm transition-all duration-300 data-[state=inactive]:text-slate-500 data-[state=inactive]:hover:bg-slate-200/50 whitespace-nowrap">
               Identificação
@@ -346,7 +346,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
             )}
           </TabsList>
 
-          <div className="flex-1 overflow-y-auto px-1 md:px-4 pb-4 custom-scrollbar relative">
+          <div className="flex-1 min-w-0 max-w-full overflow-y-auto overflow-x-hidden px-1 md:px-4 pb-4 custom-scrollbar relative">
             
             {/* STEPPER VISUAL */}
             <div className="mb-8 px-2">
@@ -689,7 +689,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
         </fieldset>
 
         {/* Barra de Ações Interna ao Formulário */}
-        <div className="mt-6 bg-muted/20 flex flex-col md:flex-row items-center justify-between gap-3 p-2 md:p-3 -mx-2 md:-mx-4 rounded-b-xl border-t border-slate-100 dark:border-slate-800">
+        <div className="mt-6 min-w-0 bg-muted/20 flex flex-col md:flex-row items-center justify-between gap-3 p-2 md:p-3 -mx-2 md:-mx-4 rounded-b-xl border-t border-slate-100 dark:border-slate-800">
           <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
             {lastSaved && !readOnly && (
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-500 uppercase tracking-widest shrink-0">
@@ -705,7 +705,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
 
             {/* Grupo de Navegação Unificado */}
             {onNavigate && (
-              <div className="flex items-center bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-0.5 shadow-sm">
+              <div className="flex max-w-full items-center bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 p-0.5 shadow-sm">
                 <Button
                   type="button"
                   variant="ghost"
@@ -715,7 +715,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
                   title="OS Anterior"
                 >
                   <ChevronLeft className="h-4 w-4" />
-                  <span className="text-[10px] uppercase">Anterior</span>
+                  <span className="hidden sm:inline text-[10px] uppercase">Anterior</span>
                 </Button>
                 
                 <div className="w-px h-4 bg-slate-200 dark:bg-slate-700 mx-0.5" />
@@ -728,7 +728,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
                   className="h-9 gap-2 text-pmpa-navy hover:bg-pmpa-navy/5 font-bold px-3 transition-all"
                   title="Próxima OS"
                 >
-                  <span className="text-[10px] uppercase">Próximo</span>
+                  <span className="hidden sm:inline text-[10px] uppercase">Próximo</span>
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
