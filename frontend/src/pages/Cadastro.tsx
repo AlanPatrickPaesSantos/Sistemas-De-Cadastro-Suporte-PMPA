@@ -178,10 +178,10 @@ const Cadastro = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-200 dark:bg-slate-950">
-      <div className="flex-1 flex flex-col container mx-auto px-4 py-4">
+    <div className="min-h-screen min-w-0 overflow-x-hidden flex flex-col bg-slate-200 dark:bg-slate-950">
+      <div className="flex-1 min-w-0 w-full flex flex-col container mx-auto px-3 sm:px-4 py-4">
         {/* Cabeçalho */}
-        <div className="flex items-center gap-4 mb-3 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3 shrink-0">
           <Button variant="ghost" onClick={() => navigate("/")} className="gap-2">
             <ArrowLeft className="h-4 w-4" />
             Voltar
@@ -191,7 +191,7 @@ const Cadastro = () => {
           </div>
 
           {/* Botões de Navegação Direta */}
-          <div className="flex items-center gap-2 bg-muted/30 p-1 rounded-lg border border-border/40">
+          <div className="ml-auto flex shrink-0 items-center gap-2 bg-muted/30 p-1 rounded-lg border border-border/40">
             <Button 
               variant="ghost"
               size="sm"
