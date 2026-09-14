@@ -63,7 +63,7 @@ export function HUDRadialGauge({
   return (
     <div
       onClick={onClick}
-      className={`group relative bg-white dark:bg-slate-900 backdrop-blur-md p-5 md:p-6 cursor-pointer transition-all duration-500 flex items-center justify-between overflow-hidden rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/40 hover:-translate-y-0.5 ${colorConfig.hoverShadow}`}
+      className={`group relative bg-white dark:bg-[#152238] backdrop-blur-md p-5 md:p-6 cursor-pointer transition-all duration-500 flex items-center justify-between overflow-hidden rounded-2xl shadow-sm border border-slate-100 dark:border-blue-400/10 hover:-translate-y-0.5 ${colorConfig.hoverShadow}`}
     >
       <div className="flex items-center gap-4 relative z-10">
         <div className={`p-3 rounded-xl transition-all duration-500 ${colorConfig.iconBg}`}>
