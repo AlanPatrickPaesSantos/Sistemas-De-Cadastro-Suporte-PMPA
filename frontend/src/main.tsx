@@ -18,7 +18,8 @@ console.log(
 // Qualquer chamada 'fetch' feita pelo sistema passará por aqui primeiro para anexar o token
 const originalFetch = window.fetch;
 window.fetch = async (...args) => {
-  const [resource, config] = args;
+  const [resource, initialConfig] = args;
+  let config = initialConfig;
   
   const isApiRequest = typeof resource === 'string' && (
     resource.startsWith(API_BASE) || 
