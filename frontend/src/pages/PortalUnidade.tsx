@@ -89,7 +89,7 @@ const PortalUnidade = () => {
         title: "Relatório Enviado com Sucesso",
         description: "Obrigado. Suas informações foram registradas no DITEL para o mês atual.",
       });
-    } catch (err: any) {
+    } catch (err) {
       toast({
         variant: "destructive",
         title: "Erro ao Enviar",
@@ -132,7 +132,7 @@ const PortalUnidade = () => {
         description: `O DITEL foi notificado. Protocolo: ${resData.chamado.protocolo}`,
       });
       // reset optionally
-    } catch (err: any) {
+    } catch (err) {
       toast({
         variant: "destructive",
         title: "Erro ao Enviar Chamado",
