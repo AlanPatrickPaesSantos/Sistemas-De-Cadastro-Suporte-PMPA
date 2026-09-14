@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Header } from "@/components/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -38,7 +38,7 @@ export default function DemandasDitel() {
     }
   }, [user, navigate, toast]);
 
-  const fetchDados = async () => {
+  const fetchDados = useCallback(async () => {
     setIsLoading(true);
     try {
       const token = localStorage.getItem('ditel_token');
@@ -64,11 +64,11 @@ export default function DemandasDitel() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     fetchDados();
-  }, []);
+  }, [fetchDados]);
 
   const handleUpdateChamado = async (id: string, novoStatus: string) => {
     try {
