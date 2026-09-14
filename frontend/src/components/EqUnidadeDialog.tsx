@@ -13,9 +13,10 @@ interface EqUnidadeDialogProps {
   onOpenChange: (open: boolean) => void;
   readOnly?: boolean;
 }
+interface UnidadeRecord { ID_UNID_SEÇÃO: string | number; UNIDADE: string; }
 
 export const EqUnidadeDialog = ({ open, onOpenChange, readOnly }: EqUnidadeDialogProps) => {
-  const [unidades, setUnidades] = useState<any[]>([]);
+  const [unidades, setUnidades] = useState<UnidadeRecord[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -63,7 +64,7 @@ export const EqUnidadeDialog = ({ open, onOpenChange, readOnly }: EqUnidadeDialo
     }
   }, [open, fetchUnidades]);
 
-  const loadRecordToState = (record: any) => {
+  const loadRecordToState = (record: UnidadeRecord) => {
     setId(record.ID_UNID_SEÇÃO);
     setSigla(record.UNIDADE);
   };
@@ -127,8 +128,8 @@ export const EqUnidadeDialog = ({ open, onOpenChange, readOnly }: EqUnidadeDialo
       toast.success("Unidade salva com sucesso!");
       await fetchUnidades(searchTerm);
       
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Erro ao salvar unidade");
     } finally {
       setIsSaving(false);
     }
@@ -168,8 +169,8 @@ export const EqUnidadeDialog = ({ open, onOpenChange, readOnly }: EqUnidadeDialo
         await fetchUnidades(searchTerm);
       }
       
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Erro ao excluir unidade");
     } finally {
       setIsDeleting(false);
     }

@@ -13,9 +13,10 @@ interface EqSuporteDialogProps {
   onOpenChange: (open: boolean) => void;
   readOnly?: boolean;
 }
+interface EquipamentoRecord { ID_EQUIP: string | number; EQUIPAMENTO: string; }
 
 export const EqSuporteDialog = ({ open, onOpenChange, readOnly }: EqSuporteDialogProps) => {
-  const [equips, setEquips] = useState<any[]>([]);
+  const [equips, setEquips] = useState<EquipamentoRecord[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -61,7 +62,7 @@ export const EqSuporteDialog = ({ open, onOpenChange, readOnly }: EqSuporteDialo
     }
   }, [open, fetchEquips]);
 
-  const loadRecordToState = (record: any) => {
+  const loadRecordToState = (record: EquipamentoRecord) => {
     setId(record.ID_EQUIP);
     setEquipamento(record.EQUIPAMENTO);
   };
@@ -125,8 +126,8 @@ export const EqSuporteDialog = ({ open, onOpenChange, readOnly }: EqSuporteDialo
       toast.success("Equipamento salvo com sucesso!");
       await fetchEquips(searchTerm);
 
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Erro ao salvar equipamento");
     } finally {
       setIsSaving(false);
     }
@@ -165,8 +166,8 @@ export const EqSuporteDialog = ({ open, onOpenChange, readOnly }: EqSuporteDialo
         await fetchEquips(searchTerm);
       }
 
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Erro ao excluir equipamento");
     } finally {
       setIsDeleting(false);
     }
