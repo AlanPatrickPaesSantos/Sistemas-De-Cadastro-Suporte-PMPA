@@ -21,7 +21,10 @@ async function createBatch(items, user) {
   const normalizedItems = items.map(item => ({ ...item, unidade: restricted ? user.unidadeVinculada : item.unidade }));
   const rps = normalizedItems.map(item => normalize(item.rp));
   const serials = normalizedItems.map(item => normalize(item.nSerie));
-  const conflicts = await Servico.find({ $or: [{ RP: { $in: rps } }, { 'Nº_Serie': { $in: serials } }] }, 'Id_cod RP Nº_Serie').lean();
+  const conflicts = await Servico.find({ $expr: { $or: [
+    { $in: [{ $toLower: { $trim: { input: { $ifNull: ['$RP', ''] } } } }, rps] },
+    { $in: [{ $toLower: { $trim: { input: { $ifNull: ['$Nº_Serie', ''] } } } }, serials] },
+  ] } }, 'Id_cod RP Nº_Serie').lean();
   if (conflicts.length) throw new Error(`RP ou patrimônio já cadastrado na O.S. ${conflicts[0].Id_cod}.`);
   const session = await Servico.startSession();
   try {
