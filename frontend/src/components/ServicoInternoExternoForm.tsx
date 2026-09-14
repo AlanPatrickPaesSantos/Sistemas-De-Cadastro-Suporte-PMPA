@@ -43,7 +43,7 @@ type FormData = z.infer<typeof formSchema>;
 
 interface ServicoInternoExternoFormProps {
   id?: string;
-  initialData?: any;
+  initialData?: Record<string, unknown>;
   onSubmit: (data: FormData) => void;
   onCancel: () => void;
   onPrint?: (type: 'laudo' | 'saida' | 'entrada') => void;
@@ -80,7 +80,7 @@ export const ServicoInternoExternoForm = ({
 
   useEffect(() => {
     if (initialData) {
-      const fmtDate = (d: any) => {
+      const fmtDate = (d: unknown) => {
         if (!d) return "";
         if (typeof d === 'string' && d.includes('/')) {
           const parts = d.split('/');

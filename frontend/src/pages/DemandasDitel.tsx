@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Header } from "@/components/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,12 +17,16 @@ import MapaInterativoPara from "@/components/MapaInterativoPara";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+type EquipamentoResumo = { operantes?: number; inoperantes?: number };
+type ChamadoResumo = { unidadeSolicitante: string; status: string; dataAbertura?: string; createdAt?: string };
+type RelatorioResumo = { unidade: string; statusGeral: string; equipamentos?: { radiosHT?: EquipamentoResumo; radiosMoveis?: EquipamentoResumo; computadores?: EquipamentoResumo } };
+
 export default function DemandasDitel() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [chamados, setChamados] = useState<any[]>([]);
-  const [relatorios, setRelatorios] = useState<any[]>([]);
+  const [chamados, setChamados] = useState<ChamadoResumo[]>([]);
+  const [relatorios, setRelatorios] = useState<RelatorioResumo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCPR, setSelectedCPR] = useState<string>('');
 
@@ -34,7 +38,7 @@ export default function DemandasDitel() {
     }
   }, [user, navigate, toast]);
 
-  const fetchDados = async () => {
+  const fetchDados = useCallback(async () => {
     setIsLoading(true);
     try {
       const token = localStorage.getItem('ditel_token');
@@ -60,11 +64,11 @@ export default function DemandasDitel() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     fetchDados();
-  }, []);
+  }, [fetchDados]);
 
   const handleUpdateChamado = async (id: string, novoStatus: string) => {
     try {

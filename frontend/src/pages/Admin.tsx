@@ -48,7 +48,7 @@ import { useNavigate } from "react-router-dom";
 interface Usuario {
   _id: string;
   username: string;
-  papel: string;
+  papel: 'admin' | 'operador' | 'visualizador' | 'tecnico';
   nomeCompleto?: string;
 }
 
@@ -254,7 +254,7 @@ const Admin = () => {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Papel / Nível de Acesso</Label>
-                    <Select value={formData.papel} onValueChange={(val) => setFormData({...formData, papel: val as any})}>
+                    <Select value={formData.papel} onValueChange={(val) => { if (['admin', 'operador', 'visualizador', 'tecnico'].includes(val)) setFormData({...formData, papel: val as typeof formData.papel}); }}>
                       <SelectTrigger className="h-11 rounded-xl">
                         <SelectValue placeholder="Selecione o papel" />
                       </SelectTrigger>

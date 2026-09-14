@@ -55,7 +55,7 @@ const Login = () => {
         duration: 3000,
       });
 
-    } catch (err: any) {
+    } catch {
       toast({
         variant: "destructive",
         title: "Acesso Negado",

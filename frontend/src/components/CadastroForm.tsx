@@ -94,6 +94,7 @@ const cadastroSchema = z.object({
 });
 
 type CadastroFormValues = z.infer<typeof cadastroSchema>;
+type CadastroRecord = Partial<CadastroFormValues> & { Id_cod?: number };
 
 interface CadastroFormProps {
   onSubmit: (data: CadastroFormValues) => void | Promise<void>;
@@ -103,7 +104,7 @@ interface CadastroFormProps {
   onDelete?: (os: number) => void;
   hasPrev?: boolean;
   hasNext?: boolean;
-  initialData?: any;
+  initialData?: CadastroRecord;
   id?: string;
   isEditMode?: boolean;
   readOnly?: boolean;
@@ -187,7 +188,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
     },
   });
 
-  const handleError = (errors: any) => {
+  const handleError = (errors: unknown) => {
     console.error("Erro de validação:", errors);
     toast.error("⚠️ Existem campos inválidos ou obrigatórios não preenchidos.");
   };
@@ -201,7 +202,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
     }
   }, [initialData, form]);
 
-  const [historyMatches, setHistoryMatches] = useState<any[]>([]);
+  const [historyMatches, setHistoryMatches] = useState<CadastroRecord[]>([]);
   const [isSearchingHistory, setIsSearchingHistory] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
@@ -228,7 +229,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
           form.setValue("secaoDitel", "SUPORTE");
           toast.info("📋 Rascunho carregado automaticamente.");
         }
-      } catch (e) {}
+      } catch (e) { console.warn("Falha ao buscar dados históricos", e); }
     }
   }, [isEditMode, initialData, form]);
 
@@ -239,7 +240,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
     try {
       const res = await fetch(`${API_BASE}/servicos?q=${value}&limit=3`);
       const data = await res.json();
-      const matches = Array.isArray(data) ? data.filter((item: any) => item.Id_cod != (initialData?.Id_cod || 0)) : [];
+      const matches = Array.isArray(data) ? data.filter((item: CadastroRecord) => item.Id_cod !== (initialData?.Id_cod || 0)) : [];
       setHistoryMatches(matches);
     } catch (e) {
       console.error(e);
@@ -250,7 +251,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
 
   useEffect(() => {
     if (initialData) {
-      const fmtDate = (d: any) => {
+      const fmtDate = (d: unknown) => {
 // ... existing date logic ...
         if (!d) return "";
         if (typeof d === 'string' && d.includes('/')) {

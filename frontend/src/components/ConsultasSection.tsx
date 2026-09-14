@@ -12,13 +12,15 @@ import { toast } from "sonner";
 import { API_BASE } from "../lib/api-config";
 import { useAuth } from "@/contexts/AuthContext";
 
+type ServiceRecord = { Id_cod: number; [key: string]: unknown };
+
 export const ConsultasSection = ({ globalUnidade }: { globalUnidade?: string }) => {
   const [query, setQuery] = useState("");
   const [filterType, setFilterType] = useState("all");
   const selectedUnidade = globalUnidade || "";
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<ServiceRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState<any>(null);
+  const [selectedRecord, setSelectedRecord] = useState<ServiceRecord | null>(null);
   const [hasPrev, setHasPrev] = useState(false);
   const [hasNext, setHasNext] = useState(false);
   const [isNavLoading, setIsNavLoading] = useState(false);
@@ -53,7 +55,7 @@ export const ConsultasSection = ({ globalUnidade }: { globalUnidade?: string }) 
     return () => clearTimeout(debounceTimer);
   }, [query, filterType, selectedUnidade]);
 
-  const loadRecord = async (record: any) => {
+  const loadRecord = async (record: ServiceRecord) => {
     try {
       const token = localStorage.getItem("ditel_token");
       const res = await fetch(`${API_BASE}/servicos/${record.Id_cod}`, {

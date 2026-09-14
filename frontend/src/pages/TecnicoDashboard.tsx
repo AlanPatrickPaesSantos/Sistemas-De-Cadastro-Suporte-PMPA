@@ -15,11 +15,11 @@ import { UnidadeCombobox } from "@/components/UnidadeCombobox";
 const TecnicoDashboard = () => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [currentOsRecord, setCurrentOsRecord] = useState<any>(null);
+  const [currentOsRecord, setCurrentOsRecord] = useState<Record<string, unknown> | null>(null);
   const [hasPrev, setHasPrev] = useState(false);
   const [hasNext, setHasNext] = useState(false);
   const [isNavLoading, setIsNavLoading] = useState(false);
-  const [draftFormData, setDraftFormData] = useState<any>(null);
+  const [draftFormData, setDraftFormData] = useState<Record<string, unknown> | null>(null);
   const [searchOs, setSearchOs] = useState("");
 
   const [formData, setFormData] = useState(() => {
