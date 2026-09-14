@@ -8,6 +8,7 @@ import { ArrowLeft, Search, Loader2, FileText, ChevronLeft, ChevronRight, Printe
 import { LaudoPrint } from "@/components/LaudoPrint";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { Link } from "react-router-dom";
 const Cadastro = () => {
   const { user } = useAuth();
   const isViewer = user?.papel === 'visualizador';
@@ -191,7 +192,7 @@ const Cadastro = () => {
 
           {/* Botões de Navegação Direta */}
           <div className="flex items-center gap-2 bg-muted/30 p-1 rounded-lg border border-border/40">
-            <Button
+            <Button 
               variant="ghost"
               size="sm"
               onClick={() => navigateTo('prev')}
@@ -234,6 +235,9 @@ const Cadastro = () => {
                className="h-8 gap-1 font-bold text-[10px] uppercase border"
             >
               Novo
+            </Button>
+            <Button asChild variant="outline" size="sm" className="h-8 font-bold text-[10px] uppercase">
+              <Link to="/cadastro-lote">Cadastro em lote</Link>
             </Button>
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
