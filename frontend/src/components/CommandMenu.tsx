@@ -34,14 +34,16 @@ import { LaudoPrint } from "./LaudoPrint";
 import { EqSuporteDialog } from "./EqSuporteDialog";
 import { EqUnidadeDialog } from "./EqUnidadeDialog";
 
+type ServiceRecord = { Id_cod: number; [key: string]: unknown };
+
 export function CommandMenu() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<ServiceRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
   // States for the details popup
-  const [selectedRecord, setSelectedRecord] = useState<any>(null);
+  const [selectedRecord, setSelectedRecord] = useState<ServiceRecord | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [printType, setPrintType] = useState<'laudo' | 'saida' | 'entrada'>('laudo');
@@ -116,7 +118,7 @@ export function CommandMenu() {
     }
   };
 
-  const handleUpdateRecord = async (data: any) => {
+  const handleUpdateRecord = async (data: Record<string, unknown>) => {
     if (!selectedRecord) return;
     try {
       const token = localStorage.getItem("ditel_token");
