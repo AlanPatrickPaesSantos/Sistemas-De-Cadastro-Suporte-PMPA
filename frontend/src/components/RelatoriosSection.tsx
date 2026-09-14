@@ -18,9 +18,11 @@ interface RelatoriosSectionProps {
   externalTrigger?: { id: string; dateRange?: { start: string; end: string }; q?: string; status?: string } | null;
   onTriggerClean?: () => void;
 }
+type ReportRecord = { Id_cod?: number; os?: number; Data_Saida?: string; saidaEquip?: string; data?: string; Data_Ent?: string; servico?: string; Serviço?: string; [key: string]: unknown };
+type Rankings = { unidades: unknown[]; servicos: unknown[]; defeitos: unknown[] };
 
 // Auxiliares de Formatação fora do componente para evitar re-criação
-const getFormattedDate = (item: any) => {
+const getFormattedDate = (item: ReportRecord) => {
   const d = item.Data_Saida || item.saidaEquip || item.data || item.Data_Ent;
   if (!d) return "---";
   if (typeof d === 'string' && d.includes('/')) return d.split(' ')[0];
@@ -28,7 +30,7 @@ const getFormattedDate = (item: any) => {
   return isNaN(date.getTime()) ? "---" : date.toLocaleDateString('pt-BR');
 };
 
-const getStatusStyle = (item: any) => {
+const getStatusStyle = (item: ReportRecord) => {
   const val = String(item.servico || item.Serviço || "").toLowerCase();
   if (val.includes("externo")) return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
   if (val.includes("interno")) return "bg-blue-500/10 text-blue-600 dark:text-blue-400";
@@ -39,10 +41,10 @@ const getStatusStyle = (item: any) => {
 
 export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: RelatoriosSectionProps) => {
   const [activeReport, setActiveReport] = useState<string | null>(null);
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<ReportRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "", unidade: "", bateria: false, garantia: false });
-  const [selectedRecord, setSelectedRecord] = useState<any>(null);
+  const [selectedRecord, setSelectedRecord] = useState<ReportRecord | null>(null);
   const { user } = useAuth();
   const isViewer = user?.papel === 'visualizador';
   const [stats, setStats] = useState<{
@@ -57,7 +59,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     garantia: number;
     manutencaoTotal?: number;
     manutencaoProntas?: number;
-    rankings?: any;
+    rankings?: Rankings;
   }>({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0, laudo: 0, bateria: 0, garantia: 0 });
 
   const [printType, setPrintType] = useState<'laudo' | 'saida' | 'entrada'>('laudo');
@@ -155,7 +157,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     await fetchReportData(filters.startDate, filters.endDate, activeReport, filters.q, filters.status);
   };
 
-  const handleSave = async (data: any) => {
+  const handleSave = async (data: Record<string, unknown>) => {
     if (!selectedRecord) return;
     try {
       const isMissions = activeReport === "Rel_Missao_Consolidado";
@@ -186,7 +188,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     }
   };
 
-  const loadDetail = async (item: any) => {
+  const loadDetail = async (item: ReportRecord) => {
     setIsLoading(true);
     try {
       const isMissions = activeReport === "Rel_Missao_Consolidado";
