@@ -91,7 +91,7 @@ const Chamado = require('./models/Chamado');
 const RelatorioQualidade = require('./models/RelatorioQualidade');
 const bcrypt = require('bcryptjs');
 const verificarToken = require('./middleware/authMiddleware');
-const { bloquearVisualizador } = require('./middleware/roleMiddleware');
+const { bloquearVisualizador, permitirPerfis } = require('./middleware/roleMiddleware');
 
 // Helper centralizado para tratamento de erros (oculta stack trace em produção)
 function sendServerError(res, err, fallback = 'Erro interno ao processar requisição.') {
@@ -726,12 +726,17 @@ app.delete('/api/eqsuporte/:id', async (req, res) => {
 
 
 // Criar novo cadastro
-app.post('/api/servicos/lote', async (req, res) => {
+app.post('/api/servicos/lote', permitirPerfis('admin', 'operador', 'tecnico'), async (req, res) => {
   try {
+    if (!Array.isArray(req.body?.equipamentos) || req.body.equipamentos.length > 100) {
+      return res.status(413).json({ success: false, error: 'O lote deve conter entre 1 e 100 equipamentos.' });
+    }
     const records = await createBatch(req.body?.equipamentos, req.user);
     res.status(201).json({ success: true, count: records.length, records });
   } catch (err) {
-    res.status(err.message?.includes('obrigatório') || err.message?.includes('repetido') || err.message?.includes('cadastrado') ? 409 : 400).json({ success: false, error: err.message });
+    const conflict = /obrigatório|repetido|cadastrado/.test(err.message || '');
+    console.error('Erro no cadastro em lote:', err);
+    res.status(conflict ? 409 : 500).json({ success: false, error: conflict ? err.message : 'Não foi possível salvar o lote.' });
   }
 });
 

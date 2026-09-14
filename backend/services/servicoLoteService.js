@@ -8,6 +8,7 @@ function validateItems(items) {
   const seenRp = new Map(); const seenSerial = new Map();
   items.forEach((item, index) => {
     required.forEach(field => { if (!normalize(item[field])) throw new Error(`Equipamento ${index + 1}: campo obrigatório ausente (${field}).`); });
+    if (String(item.analiseTecnica).length > 10000 || String(item.rp).length > 200 || String(item.nSerie).length > 200) throw new Error(`Equipamento ${index + 1}: campo excede o tamanho permitido.`);
     const rp = normalize(item.rp); const serial = normalize(item.nSerie);
     if (seenRp.has(rp)) throw new Error(`RP repetido entre os equipamentos ${seenRp.get(rp)} e ${index + 1}.`);
     if (seenSerial.has(serial)) throw new Error(`Patrimônio repetido entre os equipamentos ${seenSerial.get(serial)} e ${index + 1}.`);
@@ -17,7 +18,7 @@ function validateItems(items) {
 
 async function createBatch(items, user) {
   validateItems(items);
-  const restricted = user && user.papel !== 'admin' && user.unidadeVinculada !== 'DITEL';
+  const restricted = user && user.papel !== 'admin';
   const normalizedItems = items.map(item => ({ ...item, unidade: restricted ? user.unidadeVinculada : item.unidade }));
   const rps = normalizedItems.map(item => normalize(item.rp));
   const serials = normalizedItems.map(item => normalize(item.nSerie));
