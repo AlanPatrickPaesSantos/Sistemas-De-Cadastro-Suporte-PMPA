@@ -74,7 +74,7 @@ const TecnicoDashboard = () => {
         tecnicos: savedTecnico || user.nomeCompleto || user.username || ""
       }));
     }
-  }, [user]);
+  }, [user, formData.tecnicos]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (isReadOnly) return;
