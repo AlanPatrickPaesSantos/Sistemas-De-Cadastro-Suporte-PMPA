@@ -6,6 +6,7 @@ const fs = require('fs');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const { createBatch } = require('./services/servicoLoteService');
 
 // Carregamento resiliente do .env (Apenas se o arquivo existir localmente)
 const envPath = path.resolve(__dirname, '.env');
@@ -725,6 +726,15 @@ app.delete('/api/eqsuporte/:id', async (req, res) => {
 
 
 // Criar novo cadastro
+app.post('/api/servicos/lote', async (req, res) => {
+  try {
+    const records = await createBatch(req.body?.equipamentos, req.user);
+    res.status(201).json({ success: true, count: records.length, records });
+  } catch (err) {
+    res.status(err.message?.includes('obrigatório') || err.message?.includes('repetido') || err.message?.includes('cadastrado') ? 409 : 400).json({ success: false, error: err.message });
+  }
+});
+
 app.post('/api/servicos', async (req, res) => {
   try {
     const data = req.body;
