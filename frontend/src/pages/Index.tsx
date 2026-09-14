@@ -75,7 +75,7 @@ const Index = () => {
     };
 
     fetchDashboardStats();
-  }, [globalUnidade]);
+  }, [globalUnidade, navigate, user?.papel]);
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-200 dark:bg-slate-950 overflow-x-hidden">
