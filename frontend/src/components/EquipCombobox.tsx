@@ -32,7 +32,7 @@ export function EquipCombobox({ value, onChange }: EquipComboboxProps) {
       setIsLoading(true);
       try {
         const token = localStorage.getItem('ditel_token');
-        const authHeaders: any = {};
+        const authHeaders: Record<string, string> = {};
         if (token) authHeaders['Authorization'] = `Bearer ${token}`; // /api/eqsuporte is unprotected explicitly, but sending token doesn't hurt.
         
         const response = await fetch(`${API_BASE}/eqsuporte`, { headers: authHeaders });
