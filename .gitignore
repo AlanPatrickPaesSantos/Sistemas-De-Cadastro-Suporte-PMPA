@@ -42,6 +42,7 @@ final_check*.json
 fase-1-seguranca-ditel-relatorio.txt
 .env
 frontend/vite.config.ts.timestamp-*.mjs
+frontend/test-results/
 auditoria-inicial.sh
 fase-1-diff-review.txt
 fase-*.txt
