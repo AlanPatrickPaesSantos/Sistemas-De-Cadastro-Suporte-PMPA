@@ -14,5 +14,5 @@ export function BatchReport({ items, fallbackDescription, unit, date, technician
     win.onload = () => setTimeout(() => win.print(), 300);
     setTimeout(() => win.print(), 800);
   };
-  return <Button type="button" variant="outline" className="w-full" onClick={print}>Imprimir relatório do lote</Button>;
+  return <Button type="button" className="w-full bg-[#004e9a] text-white shadow-md hover:bg-[#003b75] focus-visible:ring-2 focus-visible:ring-[#004e9a]/50" onClick={print}>Imprimir relatório do lote</Button>;
 }
