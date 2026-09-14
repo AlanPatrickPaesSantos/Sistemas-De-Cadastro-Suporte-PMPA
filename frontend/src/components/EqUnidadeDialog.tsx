@@ -30,7 +30,7 @@ export const EqUnidadeDialog = ({ open, onOpenChange, readOnly }: EqUnidadeDialo
     setIsLoading(true);
     try {
       const token = localStorage.getItem('ditel_token');
-      const authHeaders: any = {};
+      const authHeaders: Record<string, string> = {};
       if (token) {
         authHeaders['Authorization'] = `Bearer ${token}`;
       }
@@ -73,7 +73,7 @@ export const EqUnidadeDialog = ({ open, onOpenChange, readOnly }: EqUnidadeDialo
     if (!keepLoadingNextId) {
       try {
         const token = localStorage.getItem('ditel_token');
-        const authHeaders: any = {};
+        const authHeaders: Record<string, string> = {};
         if (token) authHeaders['Authorization'] = `Bearer ${token}`;
         
         const res = await fetch(`${API_BASE}/unidades/next-id`, {
@@ -102,7 +102,7 @@ export const EqUnidadeDialog = ({ open, onOpenChange, readOnly }: EqUnidadeDialo
     
     setIsSaving(true);
     const token = localStorage.getItem('ditel_token');
-    const authHeaders: any = { 'Content-Type': 'application/json' };
+    const authHeaders: Record<string, string> = { 'Content-Type': 'application/json' };
     if (token) authHeaders['Authorization'] = `Bearer ${token}`;
     
     try {
@@ -146,7 +146,7 @@ export const EqUnidadeDialog = ({ open, onOpenChange, readOnly }: EqUnidadeDialo
     setConfirmOpen(false);
     setIsDeleting(true);
     const token = localStorage.getItem('ditel_token');
-    const authHeaders: any = {};
+      const authHeaders: Record<string, string> = {};
     if (token) authHeaders['Authorization'] = `Bearer ${token}`;
     
     try {

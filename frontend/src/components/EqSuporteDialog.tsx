@@ -30,7 +30,7 @@ export const EqSuporteDialog = ({ open, onOpenChange, readOnly }: EqSuporteDialo
     setIsLoading(true);
     try {
       const token = localStorage.getItem('ditel_token');
-      const authHeaders: any = {};
+      const authHeaders: Record<string, string> = {};
       if (token) authHeaders['Authorization'] = `Bearer ${token}`;
 
       const res = await fetch(`${API_BASE}/eqsuporte/list${query ? `?q=${query}` : ''}`, {
@@ -71,7 +71,7 @@ export const EqSuporteDialog = ({ open, onOpenChange, readOnly }: EqSuporteDialo
     if (!keepLoadingNextId) {
       try {
         const token = localStorage.getItem('ditel_token');
-        const authHeaders: any = {};
+        const authHeaders: Record<string, string> = {};
         if (token) authHeaders['Authorization'] = `Bearer ${token}`;
 
         const res = await fetch(`${API_BASE}/eqsuporte/next-id`, {
@@ -100,7 +100,7 @@ export const EqSuporteDialog = ({ open, onOpenChange, readOnly }: EqSuporteDialo
 
     setIsSaving(true);
     const token = localStorage.getItem('ditel_token');
-    const authHeaders: any = { 'Content-Type': 'application/json' };
+    const authHeaders: Record<string, string> = { 'Content-Type': 'application/json' };
     if (token) authHeaders['Authorization'] = `Bearer ${token}`;
 
     try {
@@ -144,7 +144,7 @@ export const EqSuporteDialog = ({ open, onOpenChange, readOnly }: EqSuporteDialo
     setConfirmOpen(false);
     setIsDeleting(true);
     const token = localStorage.getItem('ditel_token');
-    const authHeaders: any = {};
+      const authHeaders: Record<string, string> = {};
     if (token) authHeaders['Authorization'] = `Bearer ${token}`;
 
     try {
