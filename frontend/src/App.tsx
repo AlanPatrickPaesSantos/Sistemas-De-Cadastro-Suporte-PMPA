@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Cadastro from "./pages/Cadastro";
+import CadastroLote from "./pages/CadastroLote";
 import ServicoInternoExterno from "./pages/ServicoInternoExterno";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
@@ -34,6 +35,7 @@ const App = () => (
               {/* Rotas Protegidas e Secretas */}
               <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
               <Route path="/cadastro" element={<ProtectedRoute><Cadastro /></ProtectedRoute>} />
+              <Route path="/cadastro-lote" element={<ProtectedRoute><CadastroLote /></ProtectedRoute>} />
               <Route path="/servico-interno-externo" element={<ProtectedRoute><ServicoInternoExterno /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
               <Route path="/tecnico" element={<ProtectedRoute><TecnicoDashboard /></ProtectedRoute>} />

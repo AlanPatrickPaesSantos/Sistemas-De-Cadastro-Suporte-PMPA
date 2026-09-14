@@ -35,6 +35,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { EquipCombobox } from "./EquipCombobox";
 import { UnidadeCombobox } from "./UnidadeCombobox";
+import { AnaliseSugestoesMenu } from "./AnaliseSugestoesMenu";
+import { appendAnaliseSuggestion } from "@/lib/analiseSugestoes";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -316,16 +318,12 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
   }, [initialData, form]);
 
   const addAnaliseSuggestion = (suggestion: string) => {
-    const current = (form.getValues("analiseTecnica") || "").trim();
-
-    if (current && current.toLocaleLowerCase("pt-BR").includes(suggestion.toLocaleLowerCase("pt-BR"))) {
+    const result = appendAnaliseSuggestion(form.getValues("analiseTecnica") || "", suggestion);
+    if (result.duplicate) {
       toast.info("Essa sugestão já foi adicionada.");
       return;
     }
-
-    const separator = current && !/[.!?]$/.test(current) ? ". " : current ? " " : "";
-    const nextValue = current ? `${current}${separator}${suggestion}` : suggestion;
-    form.setValue("analiseTecnica", nextValue, { shouldDirty: true, shouldTouch: true });
+    form.setValue("analiseTecnica", result.value, { shouldDirty: true, shouldTouch: true });
   };
 
   return (
@@ -553,37 +551,7 @@ export const CadastroForm = ({ onSubmit, onCancel, onPrint, onNavigate, onDelete
                     <FormItem>
                       <div className="flex items-center justify-between mb-2">
                         <FormLabel className="text-[11px] font-bold text-[#004e9a] uppercase tracking-widest">Análise Técnica Preliminar</FormLabel>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              className="h-7 gap-1.5 text-[10px] uppercase font-bold border-amber-200 hover:bg-amber-50 text-amber-700"
-                            >
-                              <Sparkles className="w-3 h-3" /> Sugestões
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-[330px] max-h-[420px] overflow-y-auto">
-                            <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-slate-500">
-                              Manutenção
-                            </DropdownMenuLabel>
-                            {ANALISE_SUGESTOES_MANUTENCAO.map((item) => (
-                              <DropdownMenuItem key={item.label} onSelect={() => addAnaliseSuggestion(item.text)}>
-                                {item.label}
-                              </DropdownMenuItem>
-                            ))}
-                            <DropdownMenuSeparator />
-                            <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-slate-500">
-                              Laudo
-                            </DropdownMenuLabel>
-                            {ANALISE_SUGESTOES_LAUDO.map((item) => (
-                              <DropdownMenuItem key={item.label} onSelect={() => addAnaliseSuggestion(item.text)}>
-                                {item.label}
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <AnaliseSugestoesMenu onSelect={addAnaliseSuggestion} />
                       </div>
                       <FormControl><Textarea {...field} className="min-h-[160px] text-sm leading-relaxed p-4 bg-slate-50 dark:bg-slate-900/50 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 border-slate-200/60 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 focus:border-[#004e9a]/40 dark:focus:border-[#004e9a]/60 focus:ring-4 focus:ring-[#004e9a]/10 dark:focus:ring-[#004e9a]/20 transition-all rounded-xl shadow-sm text-slate-800 dark:text-slate-100 font-medium custom-scrollbar" /></FormControl>
                     </FormItem>
