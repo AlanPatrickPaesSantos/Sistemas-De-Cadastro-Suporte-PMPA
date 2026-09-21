@@ -13,7 +13,7 @@ describe("documentos individuais do lote", () => {
 
     expect((html.match(/class="os-page"/g) || []).length).toBe(2);
     expect(html).toContain("RELATÓRIO DE LAUDO TÉCNICO");
-    expect(html).toContain("RELATÓRIO DE MANUTENÇÃO");
+    expect(html).toContain("RELATÓRIO DE SAÍDA DE EQUIPAMENTO");
     expect(html).toContain("3208");
     expect(html).toContain("3209");
   });
