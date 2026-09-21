@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-interface LaudoData {
+export interface LaudoData {
   Id_cod: number | string;
   T_EquipSuporte?: string;
   T_EquipTelecom?: string;
@@ -18,7 +18,10 @@ interface LaudoData {
   Tecnico?: string;
 }
 
-export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: 'laudo' | 'saida' | 'entrada' }) => {
+export type LaudoPrintType = 'laudo' | 'saida' | 'entrada';
+export type BatchLaudoRecord = { data: LaudoData; type: LaudoPrintType };
+
+export const LaudoPrint = ({ data, type = 'laudo', batch }: { data: LaudoData, type?: LaudoPrintType, batch?: BatchLaudoRecord[] }) => {
   const [mountNode, setMountNode] = useState<HTMLElement | null>(null);
 
   const formatDateBR = (dateStr?: string) => {
@@ -51,7 +54,10 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
     setMountNode(el);
   }, []);
 
-  const renderHalf = () => (
+  const renderHalf = (record: LaudoData, recordType: LaudoPrintType) => {
+    const data = record;
+    const type = recordType;
+    return (
     <div className="laudo-half px-6 py-4 flex flex-col justify-between h-full font-sans text-[11px] leading-tight text-black bg-white relative overflow-hidden">
       {/* Logos and Header */}
       <img src="/logo-pmpa.png" alt="Watermark" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: 0.05, width: '380px', zIndex: 0, pointerEvents: 'none' }} />
@@ -151,7 +157,8 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
         </div>
       </div>
     </div>
-  );
+    );
+  };
 
   if (!mountNode) return null;
 
@@ -176,17 +183,16 @@ export const LaudoPrint = ({ data, type = 'laudo' }: { data: LaudoData, type?: '
           }
         }
       `}</style>
-      <div className="mx-auto w-full max-w-[210mm] h-[292mm] overflow-hidden flex flex-col justify-between">
-        <div className="flex-1 w-full flex flex-col overflow-hidden">
-          {renderHalf()}
-        </div>
-
-        {/* Visual divider space / Cutline */}
-        <div className="h-0 border-t-2 border-dashed border-gray-400 w-full -my-px no-print z-10"></div>
-
-        <div className="flex-1 w-full flex flex-col overflow-hidden">
-          {renderHalf()}
-        </div>
+      <div className="mx-auto w-full max-w-[210mm] overflow-hidden">
+        {batch?.length ? batch.map((record, index) => (
+          <div key={`${record.data.Id_cod}-${index}`} className="h-[297mm] w-full flex flex-col overflow-hidden">
+            {renderHalf(record.data, record.type)}
+          </div>
+        )) : <div className="h-[292mm] flex flex-col justify-between">
+          <div className="flex-1 w-full flex flex-col overflow-hidden">{renderHalf(data, type)}</div>
+          <div className="h-0 border-t-2 border-dashed border-gray-400 w-full -my-px no-print z-10"></div>
+          <div className="flex-1 w-full flex flex-col overflow-hidden">{renderHalf(data, type)}</div>
+        </div>}
       </div>
     </div>,
     mountNode
