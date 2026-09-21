@@ -185,8 +185,10 @@ export const LaudoPrint = ({ data, type = 'laudo', batch }: { data: LaudoData, t
       `}</style>
       <div className="mx-auto w-full max-w-[210mm] overflow-hidden">
         {batch?.length ? batch.map((record, index) => (
-          <div key={`${record.data.Id_cod}-${index}`} className="h-[297mm] w-full flex flex-col overflow-hidden">
-            {renderHalf(record.data, record.type)}
+          <div key={`${record.data.Id_cod}-${index}`} className="h-[292mm] w-full flex flex-col justify-between overflow-hidden">
+            <div className="flex-1 w-full flex flex-col overflow-hidden">{renderHalf(record.data, record.type)}</div>
+            <div className="h-0 border-t-2 border-dashed border-gray-400 w-full -my-px no-print z-10"></div>
+            <div className="flex-1 w-full flex flex-col overflow-hidden">{renderHalf(record.data, record.type)}</div>
           </div>
         )) : <div className="h-[292mm] flex flex-col justify-between">
           <div className="flex-1 w-full flex flex-col overflow-hidden">{renderHalf(data, type)}</div>

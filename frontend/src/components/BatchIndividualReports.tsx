@@ -15,7 +15,17 @@ export function BatchIndividualReports({ items, unit, date, technician, requeste
     };
     return { data, type: item.atendimento === "LAUDO" ? "laudo" : "saida" };
   });
-  const print = () => { setPrinting(true); setTimeout(() => window.print(), 150); };
+  const print = () => {
+    setPrinting(true);
+    setTimeout(async () => {
+      const images = Array.from(document.querySelectorAll<HTMLImageElement>('#print-portal-container img'));
+      await Promise.all(images.filter(image => !image.complete).map(image => new Promise<void>(resolve => {
+        image.addEventListener('load', () => resolve(), { once: true });
+        image.addEventListener('error', () => resolve(), { once: true });
+      })));
+      window.print();
+    }, 250);
+  };
   return <>
     <Button type="button" className="w-full bg-[#004e9a] text-white shadow-md hover:bg-[#003b75]" onClick={print}>Imprimir O.S. individuais do lote</Button>
     {printing && <div className="hidden"><LaudoPrint data={records[0].data} batch={records} /></div>}
