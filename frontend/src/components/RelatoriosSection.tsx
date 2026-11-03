@@ -39,11 +39,118 @@ const getStatusStyle = (item: ReportRecord) => {
   return "bg-amber-500/10 text-amber-600 dark:text-amber-400";
 };
 
+type EquipmentPrintFilters = { startDate: string; endDate: string };
+
+export const getEquipmentPrintFilters = (
+  lastCompletedDateFilters: EquipmentPrintFilters | null,
+  currentDateFilters: EquipmentPrintFilters,
+) => lastCompletedDateFilters || currentDateFilters;
+
+const escapePrintHtml = (value: unknown) => String(value ?? "")
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;")
+  .replace(/'/g, "&#39;");
+
+const printValue = (value: unknown) => {
+  const text = String(value ?? "").trim();
+  return text ? escapePrintHtml(text) : "—";
+};
+
+const formatPrintDate = (value: unknown) => {
+  const text = String(value ?? "").trim();
+  if (!text) return "—";
+  if (/^\d{2}\/\d{2}\/\d{4}/.test(text)) return escapePrintHtml(text.split(" ")[0]);
+  const date = new Date(text);
+  if (Number.isNaN(date.getTime())) return printValue(text);
+  return `${String(date.getUTCDate()).padStart(2, "0")}/${String(date.getUTCMonth() + 1).padStart(2, "0")}/${date.getUTCFullYear()}`;
+};
+
+const formatSelectedDate = (value: string, fallback: string) => value ? formatPrintDate(`${value}T00:00:00.000Z`) : fallback;
+
+export const buildEquipmentPrintHtml = (records: ReportRecord[], dateFilters: EquipmentPrintFilters, logoBase: string) => {
+  const rows = records.map((item) => `
+    <tr>
+      <td>${printValue(item.Id_cod)}</td>
+      <td>${formatPrintDate(item.Data_Ent)}</td>
+      <td>${printValue(item.Unidade)}</td>
+      <td>${printValue(item.T_EquipSuporte || item.T_EquipTelecom)}</td>
+      <td>${printValue(item.RP)}</td>
+      <td>${printValue(item.Nº_Serie)}</td>
+      <td>${printValue(item.Tecnico)}</td>
+      <td>${printValue(item.Serviço || item.servico)}</td>
+    </tr>
+  `).join("");
+
+  return `<!DOCTYPE html>
+  <html lang="pt-BR">
+    <head>
+      <meta charset="UTF-8" />
+      <title>Relatório de Equipamentos - PMPA/DITEL</title>
+      <style>
+        @page { size: A4 landscape; margin: 12mm; }
+        * { box-sizing: border-box; }
+        body { margin: 0; color: #172033; background: #fff; font-family: Arial, sans-serif; font-size: 9pt; }
+        .header { display: flex; align-items: center; gap: 16px; border-bottom: 1.2pt solid #172033; padding-bottom: 10px; }
+        .logo { width: 58px; height: 58px; object-fit: contain; }
+        .ditel-logo { width: 80px; height: 58px; object-fit: contain; }
+        .header-text { flex: 1; text-align: center; font-size: 8pt; font-weight: 700; line-height: 1.35; text-transform: uppercase; }
+        .header-text strong { display: block; margin-top: 3px; font-size: 11pt; }
+        h1 { margin: 16px 0 8px; text-align: center; font-size: 14pt; text-transform: uppercase; letter-spacing: .04em; }
+        .meta { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 14px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; font-size: 8.5pt; }
+        .meta strong { text-transform: uppercase; font-size: 7.5pt; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        thead { display: table-header-group; }
+        tr { break-inside: avoid; page-break-inside: avoid; }
+        th, td { border: 1px solid #cbd5e1; padding: 5px 4px; text-align: left; overflow-wrap: anywhere; vertical-align: top; }
+        th { background: #004e9a; color: #fff; font-size: 7.5pt; text-align: center; text-transform: uppercase; }
+        td { font-size: 8pt; }
+        th:nth-child(1) { width: 7%; } th:nth-child(2) { width: 10%; } th:nth-child(3) { width: 15%; } th:nth-child(4) { width: 15%; }
+        th:nth-child(5) { width: 10%; } th:nth-child(6) { width: 14%; } th:nth-child(7) { width: 14%; } th:nth-child(8) { width: 15%; }
+        .footer { margin-top: 12px; border-top: 1px solid #cbd5e1; padding-top: 7px; color: #475569; text-align: center; font-size: 7pt; }
+      </style>
+    </head>
+    <body>
+      <header class="header">
+        <img class="logo" src="${escapePrintHtml(logoBase)}/logo-pmpa.png" alt="PMPA" />
+        <div class="header-text">
+          <div>GOVERNO DO ESTADO DO PARÁ</div>
+          <div>SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA E DEFESA SOCIAL</div>
+          <div>POLÍCIA MILITAR DO PARÁ</div>
+          <div>DEPARTAMENTO GERAL DE ADMINISTRAÇÃO</div>
+          <strong>DIRETORIA DE TELEMÁTICA</strong>
+        </div>
+        <img class="ditel-logo" src="${escapePrintHtml(logoBase)}/Logo Ditel.jpeg" alt="DITEL" />
+      </header>
+      <h1>Relatório de Equipamentos</h1>
+      <div class="meta">
+        <div><strong>Período pesquisado:</strong><br />${formatSelectedDate(dateFilters.startDate, "Início")} — ${formatSelectedDate(dateFilters.endDate, "Fim")}</div>
+        <div><strong>Registros encontrados:</strong><br />${records.length}</div>
+        <div><strong>Emissão:</strong><br />${new Date().toLocaleDateString("pt-BR")}</div>
+      </div>
+      <table>
+        <thead><tr><th>O.S.</th><th>Data</th><th>Unidade</th><th>Equipamento</th><th>RP</th><th>Patrimônio / Nº Série</th><th>Técnico</th><th>Situação</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="footer">PMPA | Diretoria de Telemática — documento gerado a partir dos resultados da pesquisa.</div>
+      <script>
+        let printed = false;
+        const printOnce = () => { if (printed) return; printed = true; window.print(); };
+        window.onload = () => setTimeout(printOnce, 250);
+        setTimeout(printOnce, 1200);
+        window.onafterprint = () => window.close();
+      </script>
+    </body>
+  </html>`;
+};
+
 export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: RelatoriosSectionProps) => {
   const [activeReport, setActiveReport] = useState<string | null>(null);
   const [results, setResults] = useState<ReportRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "", unidade: "", bateria: false, garantia: false });
+  const [lastCompletedDateFilters, setLastCompletedDateFilters] = useState<EquipmentPrintFilters | null>(null);
   const [selectedRecord, setSelectedRecord] = useState<ReportRecord | null>(null);
   const { user } = useAuth();
   const isViewer = user?.papel === 'visualizador';
@@ -140,6 +247,9 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
         // Rankings auditados do servidor (v40.5)
         rankings: allStats.missoes.rankings || { unidades: [], servicos: [], defeitos: [] }
       });
+      if (isEquipments) {
+        setLastCompletedDateFilters({ startDate: start, endDate: end });
+      }
     } catch (error) {
       console.error("Erro ao gerar relatório:", error);
     } finally {
@@ -570,6 +680,24 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     printWindow.document.close();
   };
 
+  const handlePrintEquipamentos = () => {
+    if (activeReport !== "Rel_Equipamentos" || results.length === 0) return;
+
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      alert("Por favor, permita pop-ups no seu navegador para imprimir o relatório.");
+      return;
+    }
+
+    printWindow.document.open();
+    const printFilters = getEquipmentPrintFilters(lastCompletedDateFilters, {
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+    });
+    printWindow.document.write(buildEquipmentPrintHtml(results, printFilters, window.location.origin));
+    printWindow.document.close();
+  };
+
   return (
     <>
       <Card className="relative overflow-hidden bg-white/95 dark:bg-[#182944]/95 backdrop-blur-md rounded-2xl border border-slate-200/50 dark:border-blue-300/10 shadow-[0_4px_20px_rgba(0,0,0,0.04)] transition-all duration-500 group">
@@ -618,6 +746,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           setResults([]);
           setStats({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0, laudo: 0, bateria: 0, garantia: 0 });
           setFilters({ startDate: "", endDate: "", q: "", status: "", unidade: "", bateria: false, garantia: false });
+          setLastCompletedDateFilters(null);
         }
       }}>
         <DialogContent className="max-w-5xl w-[95vw] sm:w-full max-h-[92vh] overflow-hidden flex flex-col p-4 md:p-6 border-border/50 shadow-2xl bg-white dark:bg-slate-900">
@@ -701,6 +830,12 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
               {results.length > 0 && activeReport === "Rel_Missao_Consolidado" && (
                 <Button onClick={handlePrint} variant="outline" className="border-pmpa-navy text-pmpa-navy hover:bg-pmpa-navy/5 gap-2 h-10">
                   <FileText className="h-4 w-4" />
+                  Imprimir
+                </Button>
+              )}
+              {results.length > 0 && activeReport === "Rel_Equipamentos" && (
+                <Button onClick={handlePrintEquipamentos} variant="outline" className="border-pmpa-navy text-pmpa-navy hover:bg-pmpa-navy/5 gap-2 h-10">
+                  <Printer className="h-4 w-4" />
                   Imprimir
                 </Button>
               )}
