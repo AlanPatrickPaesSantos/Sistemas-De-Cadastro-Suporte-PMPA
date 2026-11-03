@@ -311,7 +311,7 @@ const buildServiceQuery = (params, user) => {
   }
 
   if (bateria === "true") {
-    query.Bateria = { $regex: /\\S/ };
+    query.Bateria = { $regex: /\S/ };
   }
 
   if (garantia === "true") {
@@ -984,7 +984,7 @@ app.get('/api/stats/consolidated', async (req, res) => {
         Servico.countDocuments({ ...serviceQuery, Serviço: /^\s*PRONTO\s*$/i }),    // [6]
         Servico.countDocuments({ ...serviceQuery, Serviço: /^\s*PENDENTE\s*$/i }),  // [7]
         Servico.countDocuments({ ...serviceQuery, Serviço: /^\s*LAUDO\s*$/i }),     // [8]
-        Servico.countDocuments({ ...serviceQuery, Bateria: { $regex: /\\S/ } }), // [9]
+        Servico.countDocuments({ ...serviceQuery, Bateria: { $regex: /\S/ } }), // [9]
         Servico.countDocuments({ ...serviceQuery, Garantia: /^\s*sim\s*$/i })        // [10]
       ]),
 
