@@ -40,18 +40,50 @@ const getStatusStyle = (item: ReportRecord) => {
 };
 
 type EquipmentPrintFilters = { startDate: string; endDate: string };
+type EquipmentQueryFilters = EquipmentPrintFilters & { q: string; status: string; unidade: string; bateria: boolean; garantia: boolean };
+type EquipmentPage<T> = { records: T[]; total: number };
 
 export const getEquipmentPrintFilters = (
   lastCompletedDateFilters: EquipmentPrintFilters | null,
   currentDateFilters: EquipmentPrintFilters,
 ) => lastCompletedDateFilters || currentDateFilters;
 
+export const getEquipmentPrintQueryParams = (filters: EquipmentQueryFilters) => {
+  const params = new URLSearchParams();
+  if (filters.startDate) params.set("startDate", filters.startDate);
+  if (filters.endDate) params.set("endDate", filters.endDate);
+  if (filters.q) params.set("q", filters.q);
+  if (filters.status) params.set("status", filters.status);
+  if (filters.unidade) params.set("unidade", filters.unidade);
+  if (filters.bateria) params.set("bateria", "true");
+  if (filters.garantia) params.set("garantia", "true");
+  return params;
+};
+
+export const fetchAllEquipmentPages = async <T,>(
+  fetchPage: (page: number) => Promise<EquipmentPage<T>>,
+  pageSize = 100,
+) => {
+  if (!Number.isInteger(pageSize) || pageSize < 1) throw new Error("Tamanho de página inválido.");
+  const first = await fetchPage(1);
+  if (!Number.isInteger(first.total) || first.total < 0) throw new Error("A API não informou uma contagem total válida.");
+  const records = [...first.records];
+  if (records.length > first.total) throw new Error("A API retornou mais registros que o total informado.");
+  const pageCount = Math.ceil(first.total / pageSize);
+  for (let page = 2; page <= pageCount; page += 1) {
+    const result = await fetchPage(page);
+    if (result.total !== first.total) throw new Error("A quantidade total mudou durante a geração. Faça uma nova pesquisa.");
+    records.push(...result.records);
+  }
+  if (records.length !== first.total) {
+    throw new Error("Relatório incompleto: a API informou " + first.total + " registros, mas " + records.length + " foram carregados.");
+  }
+  return records;
+};
+
 const escapePrintHtml = (value: unknown) => String(value ?? "")
-  .replace(/&/g, "&amp;")
-  .replace(/</g, "&lt;")
-  .replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;")
-  .replace(/'/g, "&#39;");
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
 const printValue = (value: unknown) => {
   const text = String(value ?? "").trim();
@@ -64,85 +96,91 @@ const formatPrintDate = (value: unknown) => {
   if (/^\d{2}\/\d{2}\/\d{4}/.test(text)) return escapePrintHtml(text.split(" ")[0]);
   const date = new Date(text);
   if (Number.isNaN(date.getTime())) return printValue(text);
-  return `${String(date.getUTCDate()).padStart(2, "0")}/${String(date.getUTCMonth() + 1).padStart(2, "0")}/${date.getUTCFullYear()}`;
+  return String(date.getUTCDate()).padStart(2, "0") + "/" +
+    String(date.getUTCMonth() + 1).padStart(2, "0") + "/" + date.getUTCFullYear();
 };
 
-const formatSelectedDate = (value: string, fallback: string) => value ? formatPrintDate(`${value}T00:00:00.000Z`) : fallback;
+const formatSelectedDate = (value: string, fallback: string) => value ? formatPrintDate(value + "T00:00:00.000Z") : fallback;
+const equipmentLabel = (item: ReportRecord) => item.T_EquipSuporte || item.T_EquipTelecom || item.Equipamento || "Não informado";
+const equipmentStatus = (item: ReportRecord) => String(item.Serviço || item.servico || "Não informado").trim() || "Não informado";
+
+const countEquipmentBy = (records: ReportRecord[], getLabel: (item: ReportRecord) => unknown) => {
+  const counts = new Map<string, number>();
+  records.forEach((item) => {
+    const label = String(getLabel(item) ?? "").trim() || "Não informado";
+    counts.set(label, (counts.get(label) || 0) + 1);
+  });
+  return [...counts.entries()].sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0], "pt-BR")).slice(0, 6);
+};
+
+const analyticsRows = (entries: [string, number][], total: number) => {
+  const visibleEntries = entries.slice(0, 5);
+  const remaining = entries.slice(5).reduce((sum, entry) => sum + entry[1], 0);
+  if (remaining > 0) visibleEntries.push(["Outros", remaining]);
+  return visibleEntries.map(([label, count]) => {
+  const percent = total ? Math.round((count / total) * 100) : 0;
+  return '<div class="metric"><div><span>' + printValue(label) + '</span><b>' + count +
+    ' <small>(' + percent + '%)</small></b></div><i><span style="width:' + Math.max(2, percent) + '%"></span></i></div>';
+}).join("");
+};
 
 export const buildEquipmentPrintHtml = (records: ReportRecord[], dateFilters: EquipmentPrintFilters, logoBase: string) => {
-  const rows = records.map((item) => `
-    <tr>
-      <td>${printValue(item.Id_cod)}</td>
-      <td>${formatPrintDate(item.Data_Ent)}</td>
-      <td>${printValue(item.Unidade)}</td>
-      <td>${printValue(item.T_EquipSuporte || item.T_EquipTelecom)}</td>
-      <td>${printValue(item.RP)}</td>
-      <td>${printValue(item.Nº_Serie)}</td>
-      <td>${printValue(item.Tecnico)}</td>
-      <td>${printValue(item.Serviço || item.servico)}</td>
-    </tr>
-  `).join("");
+  const total = records.length;
+  const statuses = countEquipmentBy(records, equipmentStatus);
+  const units = countEquipmentBy(records, (item) => item.Unidade);
+  const types = countEquipmentBy(records, equipmentLabel);
+  const batteries = countEquipmentBy(records, (item) => String(item.Bateria ?? "").trim() ? "Informada" : "Não informada");
+  const warranties = countEquipmentBy(records, (item) => /^sim$/i.test(String(item.Garantia ?? "").trim()) ? "Em garantia" : "Fora/sem garantia");
+  const ready = records.filter((item) => /^pronto$/i.test(equipmentStatus(item))).length;
+  const pending = records.filter((item) => /^pendente$/i.test(equipmentStatus(item))).length;
+  const laudo = records.filter((item) => /^laudo$/i.test(equipmentStatus(item))).length;
+  const cards = records.map((item) => {
+    return '<article class="equipment-card"><header><div><small>Ordem de serviço</small><strong>#' + printValue(item.Id_cod) +
+      '</strong></div><span class="status">' + printValue(equipmentStatus(item)) + '</span></header><h3>' + printValue(equipmentLabel(item)) +
+      '</h3><div class="fields">' +
+      '<div><small>Unidade</small><b>' + printValue(item.Unidade) + '</b></div>' +
+      '<div><small>Data de entrada</small><b>' + formatPrintDate(item.Data_Ent) + '</b></div>' +
+      '<div><small>RP</small><b>' + printValue(item.RP) + '</b></div>' +
+      '<div><small>Nº de série</small><b>' + printValue(item["Nº_Serie"]) + '</b></div>' +
+      '<div><small>Técnico</small><b>' + printValue(item.Tecnico) + '</b></div>' +
+      '<div><small>Garantia</small><b>' + printValue(item.Garantia) + '</b></div>' +
+      '<div><small>Bateria</small><b>' + printValue(item.Bateria) + '</b></div>' +
+      '<div><small>Data de envio</small><b>' + formatPrintDate(item.Data_Envio) + '</b></div>' +
+      '<div><small>Data de retorno</small><b>' + formatPrintDate(item.Data_Retorno) + '</b></div>' +
+      '<div><small>Data de saída</small><b>' + formatPrintDate(item.Data_Saida || item.saidaEquip) + '</b></div></div>' +
+      '<div class="notes"><div><small>Defeito reclamado</small><p>' + printValue(item.Defeito_Recl) + '</p></div>' +
+      '<div><small>Análise técnica</small><p>' + printValue(item.Analise_Tecnica) + '</p></div></div></article>';
+  }).join("");
 
-  return `<!DOCTYPE html>
-  <html lang="pt-BR">
-    <head>
-      <meta charset="UTF-8" />
-      <title>Relatório de Equipamentos - PMPA/DITEL</title>
-      <style>
-        @page { size: A4 landscape; margin: 12mm; }
-        * { box-sizing: border-box; }
-        body { margin: 0; color: #172033; background: #fff; font-family: Arial, sans-serif; font-size: 9pt; }
-        .header { display: flex; align-items: center; gap: 16px; border-bottom: 1.2pt solid #172033; padding-bottom: 10px; }
-        .logo { width: 58px; height: 58px; object-fit: contain; }
-        .ditel-logo { width: 80px; height: 58px; object-fit: contain; }
-        .header-text { flex: 1; text-align: center; font-size: 8pt; font-weight: 700; line-height: 1.35; text-transform: uppercase; }
-        .header-text strong { display: block; margin-top: 3px; font-size: 11pt; }
-        h1 { margin: 16px 0 8px; text-align: center; font-size: 14pt; text-transform: uppercase; letter-spacing: .04em; }
-        .meta { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 14px; border-bottom: 1px solid #cbd5e1; padding-bottom: 8px; font-size: 8.5pt; }
-        .meta strong { text-transform: uppercase; font-size: 7.5pt; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        thead { display: table-header-group; }
-        tr { break-inside: avoid; page-break-inside: avoid; }
-        th, td { border: 1px solid #cbd5e1; padding: 5px 4px; text-align: left; overflow-wrap: anywhere; vertical-align: top; }
-        th { background: #004e9a; color: #fff; font-size: 7.5pt; text-align: center; text-transform: uppercase; }
-        td { font-size: 8pt; }
-        th:nth-child(1) { width: 7%; } th:nth-child(2) { width: 10%; } th:nth-child(3) { width: 15%; } th:nth-child(4) { width: 15%; }
-        th:nth-child(5) { width: 10%; } th:nth-child(6) { width: 14%; } th:nth-child(7) { width: 14%; } th:nth-child(8) { width: 15%; }
-        .footer { margin-top: 12px; border-top: 1px solid #cbd5e1; padding-top: 7px; color: #475569; text-align: center; font-size: 7pt; }
-      </style>
-    </head>
-    <body>
-      <header class="header">
-        <img class="logo" src="${escapePrintHtml(logoBase)}/logo-pmpa.png" alt="PMPA" />
-        <div class="header-text">
-          <div>GOVERNO DO ESTADO DO PARÁ</div>
-          <div>SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA E DEFESA SOCIAL</div>
-          <div>POLÍCIA MILITAR DO PARÁ</div>
-          <div>DEPARTAMENTO GERAL DE ADMINISTRAÇÃO</div>
-          <strong>DIRETORIA DE TELEMÁTICA</strong>
-        </div>
-        <img class="ditel-logo" src="${escapePrintHtml(logoBase)}/Logo Ditel.jpeg" alt="DITEL" />
-      </header>
-      <h1>Relatório de Equipamentos</h1>
-      <div class="meta">
-        <div><strong>Período pesquisado:</strong><br />${formatSelectedDate(dateFilters.startDate, "Início")} — ${formatSelectedDate(dateFilters.endDate, "Fim")}</div>
-        <div><strong>Registros encontrados:</strong><br />${records.length}</div>
-        <div><strong>Emissão:</strong><br />${new Date().toLocaleDateString("pt-BR")}</div>
-      </div>
-      <table>
-        <thead><tr><th>O.S.</th><th>Data</th><th>Unidade</th><th>Equipamento</th><th>RP</th><th>Patrimônio / Nº Série</th><th>Técnico</th><th>Situação</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-      <div class="footer">PMPA | Diretoria de Telemática — documento gerado a partir dos resultados da pesquisa.</div>
-      <script>
-        let printed = false;
-        const printOnce = () => { if (printed) return; printed = true; window.print(); };
-        window.onload = () => setTimeout(printOnce, 250);
-        setTimeout(printOnce, 1200);
-        window.onafterprint = () => window.close();
-      </script>
-    </body>
-  </html>`;
+  return '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8" />' +
+    '<title>Relatório de Equipamentos - PMPA/DITEL</title><style>' +
+    '@page{size:A4 portrait;margin:12mm}*{box-sizing:border-box}body{margin:0;color:#172033;font:9pt Arial,sans-serif;line-height:1.4}' +
+    '.header{display:flex;align-items:center;gap:14px;border-bottom:1.2pt solid #172033;padding-bottom:10px}' +
+    '.logo{width:58px;height:58px;object-fit:contain}.ditel{width:76px;height:58px;object-fit:contain}' +
+    '.header-text{flex:1;text-align:center;font-size:7.5pt;font-weight:bold;line-height:1.35;text-transform:uppercase}.header-text strong{display:block;font-size:10pt;margin-top:3px}' +
+    'h1{text-align:center;font-size:15pt;margin:15px 0 4px;text-transform:uppercase}.subtitle{text-align:center;color:#64748b;font-size:8pt;margin-bottom:12px}' +
+    '.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;border:1px solid #dbe3ed;padding:9px;margin-bottom:16px;font-size:8pt}.meta b{display:block;color:#64748b;font-size:7pt;text-transform:uppercase}' +
+    '.section-title{margin:18px 0 9px;padding-left:8px;border-left:3px solid #004e9a;font-size:10pt;text-transform:uppercase}' +
+    '.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.summary div{border:1px solid #dbe3ed;padding:9px;border-radius:6px}.summary strong{display:block;color:#004e9a;font-size:17pt}.summary span{font-size:7pt;font-weight:bold;text-transform:uppercase;color:#475569}' +
+    '.analytics{display:grid;grid-template-columns:1fr 1fr;gap:10px}.panel{border:1px solid #dbe3ed;padding:9px;border-radius:6px;break-inside:avoid}.panel h3{font-size:8pt;text-transform:uppercase;margin:0 0 8px}' +
+    '.metric{margin:7px 0}.metric>div{display:flex;justify-content:space-between;gap:8px;font-size:7.5pt}.metric small{color:#64748b;font-weight:normal}.metric i{display:block;height:6px;background:#edf2f7;border-radius:5px;overflow:hidden;margin-top:3px}.metric i span{display:block;height:100%;background:#1769aa}' +
+    '.equipment-card{border:1px solid #cbd5e1;border-radius:7px;padding:10px 11px;margin-bottom:10px;break-inside:avoid;page-break-inside:avoid}.equipment-card header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e2e8f0;padding-bottom:7px}.equipment-card header small,.fields small,.notes small{display:block;color:#64748b;font-size:6.5pt;font-weight:bold;text-transform:uppercase}.equipment-card header strong{display:block;color:#004e9a;font-size:12pt}.status{border:1px solid #bfdbfe;background:#eff6ff;color:#1e40af;border-radius:20px;padding:3px 8px;font-size:7pt;font-weight:bold;text-transform:uppercase}.equipment-card h3{margin:7px 0 8px;font-size:10pt}' +
+    '.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 12px}.fields b{display:block;font-size:8pt;margin-top:2px;overflow-wrap:anywhere}.notes{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px solid #e2e8f0;margin-top:9px;padding-top:8px}.notes p{font-size:7.5pt;margin:3px 0;overflow-wrap:anywhere;white-space:pre-wrap}.page-break{break-before:page;page-break-before:always}.footer{margin-top:14px;border-top:1px solid #cbd5e1;padding-top:7px;text-align:center;color:#64748b;font-size:7pt}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}' +
+    '</style></head><body><header class="header"><img class="logo" src="' + escapePrintHtml(logoBase) + '/logo-pmpa.png" alt="PMPA" />' +
+    '<div class="header-text"><div>GOVERNO DO ESTADO DO PARÁ</div><div>SECRETARIA DE ESTADO DE SEGURANÇA PÚBLICA E DEFESA SOCIAL</div><div>POLÍCIA MILITAR DO PARÁ</div><div>DEPARTAMENTO GERAL DE ADMINISTRAÇÃO</div><strong>DIRETORIA DE TELEMÁTICA</strong></div>' +
+    '<img class="ditel" src="' + escapePrintHtml(logoBase) + '/Logo Ditel.jpeg" alt="DITEL" /></header>' +
+    '<h1>Relatório de Equipamentos</h1><div class="subtitle">Dashboard consolidado e relação individual</div>' +
+    '<div class="meta"><div><b>Período pesquisado</b>' + formatSelectedDate(dateFilters.startDate, "Início") + ' — ' + formatSelectedDate(dateFilters.endDate, "Fim") +
+    '</div><div><b>Total de registros</b>' + total + '</div><div><b>Emissão</b>' + new Date().toLocaleDateString("pt-BR") + '</div></div>' +
+    '<h2 class="section-title">1. Dashboard consolidado</h2><div class="summary">' +
+    '<div><strong>' + total + '</strong><span>Total de O.S.</span></div><div><strong>' + ready + '</strong><span>Prontos</span></div>' +
+    '<div><strong>' + pending + '</strong><span>Pendentes</span></div><div><strong>' + laudo + '</strong><span>Em laudo</span></div></div>' +
+    '<div class="analytics"><div class="panel"><h3>Distribuição por situação</h3>' + analyticsRows(statuses,total) + '</div>' +
+    '<div class="panel"><h3>Equipamentos por unidade</h3>' + analyticsRows(units,total) + '</div><div class="panel"><h3>Tipos de equipamento</h3>' + analyticsRows(types,total) + '</div>' +
+    '<div class="panel"><h3>Condições de bateria</h3>' + analyticsRows(batteries,total) + '</div><div class="panel"><h3>Situação da garantia</h3>' + analyticsRows(warranties,total) + '</div></div>' +
+    '<h2 class="section-title page-break">2. Relação individual dos equipamentos (' + total + ')</h2>' + cards +
+    '<div class="footer">PMPA | Diretoria de Telemática — documento gerado a partir dos resultados completos da pesquisa.</div>' +
+    '<script>let printed=false;const printOnce=()=>{if(printed)return;printed=true;window.print()};window.onload=()=>setTimeout(printOnce,350);setTimeout(printOnce,1500);window.onafterprint=()=>window.close();</script></body></html>';
 };
 
 export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: RelatoriosSectionProps) => {
@@ -151,6 +189,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
   const [isLoading, setIsLoading] = useState(false);
   const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "", unidade: "", bateria: false, garantia: false });
   const [lastCompletedDateFilters, setLastCompletedDateFilters] = useState<EquipmentPrintFilters | null>(null);
+  const [lastCompletedEquipmentFilters, setLastCompletedEquipmentFilters] = useState<EquipmentQueryFilters | null>(null);
   const [selectedRecord, setSelectedRecord] = useState<ReportRecord | null>(null);
   const { user } = useAuth();
   const isViewer = user?.papel === 'visualizador';
@@ -249,6 +288,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
       });
       if (isEquipments) {
         setLastCompletedDateFilters({ startDate: start, endDate: end });
+        setLastCompletedEquipmentFilters({ startDate: start, endDate: end, q: currentQ, status: currentStatus || "", unidade: currentUnidade, bateria: currentBateria, garantia: currentGarantia });
       }
     } catch (error) {
       console.error("Erro ao gerar relatório:", error);
@@ -680,22 +720,46 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     printWindow.document.close();
   };
 
-  const handlePrintEquipamentos = () => {
+  const handlePrintEquipamentos = async () => {
     if (activeReport !== "Rel_Equipamentos" || results.length === 0) return;
-
     const printWindow = window.open("", "_blank");
     if (!printWindow) {
       alert("Por favor, permita pop-ups no seu navegador para imprimir o relatório.");
       return;
     }
-
-    printWindow.document.open();
-    const printFilters = getEquipmentPrintFilters(lastCompletedDateFilters, {
-      startDate: filters.startDate,
-      endDate: filters.endDate,
-    });
-    printWindow.document.write(buildEquipmentPrintHtml(results, printFilters, window.location.origin));
-    printWindow.document.close();
+    printWindow.document.write("<html><body style='font-family:Arial;padding:32px'>Carregando todos os equipamentos para impressão...</body></html>");
+    try {
+      const completedFilters = lastCompletedEquipmentFilters || {
+        startDate: filters.startDate, endDate: filters.endDate, q: filters.q, status: filters.status,
+        unidade: filters.unidade, bateria: filters.bateria, garantia: filters.garantia,
+      };
+      const params = getEquipmentPrintQueryParams(completedFilters);
+      const token = localStorage.getItem("ditel_token");
+      const allRecords = await fetchAllEquipmentPages<ReportRecord>(async (page) => {
+        const pageParams = new URLSearchParams(params);
+        pageParams.set("page", String(page));
+        pageParams.set("limit", "100");
+        const response = await fetch(API_BASE + "/servicos?" + pageParams.toString(), {
+          headers: { Authorization: "Bearer " + token },
+        });
+        if (!response.ok) throw new Error("Falha ao carregar página " + page + " (HTTP " + response.status + ").");
+        const data = await response.json();
+        if (!Array.isArray(data)) throw new Error("A API retornou um formato inesperado.");
+        const totalHeader = response.headers.get("X-Total-Count");
+        if (totalHeader === null) throw new Error("A API não informou X-Total-Count; impressão cancelada para evitar relatório parcial.");
+        return { records: data as ReportRecord[], total: Number(totalHeader) };
+      });
+      printWindow.document.open();
+      printWindow.document.write(buildEquipmentPrintHtml(allRecords, completedFilters, window.location.origin));
+      printWindow.document.close();
+    } catch (error) {
+      console.error("Erro ao preparar impressão de equipamentos:", error);
+      printWindow.document.open();
+      printWindow.document.write("<html><body style='font-family:Arial;padding:32px;color:#991b1b'><h2>Não foi possível gerar o relatório completo.</h2><p>" +
+        escapePrintHtml(error instanceof Error ? error.message : "Erro inesperado.") +
+        "</p><p>Feche esta aba e execute a pesquisa novamente antes de imprimir.</p></body></html>");
+      printWindow.document.close();
+    }
   };
 
   return (
@@ -747,6 +811,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           setStats({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0, laudo: 0, bateria: 0, garantia: 0 });
           setFilters({ startDate: "", endDate: "", q: "", status: "", unidade: "", bateria: false, garantia: false });
           setLastCompletedDateFilters(null);
+          setLastCompletedEquipmentFilters(null);
         }
       }}>
         <DialogContent className="max-w-5xl w-[95vw] sm:w-full max-h-[92vh] overflow-hidden flex flex-col p-4 md:p-6 border-border/50 shadow-2xl bg-white dark:bg-slate-900">
