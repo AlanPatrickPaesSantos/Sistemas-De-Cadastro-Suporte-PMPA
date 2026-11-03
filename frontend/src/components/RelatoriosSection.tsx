@@ -41,6 +41,11 @@ const getStatusStyle = (item: ReportRecord) => {
 
 type EquipmentPrintFilters = { startDate: string; endDate: string };
 
+export const getEquipmentPrintFilters = (
+  lastCompletedDateFilters: EquipmentPrintFilters | null,
+  currentDateFilters: EquipmentPrintFilters,
+) => lastCompletedDateFilters || currentDateFilters;
+
 const escapePrintHtml = (value: unknown) => String(value ?? "")
   .replace(/&/g, "&amp;")
   .replace(/</g, "&lt;")
@@ -145,6 +150,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
   const [results, setResults] = useState<ReportRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [filters, setFilters] = useState({ startDate: "", endDate: "", q: "", status: "", unidade: "", bateria: false, garantia: false });
+  const [lastCompletedDateFilters, setLastCompletedDateFilters] = useState<EquipmentPrintFilters | null>(null);
   const [selectedRecord, setSelectedRecord] = useState<ReportRecord | null>(null);
   const { user } = useAuth();
   const isViewer = user?.papel === 'visualizador';
@@ -241,6 +247,9 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
         // Rankings auditados do servidor (v40.5)
         rankings: allStats.missoes.rankings || { unidades: [], servicos: [], defeitos: [] }
       });
+      if (isEquipments) {
+        setLastCompletedDateFilters({ startDate: start, endDate: end });
+      }
     } catch (error) {
       console.error("Erro ao gerar relatório:", error);
     } finally {
@@ -681,7 +690,11 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
     }
 
     printWindow.document.open();
-    printWindow.document.write(buildEquipmentPrintHtml(results, filters, window.location.origin));
+    const printFilters = getEquipmentPrintFilters(lastCompletedDateFilters, {
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+    });
+    printWindow.document.write(buildEquipmentPrintHtml(results, printFilters, window.location.origin));
     printWindow.document.close();
   };
 
@@ -733,6 +746,7 @@ export const RelatoriosSection = ({ externalTrigger, onTriggerClean }: Relatorio
           setResults([]);
           setStats({ total: 0, interno: 0, externo: 0, remoto: 0, pendente: 0, pronto: 0, laudo: 0, bateria: 0, garantia: 0 });
           setFilters({ startDate: "", endDate: "", q: "", status: "", unidade: "", bateria: false, garantia: false });
+          setLastCompletedDateFilters(null);
         }
       }}>
         <DialogContent className="max-w-5xl w-[95vw] sm:w-full max-h-[92vh] overflow-hidden flex flex-col p-4 md:p-6 border-border/50 shadow-2xl bg-white dark:bg-slate-900">

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildEquipmentPrintHtml } from "./RelatoriosSection";
+import { buildEquipmentPrintHtml, getEquipmentPrintFilters } from "./RelatoriosSection";
 
 describe("relatório imprimível de equipamentos", () => {
   it("monta uma tabela com o período e os registros retornados, preservando campos ausentes", () => {
@@ -35,5 +35,15 @@ describe("relatório imprimível de equipamentos", () => {
     expect(html).toContain("—");
     expect(html).toContain("table-header-group");
     expect(html).toContain("page-break-inside: avoid");
+  });
+
+  it("mantém no documento o período da última pesquisa concluída após editar os campos", () => {
+    const lastCompletedSearch = { startDate: "2026-10-01", endDate: "2026-10-31" };
+    const editedDateFields = { startDate: "2026-11-01", endDate: "2026-11-30" };
+    const printFilters = getEquipmentPrintFilters(lastCompletedSearch, editedDateFields);
+    const html = buildEquipmentPrintHtml([], printFilters, "https://example.test");
+
+    expect(html).toContain("01/10/2026 — 31/10/2026");
+    expect(html).not.toContain("01/11/2026 — 30/11/2026");
   });
 });
