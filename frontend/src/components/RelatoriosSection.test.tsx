@@ -33,8 +33,8 @@ describe("relatório imprimível de equipamentos", () => {
     expect(html).toContain("Ana Silva");
     expect(html).toContain("Rádio");
     expect(html).toContain("—");
-    expect(html).toContain("table-header-group");
-    expect(html).toContain("page-break-inside: avoid");
+    expect(html).toContain("equipment-card");
+    expect(html).toContain("page-break-inside:avoid");
   });
 
   it("mantém no documento o período da última pesquisa concluída após editar os campos", () => {
