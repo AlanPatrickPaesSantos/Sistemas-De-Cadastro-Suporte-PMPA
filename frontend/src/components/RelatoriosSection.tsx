@@ -113,11 +113,16 @@ const countEquipmentBy = (records: ReportRecord[], getLabel: (item: ReportRecord
   return [...counts.entries()].sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0], "pt-BR")).slice(0, 6);
 };
 
-const analyticsRows = (entries: [string, number][], total: number) => entries.map(([label, count]) => {
+const analyticsRows = (entries: [string, number][], total: number) => {
+  const visibleEntries = entries.slice(0, 5);
+  const remaining = entries.slice(5).reduce((sum, entry) => sum + entry[1], 0);
+  if (remaining > 0) visibleEntries.push(["Outros", remaining]);
+  return visibleEntries.map(([label, count]) => {
   const percent = total ? Math.round((count / total) * 100) : 0;
   return '<div class="metric"><div><span>' + printValue(label) + '</span><b>' + count +
     ' <small>(' + percent + '%)</small></b></div><i><span style="width:' + Math.max(2, percent) + '%"></span></i></div>';
 }).join("");
+};
 
 export const buildEquipmentPrintHtml = (records: ReportRecord[], dateFilters: EquipmentPrintFilters, logoBase: string) => {
   const total = records.length;
@@ -170,9 +175,9 @@ export const buildEquipmentPrintHtml = (records: ReportRecord[], dateFilters: Eq
     '<h2 class="section-title">1. Dashboard consolidado</h2><div class="summary">' +
     '<div><strong>' + total + '</strong><span>Total de O.S.</span></div><div><strong>' + ready + '</strong><span>Prontos</span></div>' +
     '<div><strong>' + pending + '</strong><span>Pendentes</span></div><div><strong>' + laudo + '</strong><span>Em laudo</span></div></div>' +
-    '<div class="analytics"><div class="panel"><h3>Por situação</h3>' + analyticsRows(statuses,total) + '</div>' +
-    '<div class="panel"><h3>Por unidade</h3>' + analyticsRows(units,total) + '</div><div class="panel"><h3>Tipos de equipamento</h3>' + analyticsRows(types,total) + '</div>' +
-    '<div class="panel"><h3>Bateria</h3>' + analyticsRows(batteries,total) + '</div><div class="panel"><h3>Garantia</h3>' + analyticsRows(warranties,total) + '</div></div>' +
+    '<div class="analytics"><div class="panel"><h3>Distribuição por situação</h3>' + analyticsRows(statuses,total) + '</div>' +
+    '<div class="panel"><h3>Equipamentos por unidade</h3>' + analyticsRows(units,total) + '</div><div class="panel"><h3>Tipos de equipamento</h3>' + analyticsRows(types,total) + '</div>' +
+    '<div class="panel"><h3>Condições de bateria</h3>' + analyticsRows(batteries,total) + '</div><div class="panel"><h3>Situação da garantia</h3>' + analyticsRows(warranties,total) + '</div></div>' +
     '<h2 class="section-title page-break">2. Relação individual dos equipamentos (' + total + ')</h2>' + cards +
     '<div class="footer">PMPA | Diretoria de Telemática — documento gerado a partir dos resultados completos da pesquisa.</div>' +
     '<script>let printed=false;const printOnce=()=>{if(printed)return;printed=true;window.print()};window.onload=()=>setTimeout(printOnce,350);setTimeout(printOnce,1500);window.onafterprint=()=>window.close();</script></body></html>';
