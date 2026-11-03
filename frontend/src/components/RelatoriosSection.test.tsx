@@ -143,6 +143,39 @@ describe("dashboard e relação individual de equipamentos", () => {
     expect(html).toContain("Fonte substituída");
   });
 
+  it("inclui todas as categorias na soma, agrupando apenas a cauda em Outros", () => {
+    const units = ["Unidade A", "Unidade B", "Unidade C", "Unidade D", "Unidade E", "Unidade F", "Unidade G", "Unidade H"];
+    const html = buildEquipmentPrintHtml(units.map((Unidade, index) => ({
+      Id_cod: index + 1,
+      Unidade,
+      Serviço: "PRONTO",
+    })), { startDate: "", endDate: "" }, "https://example.test");
+
+    expect(html).toContain("Unidade A");
+    expect(html).toContain("Unidade E");
+    expect(html).toContain("Outros</span><b>3 <small>(37.5%)");
+    expect(html).not.toContain("Unidade F</span>");
+    expect(html).not.toContain("Unidade G</span>");
+    expect(html).not.toContain("Unidade H</span>");
+  });
+
+  it("distingue garantia não informada e bateria preenchida sem alegar condição funcional", () => {
+    const html = buildEquipmentPrintHtml([
+      { Id_cod: 1, Bateria: "78%", Garantia: "Sim" },
+      { Id_cod: 2, Bateria: " ", Garantia: "Não" },
+      { Id_cod: 3, Bateria: "", Garantia: "" },
+    ], { startDate: "", endDate: "" }, "https://example.test");
+
+    expect(html).toContain("Campo preenchido");
+    expect(html).toContain("Não informado");
+    expect(html).toContain("Em garantia");
+    expect(html).toContain("Sem garantia");
+    expect(html).toContain("Preenchimento do campo bateria");
+    expect(html).not.toContain("Condições de bateria");
+    expect(html).toContain("33.3%");
+    expect(html).toContain("66.7%");
+  });
+
   it("escapa conteúdo fornecido pelos registros antes de inserir no HTML", () => {
     const html = buildEquipmentPrintHtml([{
       Id_cod: 1,
