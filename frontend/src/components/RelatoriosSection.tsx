@@ -135,7 +135,7 @@ export const buildEquipmentPrintHtml = (records: ReportRecord[], dateFilters: Eq
   const pending = records.filter((item) => /^pendente$/i.test(equipmentStatus(item))).length;
   const laudo = records.filter((item) => /^laudo$/i.test(equipmentStatus(item))).length;
   const cards = records.map((item) => {
-    return '<article class="equipment-card"><header><div><small>ORDEM DE SERVIÇO</small><strong>#' + printValue(item.Id_cod) +
+    return '<article class="equipment-card"><header><div><small>Ordem de serviço</small><strong>#' + printValue(item.Id_cod) +
       '</strong></div><span class="status">' + printValue(equipmentStatus(item)) + '</span></header><h3>' + printValue(equipmentLabel(item)) +
       '</h3><div class="fields">' +
       '<div><small>Unidade</small><b>' + printValue(item.Unidade) + '</b></div>' +
