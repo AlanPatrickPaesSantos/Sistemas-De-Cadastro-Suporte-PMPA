@@ -110,7 +110,7 @@ const countEquipmentBy = (records: ReportRecord[], getLabel: (item: ReportRecord
     const label = String(getLabel(item) ?? "").trim() || "Não informado";
     counts.set(label, (counts.get(label) || 0) + 1);
   });
-  return [...counts.entries()].sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0], "pt-BR")).slice(0, 6);
+  return [...counts.entries()].sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0], "pt-BR"));
 };
 
 const analyticsRows = (entries: [string, number][], total: number) => {
@@ -118,10 +118,11 @@ const analyticsRows = (entries: [string, number][], total: number) => {
   const remaining = entries.slice(5).reduce((sum, entry) => sum + entry[1], 0);
   if (remaining > 0) visibleEntries.push(["Outros", remaining]);
   return visibleEntries.map(([label, count]) => {
-  const percent = total ? Math.round((count / total) * 100) : 0;
-  return '<div class="metric"><div><span>' + printValue(label) + '</span><b>' + count +
-    ' <small>(' + percent + '%)</small></b></div><i><span style="width:' + Math.max(2, percent) + '%"></span></i></div>';
-}).join("");
+    const percent = total > 0 ? (count / total) * 100 : 0;
+    const displayedPercent = percent.toFixed(1);
+    return '<div class="metric"><div><span>' + printValue(label) + '</span><b>' + count +
+      ' <small>(' + displayedPercent + '%)</small></b></div><i><span style="width:' + percent + '%"></span></i></div>';
+  }).join("");
 };
 
 export const buildEquipmentPrintHtml = (records: ReportRecord[], dateFilters: EquipmentPrintFilters, logoBase: string) => {
@@ -129,8 +130,13 @@ export const buildEquipmentPrintHtml = (records: ReportRecord[], dateFilters: Eq
   const statuses = countEquipmentBy(records, equipmentStatus);
   const units = countEquipmentBy(records, (item) => item.Unidade);
   const types = countEquipmentBy(records, equipmentLabel);
-  const batteries = countEquipmentBy(records, (item) => String(item.Bateria ?? "").trim() ? "Informada" : "Não informada");
-  const warranties = countEquipmentBy(records, (item) => /^sim$/i.test(String(item.Garantia ?? "").trim()) ? "Em garantia" : "Fora/sem garantia");
+  const batteries = countEquipmentBy(records, (item) => String(item.Bateria ?? "").trim() ? "Campo preenchido" : "Não informado");
+  const warranties = countEquipmentBy(records, (item) => {
+    const value = String(item.Garantia ?? "").trim().toLocaleLowerCase("pt-BR");
+    if (value === "sim") return "Em garantia";
+    if (value === "não" || value === "nao") return "Sem garantia";
+    return "Não informado";
+  });
   const ready = records.filter((item) => /^pronto$/i.test(equipmentStatus(item))).length;
   const pending = records.filter((item) => /^pendente$/i.test(equipmentStatus(item))).length;
   const laudo = records.filter((item) => /^laudo$/i.test(equipmentStatus(item))).length;
@@ -177,7 +183,7 @@ export const buildEquipmentPrintHtml = (records: ReportRecord[], dateFilters: Eq
     '<div><strong>' + pending + '</strong><span>Pendentes</span></div><div><strong>' + laudo + '</strong><span>Em laudo</span></div></div>' +
     '<div class="analytics"><div class="panel"><h3>Distribuição por situação</h3>' + analyticsRows(statuses,total) + '</div>' +
     '<div class="panel"><h3>Equipamentos por unidade</h3>' + analyticsRows(units,total) + '</div><div class="panel"><h3>Tipos de equipamento</h3>' + analyticsRows(types,total) + '</div>' +
-    '<div class="panel"><h3>Condições de bateria</h3>' + analyticsRows(batteries,total) + '</div><div class="panel"><h3>Situação da garantia</h3>' + analyticsRows(warranties,total) + '</div></div>' +
+    '<div class="panel"><h3>Preenchimento do campo bateria</h3>' + analyticsRows(batteries,total) + '</div><div class="panel"><h3>Situação da garantia</h3>' + analyticsRows(warranties,total) + '</div></div>' +
     '<h2 class="section-title page-break">2. Relação individual dos equipamentos (' + total + ')</h2>' + cards +
     '<div class="footer">PMPA | Diretoria de Telemática — documento gerado a partir dos resultados completos da pesquisa.</div>' +
     '<script>let printed=false;const printOnce=()=>{if(printed)return;printed=true;window.print()};window.onload=()=>setTimeout(printOnce,350);setTimeout(printOnce,1500);window.onafterprint=()=>window.close();</script></body></html>';
